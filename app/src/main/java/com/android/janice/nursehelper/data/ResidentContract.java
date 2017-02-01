@@ -1,0 +1,175 @@
+package com.android.janice.nursehelper.data;
+
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.net.Uri;
+import android.provider.BaseColumns;
+
+/**
+ * Created by janicerichards on 2/1/17.
+ */
+
+public class ResidentContract {
+    // The "Content authority" is a name for the entire content provider.
+    public static final String CONTENT_AUTHORITY = "com.android.janice.nursehelper";
+
+    // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
+    // the content provider.
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    // Possible paths (appended to base content URI for possible URI's)
+    // e.g. content://com.android.stocks/stocks/ is a valid path for at the stock data.
+    public static final String PATH_RESIDENTS = "residents";
+    public static final String PATH_MEDS = "medications";
+    public static final String PATH_ASSESSMENTS = "assessments";
+
+
+    /* Inner class that defines the table contents of the Residents table */
+    public static final class ResidentEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_RESIDENTS).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RESIDENTS;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RESIDENTS;
+
+        public static final String TABLE_NAME = "residents";
+
+
+        //_id INTEGER PRIMARY KEY AUTOINCREMENT
+        public static final String COLUMN_ID = "_id";
+
+        // primary key:  resident's room number:
+        public static final String COLUMN_ROOM_NUMBER = "roomNumber";
+
+        // long name
+        public static final String COLUMN_PORTRAIT = "residentPicture";
+
+
+        public static Uri buildResidentsUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildResidentInfoWithRoomNumber(String roomNumber) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(roomNumber).build();
+        }
+
+        public static String getRoomNumberFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+    }
+
+
+
+    /* Inner class that defines the table contents of the Residents table */
+    public static final class MedicationEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEDS).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS;
+
+        public static final String TABLE_NAME = "medications";
+
+
+        // PRIMARY KEY
+        public static final String COLUMN_ROOM_NUMBER = "roomNumber";
+
+        // generic medication name
+        public static final String COLUMN_NAME_GENERIC = "medGenericName";
+
+        // generic medication name
+        public static final String COLUMN_NAME_TRADE = "medTradeName";
+
+        // amount of med to give (float value)
+        public static final String COLUMN_DOSAGE = "dosage";
+
+        public static final String COLUMN_DOSAGE_UNITS = "dosageUnits";
+
+        public static final String COLUMN_DOSAGE_ROUTE = "route";
+
+        public static final String COLUMN_FREQUENCY = "frequency";  // e.g. "BID", etc.
+
+        public static final String COLUMN_TIMES = "adminTimes";   // THIS IS AN ARRAY OF TIMES (hr:min)
+
+
+        public static Uri buildMedsUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildMedsWithRoomNumber(String roomNumber) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(roomNumber).build();
+        }
+
+        public static String getRoomNumberFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+    }
+
+
+
+    /* Inner class that defines the table contents of the Residents table */
+    public static final class AssessmentEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ASSESSMENTS).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ASSESSMENTS;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ASSESSMENTS;
+
+        public static final String TABLE_NAME = "assessments";
+
+
+        //_id INTEGER PRIMARY KEY AUTOINCREMENT
+        public static final String COLUMN_ID = "_id";
+
+        // primary key:  room Number
+        public static final String COLUMN_ROOM_NUMBER = "roomNumber";
+
+        // Time, stored as long in milliseconds (for the current stock price listed)
+        public static final String COLUMN_TIME = "time";
+
+        // ###/###
+        public static final String COLUMN_BLOOD_PRESSURE = "bp";
+
+        // String: ###.# <degree symbol>F / C  <route>
+        public static final String COLUMN_TEMPERATURE = "temp";
+
+        public static final String COLUMN_PULSE = "pulse";
+
+        public static final String COLUMN_RR = "respiratoryRate";
+
+        public static final String COLUMN_SIGNIFICANT_FINDINGS = "significantFindings";
+
+        // edema: either "n/N" or "Stage I/II/III/IV".  If staged, give location in
+        //  significantFindings.
+        public static final String COLUMN_EDEMA = "edema";
+
+
+        public static Uri buildAssessmentsUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildAssessmentWithRoomNumber(String roomNumber) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(roomNumber).build();
+        }
+
+        public static String getRoomNumberFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+    }
+
+}
