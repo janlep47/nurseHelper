@@ -1,0 +1,13 @@
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">NurseHelper</string>
+    <string name="action_about">about</string>
+
+    <!-- Empty Residentlist Database -->
+    <string name="empty_residentlist">No Portfolio Information Available</string>
+    <string name="empty_residentlist_no_network">No resident information available. The network is not available to fetch resident data.</string>
+    <string name="empty_residentlist_server_down">No resident information available. The server is not returning data.</string>
+    <string name="empty_residentlist_server_error">No resident information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
+
+    <string name="a11y_roomNumber">Symbol: <xliff:g id="symbol">%1$s</xliff:g></string>
+
+</resources>
