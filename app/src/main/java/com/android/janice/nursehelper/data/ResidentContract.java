@@ -45,7 +45,7 @@ public class ResidentContract {
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
         // long name
-        public static final String COLUMN_PORTRAIT = "residentPicture";
+        public static final String COLUMN_PORTRAIT_FILEPATH = "residentPictureFile";
 
 
         public static Uri buildResidentsUri(long id) {

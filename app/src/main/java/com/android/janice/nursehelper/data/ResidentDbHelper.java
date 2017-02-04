@@ -20,11 +20,12 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.i("ResidentDbHelper", " YAY ... here in onCreate");
         final String SQL_CREATE_RESIDENTS_TABLE =
                 "CREATE TABLE "+ ResidentContract.ResidentEntry.TABLE_NAME +
                         "( " + ResidentContract.ResidentEntry.COLUMN_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER +" TEXT KEY, " +
-                        ResidentContract.ResidentEntry.COLUMN_PORTRAIT + " BLOB);";
+                        ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH + " TEXT);";
 
         db.execSQL(SQL_CREATE_RESIDENTS_TABLE);
 
