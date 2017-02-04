@@ -3,6 +3,7 @@
     <string name="action_about">about</string>
 
     <string name="title_activity_list">NurseHelper</string>
+    <string name="title_activity_medications">Medications</string>
 
     <!-- SyncAdapter related -->
     <string name="sync_account_type">nursehelper.com</string>
