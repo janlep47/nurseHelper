@@ -65,7 +65,7 @@ public class ResidentContract {
 
 
 
-    /* Inner class that defines the table contents of the Residents table */
+    /* Inner class that defines the table contents of the Medications table */
     public static final class MedicationEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -117,7 +117,7 @@ public class ResidentContract {
 
 
 
-    /* Inner class that defines the table contents of the Residents table */
+    /* Inner class that defines the table contents of the Assessments table */
     public static final class AssessmentEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -161,7 +161,7 @@ public class ResidentContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildAssessmentWithRoomNumber(String roomNumber) {
+        public static Uri buildAssessmentsWithRoomNumber(String roomNumber) {
             return CONTENT_URI.buildUpon()
                     .appendPath(roomNumber).build();
         }

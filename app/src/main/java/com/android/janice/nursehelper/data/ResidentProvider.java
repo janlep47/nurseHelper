@@ -129,7 +129,7 @@ public class ResidentProvider extends ContentProvider {
 
 
     private Cursor getMedicationsByPatient(Uri uri, String[] projection, String sortOrder) {
-        String roomNumber = ResidentContract.ResidentEntry.getRoomNumberFromUri(uri);
+        String roomNumber = ResidentContract.MedicationEntry.getRoomNumberFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedicationEntry.TABLE_NAME,
                 projection, sMedsByResidentSelection, new String[] {roomNumber}, null, null, sortOrder);
@@ -158,14 +158,16 @@ public class ResidentProvider extends ContentProvider {
                 break;
             }
             case MEDICATIONS_WITH_ROOM_NUMBER: {
+                String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsUri(_id);
+                if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
                 else throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
                 break;
             }
             case ASSESSMENTS_WITH_ROOM_NUMBER: {
+                String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.AssessmentEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsUri(_id);
+                if ( _id > 0) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
                 else throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
                 break;
             }
