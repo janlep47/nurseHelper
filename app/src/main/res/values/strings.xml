@@ -2,12 +2,27 @@
     <string name="app_name">NurseHelper</string>
     <string name="action_about">about</string>
 
+    <string name="title_activity_list">NurseHelper</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">nursehelper.com</string>
+    <string name="content_authority">com.android.janice.nursehelper</string>
+
     <!-- Empty Residentlist Database -->
-    <string name="empty_residentlist">No Portfolio Information Available</string>
+    <string name="empty_residentlist">No Resident Information Available</string>
     <string name="empty_residentlist_no_network">No resident information available. The network is not available to fetch resident data.</string>
     <string name="empty_residentlist_server_down">No resident information available. The server is not returning data.</string>
     <string name="empty_residentlist_server_error">No resident information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
 
     <string name="a11y_roomNumber">Symbol: <xliff:g id="symbol">%1$s</xliff:g></string>
 
+
+    <!-- Key name for storing internet-type status in SharedPreferences -->
+    <string name="pref_status_key" translatable="false">int-status</string>
+
+    <string name="about_dialog_title">About:</string>
+    <string name="about">about</string>
+    <string name="about_dialog_message">List of your current patients.\
+    To see MAR, care-plan, or to enter assessment data, click on the appropriate patient.
+    </string>
 </resources>
