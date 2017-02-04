@@ -7,6 +7,7 @@
     <dimen name="appbar_elevation">4dp</dimen>
 
     <dimen name="residentlist_text_size">32sp</dimen>
+    <dimen name="residentlist_subtext_size">24sp</dimen>
 
     <dimen name="list_item_extra_padding">0dp</dimen>
 

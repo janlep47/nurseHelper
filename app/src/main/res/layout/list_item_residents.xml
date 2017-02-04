@@ -43,5 +43,42 @@
                 android:adjustViewBounds="true"/>
         </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/list_item_medications_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="@dimen/residentlist_subtext_size"
+                android:textColor="@color/colorMeds"
+                android:text="Medications"/>
+
+            <TextView
+                android:id="@+id/list_item_assessment_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="@dimen/residentlist_subtext_size"
+                android:textColor="@color/colorAssessment"
+                android:text="Assessment"/>
+
+            <TextView
+                android:id="@+id/list_item_careplan_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+                android:textSize="@dimen/residentlist_subtext_size"
+                android:textColor="@color/colorCarePlan"
+                android:text="Care Plan"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 </FrameLayout>

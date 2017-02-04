@@ -61,7 +61,8 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     public interface Callback {
         // for when a list item has been selected.
-        public void onItemSelected(Uri dateUri, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
+        //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
+        public void onItemSelected(String roomNumber, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
     }
 
     public ResidentlistFragment() {
@@ -124,14 +125,21 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             @Override
             //public void onClick(Long date, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
             //    String locationSetting = Utility.getPreferredLocation(getActivity());
-            public void onClick(String roomNumber, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
-                //String locationSetting = Utility.getPreferredLocation(getActivity());
+            public void onClick(String roomNumber, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
+                ((Callback) getActivity())
+                        .onItemSelected(roomNumber,
+                                selectionType,
+                                vh
+                        );
+                /*
                 ((Callback) getActivity())
                         .onItemSelected(ResidentContract.ResidentEntry.buildResidentInfoWithRoomNumber(
                                 //locationSetting, date),
                                 roomNumber),
+                                selectionType,
                                 vh
                         );
+                        */
             }
         }, emptyView, mChoiceMode);
 
@@ -274,7 +282,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         mResidentlistAdapter.swapCursor(null);
     }
 
-    public void setInitialSelectedSymbol(String initialSelectedRoomNumber) {
+    public void setInitialSelectedRoomNumber(String initialSelectedRoomNumber) {
         mInitialSelectedRoomNumber = initialSelectedRoomNumber;
     }
 
