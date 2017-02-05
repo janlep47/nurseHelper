@@ -1,7 +1,16 @@
 package com.android.janice.nursehelper;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Log;
+
+import com.android.janice.nursehelper.data.ResidentContract;
+
+import java.io.IOException;
 
 /**
  * Created by janicerichards on 2/4/17.
@@ -45,5 +54,71 @@ public class MedicationItem {
         genericName = cursor.getString(COL_GENERIC_NAME);
         tradeName = cursor.getString(COL_TRADE_NAME);
 
+    }
+
+
+
+
+    public static void putInDummyData(Context context) {
+
+        String roomNumber = "200";
+        Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
+        uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
+
+        // Med #1
+        ContentValues medValues = new ContentValues();
+
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "lisinopril");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Zestril");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 30);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
+
+        Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
+
+
+        // Med #2
+        medValues = new ContentValues();
+
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metformin HCL");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Glucophage");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 300);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "TID");
+
+        medUri = context.getContentResolver().insert(uriMeds, medValues);
+
+        // Med #3
+        medValues = new ContentValues();
+
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metaprolol tartrate");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Lopressor");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 150);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
+
+        medUri = context.getContentResolver().insert(uriMeds, medValues);
+
+        // Med for ANOTHER PATIENT
+        medValues = new ContentValues();
+
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "201");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "aspirin");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Anacin");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 350);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
+        medUri = context.getContentResolver().insert(uriMeds, medValues);
     }
 }

@@ -1,7 +1,12 @@
 package com.android.janice.nursehelper;
 
 //import java.sql.Time;
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+
+import com.android.janice.nursehelper.data.ResidentContract;
 
 import java.util.Date;
 
@@ -81,6 +86,44 @@ public class AssessmentItem {
         // formate the sql Time type into util Date type:  (later)
         //long time = cursor.getLong(COL_DATE_TIME);
         //dateTime = Date.
+    }
+
+    public static void putInDummyData(Context context) {
+        // Add some (past) assessment data for room 200
+        String roomNumber = "200";
+        Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(roomNumber).build();
+
+        // Assessment #1
+        ContentValues aValues = new ContentValues();
+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER, roomNumber);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, "140/90");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, "98.5 F");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, 84);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 15);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Mild edema around R ankle. \n"+
+                "Pain 2 out of 10.");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, "QD");
+
+        Uri medUri = context.getContentResolver().insert(uri, aValues);
+
+
+        // Med #2
+        aValues = new ContentValues();
+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER, roomNumber);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, "145/92");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, "98.7 F");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, 92);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 17);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Mild edema around R ankle. \n"+
+                "Pain 3 out of 10.");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, "QD");
+
+        medUri = context.getContentResolver().insert(uri, aValues);
     }
 
 }

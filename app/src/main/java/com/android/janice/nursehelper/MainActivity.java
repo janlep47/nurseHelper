@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
                 .findFragmentById(R.id.fragment_residentlist));
 
         //ResidentItem.putInDummyData(this);
+        //MedicationItem.putInDummyData(this);
+        //AssessmentItem.putInDummyData(this);
 
         //ResidentSyncAdapter.initializeSyncAdapter(this);
     }

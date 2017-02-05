@@ -47,6 +47,7 @@ public class ResidentItem {
     }
 */
 
+
     public static void putInDummyData(Context context) {
         String[] files = null;
         AssetManager assetManager = context.getAssets();
@@ -75,91 +76,7 @@ public class ResidentItem {
             residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, fileName);
             Log.i("ResidentItem", "   ok room#="+roomNumber+"  filename = "+fileName);
             Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
-
-            // JUST DO FOR FIRST PT FOR NOW (TESTING...)
-            if (i == 0) {
-
-                Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
-                uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
-
-                // Med #1
-                ContentValues medValues = new ContentValues();
-
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "lisinopril");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Zestril");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 30);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
-
-                Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
-
-
-                // Med #2
-                medValues = new ContentValues();
-
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metformin HCL");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Glucophage");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 300);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "TID");
-
-                medUri = context.getContentResolver().insert(uriMeds, medValues);
-
-                // Med #3
-                medValues = new ContentValues();
-
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metaprolol tartrate");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Lopressor");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 150);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
-
-                medUri = context.getContentResolver().insert(uriMeds, medValues);
-
-                // Med for ANOTHER PATIENT
-                medValues = new ContentValues();
-
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, 201);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "aspirin");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Anacin");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 350);
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
-                medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
-
-                medUri = context.getContentResolver().insert(uriMeds, medValues);
-            }
-
-            /*
-            try {
-                InputStream input = assetManager.open(imgName);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                byte[] bytes;
-                reader.read
-            } catch (IOException e) {
-                Log.e("RESIDENTITEM"," Can't open asset file: "+imgName);
-            }
-            */
         }
-        /*
-        InputStream is = getAssets().open("contacts.csv");
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(is);
-        HttpContext localContext = new BasicHttpContext();
-        HttpResponse response =httpClient.execute(httpGet, localContext);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-*/
-
     }
 
 }
