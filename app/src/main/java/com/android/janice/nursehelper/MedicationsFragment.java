@@ -33,10 +33,6 @@ public class MedicationsFragment  extends ListFragment {
     String mRoomNumber;
 
     //boolean mAddProblem = false;
-    public final static int COL_ROOM_NUMBER = 0;
-    public final static int COL_GENERIC_NAME = 1;
-    public final static int COL_TRADE_NAME = 2;
-
 
     private static final String LOG_TAG = MedicationsFragment.class.getSimpleName();
     AppCompatActivity mActivity;
@@ -73,7 +69,6 @@ public class MedicationsFragment  extends ListFragment {
         activity.supportStartPostponedEnterTransition();
 
 
-
         ListView mListView = (ListView) root.findViewById(android.R.id.list);
         //mProblemText = (TextView) root.findViewById(R.id.add_stock_problem);
 
@@ -81,10 +76,7 @@ public class MedicationsFragment  extends ListFragment {
         mAdapter = new MedicationsAdapter(mContext,android.R.layout.simple_list_item_2, mMedList);
         mListView.setAdapter(mAdapter);
 
-
         new GetMedicationsListTask().execute(mRoomNumber);
-
-
 
         return root;
     }
@@ -117,10 +109,16 @@ public class MedicationsFragment  extends ListFragment {
             Cursor cursor = getContext().getContentResolver().query(uri,
                     new String[]{ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER,
                             ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC,
-                            ResidentContract.MedicationEntry.COLUMN_NAME_TRADE},
+                            ResidentContract.MedicationEntry.COLUMN_NAME_TRADE,
+                            ResidentContract.MedicationEntry.COLUMN_DOSAGE,
+                            ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS,
+                            ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE,
+                            ResidentContract.MedicationEntry.COLUMN_FREQUENCY,
+                            ResidentContract.MedicationEntry.COLUMN_TIMES},
                     null, null, ResidentContract.MedicationEntry.COLUMN_NAME_TRADE + " ASC");
             return cursor;
         }
+
 
         @Override
         protected void onPreExecute() {
@@ -132,13 +130,8 @@ public class MedicationsFragment  extends ListFragment {
         @Override
         protected void onPostExecute(Cursor result) {
             if (result != null && result.moveToFirst()) {
-                String roomNumber = result.getString(COL_ROOM_NUMBER);
                 do {
-                    String genericName = result.getString(COL_GENERIC_NAME);
-                    String tradeName = result.getString(COL_TRADE_NAME);
-                    MedicationItem item = new MedicationItem();
-                    item.setGenericName(genericName);
-                    item.setTradeName(tradeName);
+                    MedicationItem item = new MedicationItem(result);
                     mMedList.add(item);
                 } while (result.moveToNext());
             }

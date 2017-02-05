@@ -29,19 +29,19 @@ public class MedicationsAdapter extends ArrayAdapter<MedicationItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        StockHolder holder = null;
+        MedicationsHolder holder = null;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
-            holder = new StockHolder();
+            holder = new MedicationsHolder();
             holder.txt1 = (TextView)row.findViewById(android.R.id.text1);
             holder.txt2 = (TextView)row.findViewById(android.R.id.text2);
 
             row.setTag(holder);
         } else {
-            holder = (StockHolder)row.getTag();
+            holder = (MedicationsHolder)row.getTag();
         }
 
         MedicationItem med = data.get(position);
@@ -73,7 +73,7 @@ public class MedicationsAdapter extends ArrayAdapter<MedicationItem> {
     }
 */
 
-    static class StockHolder {
+    static class MedicationsHolder {
         TextView txt1, txt2;
     }
 }
