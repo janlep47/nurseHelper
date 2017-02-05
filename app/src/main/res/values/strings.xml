@@ -4,6 +4,7 @@
 
     <string name="title_activity_list">NurseHelper</string>
     <string name="title_activity_medications">Medications</string>
+    <string name="title_activity_assessments">Assessments</string>
 
     <!-- SyncAdapter related -->
     <string name="sync_account_type">nursehelper.com</string>

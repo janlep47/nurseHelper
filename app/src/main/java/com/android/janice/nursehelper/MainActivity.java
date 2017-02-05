@@ -76,11 +76,12 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
                 intent = new Intent(this, MedicationsActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-                //startActivity(new Intent(this, MedicationsActivity.class));
                 break;
-            //case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:
-            //    startActivity(new Intent(this, MedicationsActivity.class));
-            //    break;
+            case ResidentlistAdapter.ResidentlistAdapterViewHolder.ASSESSMENT_SELECTED:
+                intent = new Intent(this, AssessmentActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
             //case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:
             //    startActivity(new Intent(this, MedicationsActivity.class));
             //    break;
@@ -91,35 +92,4 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
         //        .setData(contentUri);
     }
 
-
-/*
-    @Override
-    public void onItemSelected(Uri contentUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
-        Log.i(LOG_TAG, " .. ok, this item selected: "+contentUri.toString());
-        if (selectionType == ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED)
-            Log.i(LOG_TAG, " ... for MEDICATIONS ");
-        else if (selectionType == ResidentlistAdapter.ResidentlistAdapterViewHolder.ASSESSMENT_SELECTED)
-            Log.i(LOG_TAG, " ... for ASSESSMENTS ");
-        else if (selectionType == ResidentlistAdapter.ResidentlistAdapterViewHolder.CARE_PLAN_SELECTED)
-            Log.i(LOG_TAG, " ... for CAREPLAN ");
-
-        //Intent intent = new Intent(this, DetailActivity.class)
-        //        .setData(contentUri);
-
-        //ActivityCompat.startActivity(this, intent, null);
-
-    }
-    */
-
-    public void handleMedications(View view) {
-        Log.e(LOG_TAG, "  handleMedications selected for ... ");
-    }
-
-    public void doAssessment(View view) {
-        Log.e(LOG_TAG, "  doAssessment selected for ... ");
-    }
-
-    public void showCarePlan(View view) {
-        Log.e(LOG_TAG, "  showCarePlan selected for ... ");
-    }
 }
