@@ -10,7 +10,7 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/4/17.
  */
 
-public class MedicationsActivity  extends AppCompatActivity {
+public class MedicationsActivity  extends AppCompatActivity  implements MedicationsFragment.Callback {
 
     MedicationsFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
@@ -29,12 +29,18 @@ public class MedicationsActivity  extends AppCompatActivity {
             String roomNumber = getIntent().getStringExtra("roomNumber");
             arguments.putString("roomNumber", roomNumber);
 
+
             mFragment = new MedicationsFragment();
             mFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.medications_container, mFragment)
                     .commit();
+
+            //mFragment = ((MedicationsFragment)getSupportFragmentManager()
+            //        .findFragmentById(R.id.fragment_medications));
+            //mFragment.setArguments(arguments);
+
             // animation mode
             supportPostponeEnterTransition();
         }
@@ -69,5 +75,18 @@ public class MedicationsActivity  extends AppCompatActivity {
         */
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    @Override
+    public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh) {
+        //Intent intent;
+        //Bundle bundle = new Bundle();
+        //bundle.putString("roomNumber",roomNumber);
+        //intent = new Intent(this, DisplayMedicationActivity.class);
+        //intent.putExtras(bundle);
+        //startActivity(intent);
+    }
+
 
 }

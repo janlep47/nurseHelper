@@ -28,6 +28,8 @@ public class MedicationItem {
     public final static int COL_GENERIC_NAME = 1;
     public final static int COL_TRADE_NAME = 2;
 
+    public final static String TAG = MedicationItem.class.getSimpleName();
+
 
     public String getRoomNumber() { return roomNumber; }
 
@@ -121,4 +123,24 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
         medUri = context.getContentResolver().insert(uriMeds, medValues);
     }
+
+    public static void medGiven(String roomNumber, String genericName, float dosage) {
+        Log.e(TAG,"  Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+    }
+
+
+    public static void askUndoMedGiven(String roomNumber, String genericName, float dosage) {
+        Log.e(TAG,"  UNDO Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+    }
+
+
+    public static void medRefused(String roomNumber, String genericName, float dosage) {
+        Log.e(TAG,"  Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+    }
+
+
+    public static void askUndoMedRefused(String roomNumber, String genericName, float dosage) {
+        Log.e(TAG,"  UNDO Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+    }
+
 }
