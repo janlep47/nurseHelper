@@ -16,13 +16,15 @@ android:paddingEnd="@dimen/list_item_extra_padding">
     android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
     android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
     android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
-    android:orientation="horizontal">
+    android:orientation="vertical">
+    <!-- above, was horizontal -->
 
     <!-- COLUMN 1  MEDICATION INFO: -->
+    <!-- android:layout_width="0dp" -->
+    <!-- android:layout_weight="2" -->
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_width="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -39,10 +41,11 @@ android:paddingEnd="@dimen/list_item_extra_padding">
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textSize="@dimen/residentlist_subtext_size"/>
 
+        <!-- android:layout_width="0dp" -->
+        <!-- android:layout_weight="2" -->
         <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_width="match_parent"
             android:orientation="horizontal">
 
             <TextView
@@ -87,8 +90,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
     <!-- COLUMN 2: DATE/TIME LAST GIVEN -->
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_width="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -124,8 +126,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
     <!-- COLUMN 3: When med is DUE, or if PRN, when ALLOWABLE to give -->
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_width="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -144,8 +145,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
     <!-- COLUMN 4: Checkbox for GIVE -->
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_width="match_parent"
         android:orientation="horizontal">
 
         <TextView
@@ -172,8 +172,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
     <!-- COLUMN 5: Checkbox for REFUSE -->
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_width="match_parent"
         android:orientation="horizontal">
 
         <TextView
@@ -195,6 +194,14 @@ android:paddingEnd="@dimen/list_item_extra_padding">
 
     </LinearLayout>
 
+
+    <!-- android:layout_height="1dp" -->
+    <!-- android:background="@android:color/darker_gray" -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider"/>
 
 
 </LinearLayout>
