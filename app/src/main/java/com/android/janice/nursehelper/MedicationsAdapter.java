@@ -72,6 +72,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             mRefuseBox = (CheckBox) view.findViewById(R.id.refuse_med_checkbox);
 
             mGiveBox.setOnCheckedChangeListener(this);
+            mRefuseBox.setOnCheckedChangeListener(this);
             view.setOnClickListener(this);
         }
 
