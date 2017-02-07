@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
                 startActivity(intent);
                 break;
             case ResidentlistAdapter.ResidentlistAdapterViewHolder.ASSESSMENT_SELECTED:
-                intent = new Intent(this, AssessmentActivity.class);
+                intent = new Intent(this, PastAssessmentsActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;

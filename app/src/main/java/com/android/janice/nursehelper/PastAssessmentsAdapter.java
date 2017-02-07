@@ -14,12 +14,12 @@ import java.util.List;
  * Created by janicerichards on 2/5/17.
  */
 
-public class AssessmentAdapter extends ArrayAdapter<AssessmentItem> {
+public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
     Context context;
     int layoutResourceId;
     List<AssessmentItem> data;
 
-    public AssessmentAdapter(Context context, int layoutResourceId, List<AssessmentItem> data) {
+    public PastAssessmentsAdapter(Context context, int layoutResourceId, List<AssessmentItem> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -29,19 +29,19 @@ public class AssessmentAdapter extends ArrayAdapter<AssessmentItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        AssessmentAdapter.AssessmentHolder holder = null;
+        PastAssessmentsAdapter.AssessmentHolder holder = null;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
-            holder = new AssessmentAdapter.AssessmentHolder();
+            holder = new PastAssessmentsAdapter.AssessmentHolder();
             holder.txt1 = (TextView)row.findViewById(android.R.id.text1);
             holder.txt2 = (TextView)row.findViewById(android.R.id.text2);
 
             row.setTag(holder);
         } else {
-            holder = (AssessmentAdapter.AssessmentHolder)row.getTag();
+            holder = (PastAssessmentsAdapter.AssessmentHolder)row.getTag();
         }
 
         // FIX LATER

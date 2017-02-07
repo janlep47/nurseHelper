@@ -22,8 +22,8 @@ import java.util.List;
  * Created by janicerichards on 2/5/17.
  */
 
-public class AssessmentFragment  extends ListFragment {
-    AssessmentAdapter mAdapter;
+public class PastAssessmentsFragment  extends ListFragment {
+    PastAssessmentsAdapter mAdapter;
     View mLoadingPanel;
     Context mContext;
     List<AssessmentItem> mAssessmentList = new ArrayList<>();
@@ -32,7 +32,7 @@ public class AssessmentFragment  extends ListFragment {
     String mRoomNumber;
 
 
-    private static final String LOG_TAG = AssessmentFragment.class.getSimpleName();
+    private static final String LOG_TAG = PastAssessmentsFragment.class.getSimpleName();
     AppCompatActivity mActivity;
 
     @Override
@@ -56,7 +56,7 @@ public class AssessmentFragment  extends ListFragment {
             mRoomNumber = arguments.getString("roomNumber");
         }
 
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_assessments, container, false);
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_past_assessments, container, false);
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         mActivity = activity;
@@ -72,11 +72,11 @@ public class AssessmentFragment  extends ListFragment {
         //mProblemText = (TextView) root.findViewById(R.id.add_stock_problem);
 
         mContext = getContext();
-        mAdapter = new AssessmentAdapter(mContext,android.R.layout.simple_list_item_2, mAssessmentList);
+        mAdapter = new PastAssessmentsAdapter(mContext,android.R.layout.simple_list_item_2, mAssessmentList);
         mListView.setAdapter(mAdapter);
 
 
-        new AssessmentFragment.GetAssessmentListTask().execute(mRoomNumber);
+        new PastAssessmentsFragment.GetAssessmentListTask().execute(mRoomNumber);
 
 
 

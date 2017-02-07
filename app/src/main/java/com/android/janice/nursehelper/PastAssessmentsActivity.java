@@ -9,16 +9,16 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/5/17.
  */
 
-public class AssessmentActivity extends AppCompatActivity {
+public class PastAssessmentsActivity extends AppCompatActivity {
 
-    AssessmentFragment mFragment;
-    private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
+    PastAssessmentsFragment mFragment;
+    private static final String LOG_TAG = PastAssessmentsActivity.class.getSimpleName();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assessment);
+        setContentView(R.layout.activity_past_assessments);
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -28,7 +28,7 @@ public class AssessmentActivity extends AppCompatActivity {
             String roomNumber = getIntent().getStringExtra("roomNumber");
             arguments.putString("roomNumber", roomNumber);
 
-            mFragment = new AssessmentFragment();
+            mFragment = new PastAssessmentsFragment();
             mFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
