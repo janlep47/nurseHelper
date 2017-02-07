@@ -41,6 +41,26 @@
                 android:value="com.android.janice.nursehelper.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".AssessmentActivity"
+            android:label="@string/title_activity_assessments"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.janice.nursehelper.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".PastAssessmentsActivity"
+            android:label="@string/title_activity_past_assessments"
+            android:parentActivityName=".AssessmentActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.janice.nursehelper.AssessmentActivity" />
+        </activity>
+
         <provider
             android:authorities="@string/content_authority"
             android:name=".data.ResidentProvider"
