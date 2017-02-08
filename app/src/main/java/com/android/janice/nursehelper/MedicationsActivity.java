@@ -3,6 +3,7 @@ package com.android.janice.nursehelper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -51,7 +52,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.medsedit, menu);
+        getMenuInflater().inflate(R.menu.medslist, menu);
         return true;
     }
 
@@ -63,17 +64,9 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-/*
-        if (id == R.id.action_add) {
-            startActivity(new Intent(this, AddMedicationActivity.class));
-            mFragment.dataUpdated();
-            return true;
-        } else if (id == R.id.action_delete) {
-            startActivity(new Intent(this, DeleteMedicationActivity.class));
-            mFragment.dataUpdated();
-            return true;
+        if (id == R.id.list_past_medications) {
+            Log.i(LOG_TAG,"chose 'list past meds'");
         }
-        */
         return super.onOptionsItemSelected(item);
     }
 

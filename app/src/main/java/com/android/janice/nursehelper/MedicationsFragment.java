@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,12 +13,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,9 +29,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
 /**
@@ -127,7 +133,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         if (arguments != null) {
             mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
-            Log.e(LOG_TAG, "mPortraitFilePath is "+mPortraitFilePath);
         }
 
 
@@ -155,15 +160,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                         .onItemSelected(roomNumber,
                                 vh
                         );
-                /*
-                ((Callback) getActivity())
-                        .onItemSelected(ResidentContract.ResidentEntry.buildResidentInfoWithRoomNumber(
-                                //locationSetting, date),
-                                roomNumber),
-                                selectionType,
-                                vh
-                        );
-                        */
             }
         }, emptyView, mChoiceMode, mRoomNumber);
 
@@ -180,6 +176,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
         return rootView;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -267,23 +264,31 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
 
                         AppCompatActivity activity = (AppCompatActivity) getActivity();
-                        Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
 
                         // We need to start the enter transition after the data has loaded
                         //if ( mTransitionAnimation ) {
                         activity.supportStartPostponedEnterTransition();
-/*
-                        if (null != toolbarView) {
-                            activity.setSupportActionBar(toolbarView);
-                            //getActivity().getSupportActionBar().setTitle(mSymbol);
-                            toolbarView.setTitle(R.string.title_activity_list);
+                        ActionBar actionBar = activity.getSupportActionBar();
+                        actionBar.setSubtitle("room: "+mRoomNumber);
 
-                            //activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                            activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
-                            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        }
-                        */
-                        //}
+                        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                                | ActionBar.DISPLAY_SHOW_CUSTOM);
+                        ImageView imageView = new ImageView(actionBar.getThemedContext());
+                        imageView.setScaleType(ImageView.ScaleType.CENTER);
+                        Picasso.with(getActivity())
+                                .load("file:///android_asset/"+mPortraitFilePath)
+                                .placeholder(R.drawable.blank_portrait)
+                                .noFade().resize(actionBar.getHeight(), actionBar.getHeight())
+                                .error(R.drawable.blank_portrait)
+                                .into(imageView);
+
+                        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                                ActionBar.LayoutParams.WRAP_CONTENT,
+                                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                                | Gravity.CENTER_VERTICAL);
+                        layoutParams.rightMargin = 40;
+                        imageView.setLayoutParams(layoutParams);
+                        actionBar.setCustomView(imageView);
 
                         return true;
                     }
