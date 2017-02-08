@@ -26,7 +26,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
     final private View mEmptyView;
     final private ItemChoiceManager mICM;
 
-    private static int THUMBNAIL_SIZE =150;
+    public final static int THUMBNAIL_SIZE =150;
 
     public static final String LOG_TAG = ResidentlistAdapter.class.getSimpleName();
     /**
