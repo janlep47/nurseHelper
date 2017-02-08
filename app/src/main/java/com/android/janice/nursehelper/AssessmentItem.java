@@ -107,7 +107,7 @@ public class AssessmentItem {
                 "Pain 2 out of 10.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, "QD");
 
-        Uri medUri = context.getContentResolver().insert(uri, aValues);
+        Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
 
 
         // Med #2
@@ -123,7 +123,28 @@ public class AssessmentItem {
                 "Pain 3 out of 10.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, "QD");
 
-        medUri = context.getContentResolver().insert(uri, aValues);
+        assessmentUri = context.getContentResolver().insert(uri, aValues);
+    }
+
+    // Later, format the values...
+    public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
+                                      int pulse, int rr, String edema, String findings) {
+        Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(roomNumber).build();
+
+        ContentValues aValues = new ContentValues();
+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER, roomNumber);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, String.valueOf(systolicBP)+"/"+
+                String.valueOf(diastolicBP));
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, String.valueOf(temp));
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, String.valueOf(pulse));
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, String.valueOf(rr));
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, edema);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, findings);
+        //aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, timestamp);
+
+        Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
     }
 
 }

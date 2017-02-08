@@ -86,7 +86,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             if (button == mGiveBox) {
                 if (isChecked) {
                     // Medication given for the current med
-                    MedicationItem.medGiven(mRoomNumber, genericName, dosage, dosageUnits, true);
+                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, true);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "give" record!!
@@ -95,7 +95,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             } else if (button == mRefuseBox) {
                 if (isChecked) {
                     // Medication refused for the current med
-                    MedicationItem.medGiven(mRoomNumber, genericName, dosage, dosageUnits, false);
+                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, false);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "refuse" record!!

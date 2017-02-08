@@ -125,8 +125,12 @@ public class MedicationItem {
     }
 
     // if "given" false, med was refused.
-    public static void medGiven(String roomNumber, String genericName, float dosage, String dosageUnits, boolean given) {
+    public static void medGiven(Context context, String roomNumber, String genericName, float dosage,
+                                String dosageUnits, boolean given) {
         Log.e(TAG,"  Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+        Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
+        uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
+
         ContentValues medGivenValues = new ContentValues();
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC, genericName);
@@ -134,6 +138,8 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS, dosageUnits);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given);
         //medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, timestamp);
+
+        Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
     }
 
 
