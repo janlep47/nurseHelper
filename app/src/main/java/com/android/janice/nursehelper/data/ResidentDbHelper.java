@@ -54,6 +54,17 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.AssessmentEntry.COLUMN_TIME + " TIME);";  // MAY NOT BE RIGHT!!!!
 
         db.execSQL(SQL_CREATE_ASSESSMENTS_TABLE);
+
+        final String SQL_CREATE_MEDS_GIVEN_TABLE =
+                "CREATE TABLE "+ ResidentContract.MedsGivenEntry.TABLE_NAME +
+                        "( " + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " TEXT KEY, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " TEXT, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_DOSAGE + " REAL, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS + " INTEGER, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_GIVEN + " BOOLEAN, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " TIMESTAMP);";  // MAY NOT BE RIGHT!!!!
+
+        db.execSQL(SQL_CREATE_MEDS_GIVEN_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
@@ -61,6 +72,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ResidentContract.ResidentEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ResidentContract.MedicationEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ResidentContract.AssessmentEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ResidentContract.MedsGivenEntry.TABLE_NAME);
         onCreate(db);
         return;
     }

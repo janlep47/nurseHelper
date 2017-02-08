@@ -23,6 +23,7 @@ public class ResidentProvider extends ContentProvider {
     static final int RESIDENTS = 100;              // PATH  residents path (DIR)
     static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
     static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
+    static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 401;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
 
     public static final String LOG_TAG = ResidentProvider.class.getSimpleName();
 
@@ -36,6 +37,12 @@ public class ResidentProvider extends ContentProvider {
     private static final String sRecentAssessmentByResidentSelection =
             ResidentContract.AssessmentEntry.TABLE_NAME+
                     "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ? ";
+
+    private static final String sMedsGivenByResidentAndMedSelection =
+            ResidentContract.MedsGivenEntry.TABLE_NAME+
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? AND "+
+                    ResidentContract.MedsGivenEntry.TABLE_NAME+
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ? ";
 
     static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
@@ -51,6 +58,7 @@ public class ResidentProvider extends ContentProvider {
         matcher.addURI(authority, ResidentContract.PATH_RESIDENTS, RESIDENTS);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*", MEDICATIONS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*", ASSESSMENTS_WITH_ROOM_NUMBER);
+        matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*/*", MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED);
         return matcher;
     }
 
@@ -73,6 +81,8 @@ public class ResidentProvider extends ContentProvider {
                 return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 return ResidentContract.AssessmentEntry.CONTENT_ITEM_TYPE;   // ITEM
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
+                return ResidentContract.MedsGivenEntry.CONTENT_ITEM_TYPE;    // ITEM
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -120,6 +130,13 @@ public class ResidentProvider extends ContentProvider {
                 break;
             }
 
+            // "medsGiven/*/*"
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
+            {
+                retCursor = getMedsGivenByPtAndMedname(projection, sortOrder, selectionArgs);
+                break;
+            }
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -141,6 +158,12 @@ public class ResidentProvider extends ContentProvider {
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.AssessmentEntry.TABLE_NAME,
                 projection, sRecentAssessmentByResidentSelection, new String[] {roomNumber}, null, null, sortOrder);
+    }
+
+    private Cursor getMedsGivenByPtAndMedname(String[] projection, String sortOrder, String[] selectionArgs) {
+        return mOpenHelper.getReadableDatabase().query(ResidentContract.MedsGivenEntry.TABLE_NAME,
+                projection, sMedsGivenByResidentAndMedSelection, selectionArgs,
+                null, null, sortOrder);
     }
 
 

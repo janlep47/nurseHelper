@@ -22,6 +22,7 @@ public class ResidentContract {
     public static final String PATH_RESIDENTS = "residents";
     public static final String PATH_MEDS = "medications";
     public static final String PATH_ASSESSMENTS = "assessments";
+    public static final String PATH_MEDS_GIVEN = "medsGiven";
 
 
     /* Inner class that defines the table contents of the Residents table */
@@ -171,5 +172,56 @@ public class ResidentContract {
         }
 
     }
+
+
+
+
+    /* Inner class that defines the table contents of the Medications table */
+    public static final class MedsGivenEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEDS).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS;
+
+        public static final String TABLE_NAME = "medsGiven";
+
+
+        // PRIMARY KEY
+        public static final String COLUMN_ROOM_NUMBER = "roomNumber";
+
+        // generic medication name (secondary key)
+        public static final String COLUMN_NAME_GENERIC = "medGenericName";
+
+        // amount of med to give (float value)
+        public static final String COLUMN_DOSAGE = "dosage";
+
+        public static final String COLUMN_DOSAGE_UNITS = "dosageUnits";
+
+        public static final String COLUMN_GIVEN = "givenOrRefused";
+
+        public static final String COLUMN_TIME_GIVEN = "timeGiven";
+
+
+        public static Uri buildMedsWithRoomNumber(String roomNumber) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(roomNumber).build();
+        }
+
+        //SELECT * FROM [table] WHERE [column] = [value]; (Selectors: <, >, !=; combine multiple selectors with AND, OR)
+        public static Uri buildMedsWithRoomNoAndMedName(String roomNumber, String genericName) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(roomNumber).appendPath(genericName).build();
+        }
+
+        public static String getRoomNumberFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+    }
+
 
 }

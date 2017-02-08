@@ -82,10 +82,11 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             mCursor.moveToPosition(adapterPosition);
             String genericName = mCursor.getString(MedicationsFragment.COL_GENERIC);
             float dosage = mCursor.getFloat(MedicationsFragment.COL_DOSAGE);
+            String dosageUnits = mCursor.getString(MedicationsFragment.COL_DOSAGE_UNITS);
             if (button == mGiveBox) {
                 if (isChecked) {
                     // Medication given for the current med
-                    MedicationItem.medGiven(mRoomNumber, genericName, dosage);
+                    MedicationItem.medGiven(mRoomNumber, genericName, dosage, dosageUnits, true);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "give" record!!
@@ -94,7 +95,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             } else if (button == mRefuseBox) {
                 if (isChecked) {
                     // Medication refused for the current med
-                    MedicationItem.medRefused(mRoomNumber, genericName, dosage);
+                    MedicationItem.medGiven(mRoomNumber, genericName, dosage, dosageUnits, false);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "refuse" record!!
