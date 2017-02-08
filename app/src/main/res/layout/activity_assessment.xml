@@ -3,5 +3,5 @@
     android:id="@+id/assessment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.janice.nursehelper.PastAssessmentsActivity"
+    tools:context="com.android.janice.nursehelper.AssessmentActivity"
     tools:ignore="MergeRootFrame" />

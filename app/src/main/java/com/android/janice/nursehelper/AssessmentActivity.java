@@ -11,7 +11,7 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/4/17.
  */
 
-public class AssessmentActivity  extends AppCompatActivity  implements AssessmentFragment.Callback {
+public class AssessmentActivity  extends AppCompatActivity {
 
     AssessmentFragment mFragment;
     private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
@@ -72,7 +72,7 @@ public class AssessmentActivity  extends AppCompatActivity  implements Assessmen
     }
 
 
-
+/*
     @Override
     public void onItemSelected(String roomNumber, AssessmentAdapter.AssessmentAdapterViewHolder vh) {
         //Intent intent;
@@ -82,6 +82,6 @@ public class AssessmentActivity  extends AppCompatActivity  implements Assessmen
         //intent.putExtras(bundle);
         //startActivity(intent);
     }
-
+*/
 
 }
