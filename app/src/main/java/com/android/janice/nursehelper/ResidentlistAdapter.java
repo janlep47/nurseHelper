@@ -62,6 +62,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             int roomNumberColumnIndex = mCursor.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);
+            int portraitIndex = mCursor.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH);
 
             int selectionType = PATIENT_SELECTED;
 
@@ -70,13 +71,15 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
             else if (v == mCarePlan) selectionType = CARE_PLAN_SELECTED;
 
 
-            mClickHandler.onClick(mCursor.getString(roomNumberColumnIndex), selectionType, this);
+            mClickHandler.onClick(mCursor.getString(roomNumberColumnIndex),
+                    mCursor.getString(portraitIndex),
+                    selectionType, this);
             mICM.onClick(this);
         }
     }
 
     public static interface ResidentlistAdapterOnClickHandler {
-        void onClick(String roomNumber, int selectionType, ResidentlistAdapterViewHolder vh);
+        void onClick(String roomNumber, String portraitFilePath, int selectionType, ResidentlistAdapterViewHolder vh);
     }
 
     public ResidentlistAdapter(Context context, ResidentlistAdapterOnClickHandler dh, View emptyView, int choiceMode) {

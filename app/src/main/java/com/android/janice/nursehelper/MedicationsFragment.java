@@ -44,6 +44,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     private boolean mHoldForTransition;
 
     String mRoomNumber;
+    String mPortraitFilePath;
 
 
     private String mInitialSelectedRoomNumber = "";
@@ -124,8 +125,9 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mRoomNumber = arguments.getString("roomNumber");
-            Log.e(LOG_TAG, "room# is "+mRoomNumber);
+            mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            Log.e(LOG_TAG, "mPortraitFilePath is "+mPortraitFilePath);
         }
 
 

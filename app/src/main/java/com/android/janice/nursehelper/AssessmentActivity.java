@@ -10,16 +10,16 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/4/17.
  */
 
-public class MedicationsActivity  extends AppCompatActivity  implements MedicationsFragment.Callback {
+public class AssessmentActivity  extends AppCompatActivity  implements AssessmentFragment.Callback {
 
-    MedicationsFragment mFragment;
-    private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
+    AssessmentFragment mFragment;
+    private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meds);
+        setContentView(R.layout.activity_assessment);
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -31,15 +31,16 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
             arguments.putString(MainActivity.ITEM_ROOM_NUMBER, roomNumber);
             arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, portraitFilePath);
 
-            mFragment = new MedicationsFragment();
+
+            mFragment = new AssessmentFragment();
             mFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.medications_container, mFragment)
+                    .add(R.id.assessment_container, mFragment)
                     .commit();
 
-            //mFragment = ((MedicationsFragment)getSupportFragmentManager()
-            //        .findFragmentById(R.id.fragment_medications));
+            //mFragment = ((AssessmentFragment)getSupportFragmentManager()
+            //        .findFragmentById(R.id.fragment_assessment));
             //mFragment.setArguments(arguments);
 
             // animation mode
@@ -80,7 +81,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
 
 
     @Override
-    public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh) {
+    public void onItemSelected(String roomNumber, AssessmentAdapter.AssessmentAdapterViewHolder vh) {
         //Intent intent;
         //Bundle bundle = new Bundle();
         //bundle.putString("roomNumber",roomNumber);

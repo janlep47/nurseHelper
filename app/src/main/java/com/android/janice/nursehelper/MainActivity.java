@@ -16,6 +16,9 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
 
     private ResidentlistFragment mFragment;
 
+    public static final String ITEM_ROOM_NUMBER = "roomNumber";
+    public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilePath";
+
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -69,10 +72,13 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
 
 
     @Override
-    public void onItemSelected(String roomNumber, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
+    public void onItemSelected(String roomNumber, String portraitFilePath,
+                               int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
         Intent intent;
         Bundle bundle = new Bundle();
-        bundle.putString("roomNumber",roomNumber);
+        bundle.putString(ITEM_ROOM_NUMBER,roomNumber);
+        bundle.putString(ITEM_PORTRAIT_FILEPATH,portraitFilePath);
+
         switch (selectionType) {
             case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:
                 intent = new Intent(this, MedicationsActivity.class);
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
                 startActivity(intent);
                 break;
             case ResidentlistAdapter.ResidentlistAdapterViewHolder.ASSESSMENT_SELECTED:
-                intent = new Intent(this, PastAssessmentsActivity.class);
+                intent = new Intent(this, AssessmentActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;

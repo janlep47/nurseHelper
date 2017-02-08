@@ -35,38 +35,54 @@ import com.android.janice.nursehelper.data.ResidentContract;
  * Created by janicerichards on 2/2/17.
  */
 
-public class ResidentlistFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String LOG_TAG = ResidentlistFragment.class.getSimpleName();
-    private ResidentlistAdapter mResidentlistAdapter;
+public class AssessmentFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
+    public static final String LOG_TAG = AssessmentFragment.class.getSimpleName();
+    private AssessmentAdapter mAssessmentAdapter;
     private RecyclerView mRecyclerView;
     private boolean mAutoSelectView;
     private int mChoiceMode;
     private boolean mHoldForTransition;
+
+    String mRoomNumber;
+    String mPortraitFilePath;
 
 
     private String mInitialSelectedRoomNumber = "";
 
     private static final String SELECTED_KEY = "selected_position";
 
-    private static final int RESIDENTLIST_LOADER = 0;
+    private static final int ASSESSMENT_LOADER = 0;
 
-    private static final String[] RESIDENTLIST_COLUMNS = {
-            ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER,
-            ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH};
+    private static final String[] ASSESSMENT_COLUMNS = {
+            ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
+            ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE,
+            ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE,
+            ResidentContract.AssessmentEntry.COLUMN_PULSE,
+            ResidentContract.AssessmentEntry.COLUMN_RR,
+            ResidentContract.AssessmentEntry.COLUMN_EDEMA,
+            ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS,
+            ResidentContract.AssessmentEntry.COLUMN_TIME
+};
+
 
     // These indices are tied to above.
     static final int COL_ROOM_NUMBER = 0;
-    static final int COL_PORTRAIT = 1;
+    static final int COL_BP = 1;
+    static final int COL_TEMP = 2;
+    static final int COL_PULSE = 3;
+    static final int COL_RR = 4;
+    static final int COL_EDEMA = 5;
+    static final int COL_FINDINGS = 6;
+    static final int COL_TIME = 7;
 
 
     public interface Callback {
         // for when a list item has been selected.
-        //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
-        public void onItemSelected(String roomNumber, String portraitFilePath,
-                                   int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
+        //public void onItemSelected(Uri dateUri, int selectionType, AssessmentAdapter.AssessmentAdapterViewHolder vh);
+        public void onItemSelected(String roomNumber, AssessmentAdapter.AssessmentAdapterViewHolder vh);
     }
 
-    public ResidentlistFragment() {
+    public AssessmentFragment() {
     }
 
     @Override
@@ -107,31 +123,36 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            Log.e(LOG_TAG, "mPortraitFilePath is "+mPortraitFilePath);
+        }
+
+
+        View rootView = inflater.inflate(R.layout.fragment_assessment, container, false);
 
         // Get a reference to the RecyclerView, and attach this adapter to it.
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_residentlist);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_assessment);
 
         // Set the layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        View emptyView = rootView.findViewById(R.id.recyclerview_residentlist_empty);
+        View emptyView = rootView.findViewById(R.id.recyclerview_assessment_empty);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        // The ResidentlistAdapter will take data from a source and
+        // The AssessmentAdapter will take data from a source and
         // use it to populate the RecyclerView it's attached to.
-        mResidentlistAdapter = new ResidentlistAdapter(getActivity(), new ResidentlistAdapter.ResidentlistAdapterOnClickHandler() {
+        mAssessmentAdapter = new AssessmentAdapter(getActivity(), new AssessmentAdapter.AssessmentAdapterOnClickHandler() {
             @Override
-            //public void onClick(Long date, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
+            //public void onClick(Long date, AssessmentAdapter.AssessmentAdapterViewHolder vh) {
             //    String locationSetting = Utility.getPreferredLocation(getActivity());
-            public void onClick(String roomNumber, String portraitFilePath,
-                                int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
+            public void onClick(String roomNumber, AssessmentAdapter.AssessmentAdapterViewHolder vh) {
                 ((Callback) getActivity())
                         .onItemSelected(roomNumber,
-                                portraitFilePath,
-                                selectionType,
                                 vh
                         );
                 /*
@@ -144,15 +165,15 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                         );
                         */
             }
-        }, emptyView, mChoiceMode);
+        }, mChoiceMode, emptyView, mRoomNumber);
 
         // specify an adapter (see also next example)
-        mRecyclerView.setAdapter(mResidentlistAdapter);
+        mRecyclerView.setAdapter(mAssessmentAdapter);
 
 
         // For when device is rotated
         if (savedInstanceState != null) {
-            mResidentlistAdapter.onRestoreInstanceState(savedInstanceState);
+            mAssessmentAdapter.onRestoreInstanceState(savedInstanceState);
         } else {
             //ResidentSyncAdapter.syncImmediately(getContext());
         }
@@ -168,17 +189,17 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         if ( mHoldForTransition ) {
             getActivity().supportPostponeEnterTransition();
         }
-        getLoaderManager().initLoader(RESIDENTLIST_LOADER, null, this);
+        getLoaderManager().initLoader(ASSESSMENT_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onResidentlistChanged() {getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);}
+    void onAssessmentChanged() {getLoaderManager().restartLoader(ASSESSMENT_LOADER, null, this);}
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
-        mResidentlistAdapter.onSaveInstanceState(outState);
+        mAssessmentAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -188,12 +209,14 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         // This is called when a new Loader needs to be created.  This
         // fragment only uses one loader, so we don't care about checking the id.
 
-        // Sort order:  Ascending, by Resident symbol.
-        String sortOrder = ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ASC";
+        // Sort order:  Ascending, by Generic Name.
+        String sortOrder = ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC + " ASC";
+        Uri uri = ResidentContract.MedicationEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(mRoomNumber).build();
 
         return new CursorLoader(getActivity(),
-                ResidentContract.ResidentEntry.CONTENT_URI,
-                RESIDENTLIST_COLUMNS,
+                uri,
+                ASSESSMENT_COLUMNS,
                 null,
                 null,
                 sortOrder);
@@ -201,7 +224,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mResidentlistAdapter.swapCursor(data);
+        mAssessmentAdapter.swapCursor(data);
         updateEmptyView();
         if ( data.getCount() == 0 ) {
             getActivity().supportStartPostponedEnterTransition();
@@ -213,14 +236,14 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                     // we see Children.
                     if (mRecyclerView.getChildCount() > 0) {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int position = mResidentlistAdapter.getSelectedItemPosition();
+                        int position = mAssessmentAdapter.getSelectedItemPosition();
                         //if (position == RecyclerView.NO_POSITION &&
                         //        -1 != mInitialSelectedDate) {
                         if (position == RecyclerView.NO_POSITION && !mInitialSelectedRoomNumber.equals("")) {
-                            Cursor data = mResidentlistAdapter.getCursor();
+                            Cursor data = mAssessmentAdapter.getCursor();
                             int count = data.getCount();
                             //int dateColumn = data.getColumnIndex(ResidentsContract.ResidentEntry.COLUMN_DATE);
-                            int roomNumberColumn = data.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);
+                            int roomNumberColumn = data.getColumnIndex(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER);
                             for (int i = 0; i < count; i++) {
                                 data.moveToPosition(i);
                                 //if ( data.getLong(dateColumn) == mInitialSelectedDate ) {
@@ -236,7 +259,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                         mRecyclerView.smoothScrollToPosition(position);
                         RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(position);
                         if (null != vh && mAutoSelectView) {
-                            mResidentlistAdapter.selectView(vh);
+                            mAssessmentAdapter.selectView(vh);
                         }
                         if (mHoldForTransition) {
                             getActivity().supportStartPostponedEnterTransition();
@@ -282,7 +305,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mResidentlistAdapter.swapCursor(null);
+        mAssessmentAdapter.swapCursor(null);
     }
 
     public void setInitialSelectedRoomNumber(String initialSelectedRoomNumber) {
@@ -291,26 +314,26 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     // Update the empty-list view if empty Resident DB or server down
     private void updateEmptyView() {
-        if ( mResidentlistAdapter.getItemCount() == 0 ) {
-            TextView tv = (TextView) getView().findViewById(R.id.recyclerview_residentlist_empty);
+        if ( mAssessmentAdapter.getItemCount() == 0 ) {
+            TextView tv = (TextView) getView().findViewById(R.id.recyclerview_assessment_empty);
             if ( null != tv ) {
 
 
                 /*
                 // if cursor is empty, why? do we have an invalid location
-                int message = R.string.empty_Residentlist;
+                int message = R.string.empty_Assessment;
                 @ResidentSyncAdapter.Status int status = Utility.getStatus(getActivity());
                 switch (status) {
                     case ResidentSyncAdapter.STATUS_SERVER_DOWN:
-                        message = R.string.empty_Residentlist_server_down;
+                        message = R.string.empty_Assessment_server_down;
                         break;
                     default:
                         if (!Utility.isNetworkAvailable(getActivity())) {
-                            message = R.string.empty_Residentlist_no_network;
+                            message = R.string.empty_Assessment_no_network;
                         }
                 }
                 */
-                int message = R.string.empty_residentlist_no_network;   // FOR NOW ONLY!!!
+                int message = R.string.empty_assessment_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
             }
         }
@@ -328,4 +351,5 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             updateEmptyView();
         }
     }
+
 }
