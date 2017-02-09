@@ -119,7 +119,7 @@ public class AssessmentFragment extends Fragment {
         mPulse_picker = (NumberPicker) rootView.findViewById(R.id.pulse_numberpicker);
         mRR_picker = (NumberPicker) rootView.findViewById(R.id.rr_numberpicker);
         mEdema_spinner = (Spinner) rootView.findViewById(R.id.edema_spinner);
-        //mEdema_location_spinner = (Spinner) rootView.findViewById(R.id.edema_locn_spinner);
+        mEdema_location_spinner = (Spinner) rootView.findViewById(R.id.edema_locn_spinner);
         mPain_picker = (NumberPicker) rootView.findViewById(R.id.pain_picker);
         mDone_button = (Button) rootView.findViewById(R.id.done_button);
 
@@ -206,6 +206,12 @@ public class AssessmentFragment extends Fragment {
         // Apply the adapter to the spinner
         mEdema_spinner.setAdapter(adapter);
 
+        // Do the same for the edemaLocationSpinner:
+        adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.edema_locn_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mEdema_location_spinner.setAdapter(adapter);
+
         mPain_picker.setMinValue(0);
         mPain_picker.setMaxValue(10);
         mPain_picker.setValue(0);
@@ -226,16 +232,18 @@ public class AssessmentFragment extends Fragment {
         mDone_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int systolicBP, diastolicBP, pulse, rr;
+                int systolicBP, diastolicBP, pulse, rr, pain;
                 float temp;
                 systolicBP = Integer.parseInt((String) mSystolicBP_textView.getText());
                 diastolicBP = Integer.parseInt((String) mDiastolicBP_textView.getText());
                 temp = Float.parseFloat((String) mTemperature_textView.getText());
                 pulse = Integer.parseInt((String) mPulse_textView.getText());
                 rr = Integer.parseInt((String) mRR_textView.getText());
+                pain = Integer.parseInt((String) mPain_textView.getText());
                 String findings = mFindings_editText.getText().toString();
                 AssessmentItem.saveAssessment(getActivity(), mRoomNumber, systolicBP, diastolicBP, temp, pulse, rr,
-                        (String) mEdema_spinner.getSelectedItem(), findings);
+                        (String) mEdema_spinner.getSelectedItem(), (String) mEdema_location_spinner.getSelectedItem(),
+                        pain, findings);
                 getActivity().finish();
             }
         });

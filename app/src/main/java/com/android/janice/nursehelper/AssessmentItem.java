@@ -128,7 +128,7 @@ public class AssessmentItem {
 
     // Later, format the values...
     public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
-                                      int pulse, int rr, String edema, String findings) {
+                                      int pulse, int rr, String edema, String edemaLocn, int pain, String findings) {
         Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(roomNumber).build();
 

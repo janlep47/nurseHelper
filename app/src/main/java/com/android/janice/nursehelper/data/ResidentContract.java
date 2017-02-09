@@ -151,11 +151,15 @@ public class ResidentContract {
 
         public static final String COLUMN_RR = "respiratoryRate";
 
-        public static final String COLUMN_SIGNIFICANT_FINDINGS = "significantFindings";
-
         // edema: either "n/N" or "Stage I/II/III/IV".  If staged, give location in
         //  significantFindings.
         public static final String COLUMN_EDEMA = "edema";
+
+        public static final String COLUMN_EDEMA_LOCN = "edemaLocn";
+
+        public static final String COLUMN_PAIN = "pain";
+
+        public static final String COLUMN_SIGNIFICANT_FINDINGS = "significantFindings";
 
 
         public static Uri buildAssessmentsUri(long id) {
