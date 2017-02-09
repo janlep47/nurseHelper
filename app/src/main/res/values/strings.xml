@@ -1,10 +1,41 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">NurseHelper</string>
+
     <string name="action_about">about</string>
+    <string name="action_show_past_meds">Show meds given</string>
+    <string name="action_show_past_assessments">Show previous assessments</string>
 
     <string name="title_activity_list">NurseHelper</string>
     <string name="title_activity_medications">Medications</string>
     <string name="title_activity_assessments">Assessments</string>
+    <string name="title_activity_past_assessments">Past Assessments</string>
+
+    <string name="blood_pressure_label">blood pressure: </string>
+    <string name="temperature_label">temperature: </string>
+    <string name="pulse_label">pulse: </string>
+    <string name="rr_label">respiratory rate: </string>
+    <string name="edema_label">edema: </string>
+    <string name="edema_location_label">location: </string>
+    <string name="pain_label">pain: </string>
+    <string name="significant_findings_label">significant findings: </string>
+    <string name="done_button_label">DONE</string>
+
+    <string-array name="edema_array">
+        <item>0</item>
+        <item>Stage I</item>
+        <item>Stage II</item>
+        <item>Stage III</item>
+        <item>Stage IV</item>
+    </string-array>
+
+    <string-array name="edema_locn_array">
+        <item>   </item>
+        <item>LLE</item>
+        <item>RLE</item>
+        <item>LUE</item>
+        <item>RUE</item>
+    </string-array>
+
 
     <!-- SyncAdapter related -->
     <string name="sync_account_type">nursehelper.com</string>
@@ -17,7 +48,8 @@
     <string name="empty_residentlist_server_error">No resident information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
 
     <string name="empty_medications">No Medication Information Available</string>
-    <string name="empty_medications_no_network">No medication information available. The network is not available to fetch resident data.</string>
+    <string name="empty_medications_no_network">No medication information available. The network is not available to fetch medication data.</string>
+    <string name="empty_assessment_no_network">No assessment information available. The network is not available to fetch assessment data.</string>
 
     <string name="a11y_roomNumber">Symbol: <xliff:g id="symbol">%1$s</xliff:g></string>
 

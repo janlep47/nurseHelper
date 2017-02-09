@@ -17,8 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
@@ -35,9 +39,22 @@ public class AssessmentFragment extends Fragment {
     private NumberPicker mDiastolicBP_picker;
     private NumberPicker mTemp_int_picker;
     private NumberPicker mTemp_decimal_picker;
+    private NumberPicker mPulse_picker;
+    private NumberPicker mRR_picker;
+    private Spinner mEdema_spinner;
+    private Spinner mEdema_location_spinner;
+    private NumberPicker mPain_picker;
+
     private TextView mSystolicBP_textView;
     private TextView mDiastolicBP_textView;
     private TextView mTemperature_textView;
+    private TextView mPulse_textView;
+    private TextView mRR_textView;
+    private TextView mEdema_textView;
+    private TextView mEdemaLocation_textView;
+    private TextView mPain_textView;
+    private EditText mFindings_editText;
+    private Button mDone_button;
 
     String mRoomNumber;
     String mPortraitFilePath;
@@ -89,19 +106,33 @@ public class AssessmentFragment extends Fragment {
         mSystolicBP_textView = (TextView) rootView.findViewById(R.id.bp_systolic_textview);
         mDiastolicBP_textView = (TextView) rootView.findViewById(R.id.bp_diastolic_textview);
         mTemperature_textView = (TextView) rootView.findViewById(R.id.temperature_textview);
+        mPulse_textView = (TextView) rootView.findViewById(R.id.pulse_textview);
+        mRR_textView =  (TextView) rootView.findViewById(R.id.rr_textview);
+        mEdema_textView = (TextView) rootView.findViewById(R.id.edema_textview);
+        mPain_textView = (TextView) rootView.findViewById(R.id.pain_textview);
+        mFindings_editText = (EditText) rootView.findViewById(R.id.findings_edittext);
 
         mSystolicBP_picker = (NumberPicker) rootView.findViewById(R.id.bp_systolic_numberpicker);
         mDiastolicBP_picker = (NumberPicker) rootView.findViewById(R.id.bp_diastolic_numberpicker);
         mTemp_int_picker = (NumberPicker) rootView.findViewById(R.id.temp_int_numberpicker);
         mTemp_decimal_picker = (NumberPicker) rootView.findViewById(R.id.temp_decimal_numberpicker);
+        mPulse_picker = (NumberPicker) rootView.findViewById(R.id.pulse_numberpicker);
+        mRR_picker = (NumberPicker) rootView.findViewById(R.id.rr_numberpicker);
+        mEdema_spinner = (Spinner) rootView.findViewById(R.id.edema_spinner);
+        //mEdema_location_spinner = (Spinner) rootView.findViewById(R.id.edema_locn_spinner);
+        mPain_picker = (NumberPicker) rootView.findViewById(R.id.pain_picker);
+        mDone_button = (Button) rootView.findViewById(R.id.done_button);
 
-        mSystolicBP_picker.setValue(120);
+
         mSystolicBP_picker.setMinValue(60);
         mSystolicBP_picker.setMaxValue(250);
+        mSystolicBP_picker.setValue(120);
+        mSystolicBP_textView.setText(String.valueOf(mSystolicBP_picker.getValue()));
 
-        mDiastolicBP_picker.setValue(80);
         mDiastolicBP_picker.setMinValue(40);
         mDiastolicBP_picker.setMaxValue(160);
+        mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP_picker.getValue()));
+        mDiastolicBP_picker.setValue(80);
 
         mSystolicBP_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
@@ -124,7 +155,7 @@ public class AssessmentFragment extends Fragment {
         mTemp_int_picker.setValue(98);
         mTemp_decimal_picker.setMinValue(0);
         mTemp_decimal_picker.setMaxValue(9);
-        mTemp_decimal_picker.setMaxValue(7);
+        mTemp_decimal_picker.setValue(7);
 
         mTemperature_textView.setText("98.7");
 
@@ -139,6 +170,77 @@ public class AssessmentFragment extends Fragment {
 
         mTemp_int_picker.setOnScrollListener(tempScrollListener);
         mTemp_decimal_picker.setOnScrollListener(tempScrollListener);
+
+        mPulse_picker.setMinValue(20);
+        mPulse_picker.setMaxValue(200);
+        mPulse_picker.setValue(60);
+        mPulse_textView.setText(String.valueOf(mPulse_picker.getValue()));
+
+        mPulse_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker numberPicker, int i) {
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                    mPulse_textView.setText(String.valueOf(mPulse_picker.getValue()));
+            }
+        });
+
+        mRR_picker.setMinValue(6);
+        mRR_picker.setMaxValue(70);
+        mRR_picker.setValue(14);
+        mRR_textView.setText(String.valueOf(mRR_picker.getValue()));
+
+        mRR_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker numberPicker, int i) {
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                    mRR_textView.setText(String.valueOf(mRR_picker.getValue()));
+            }
+        });
+
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.edema_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mEdema_spinner.setAdapter(adapter);
+
+        mPain_picker.setMinValue(0);
+        mPain_picker.setMaxValue(10);
+        mPain_picker.setValue(0);
+        mPain_textView.setText(String.valueOf(mPain_picker.getValue()));
+
+        mPain_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker numberPicker, int i) {
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
+                    mPain_textView.setText(String.valueOf(mPain_picker.getValue()));
+            }
+        });
+
+        rootView.invalidate();
+
+        //mEdemaLocation_textView;
+
+        mDone_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int systolicBP, diastolicBP, pulse, rr;
+                float temp;
+                systolicBP = Integer.parseInt((String) mSystolicBP_textView.getText());
+                diastolicBP = Integer.parseInt((String) mDiastolicBP_textView.getText());
+                temp = Float.parseFloat((String) mTemperature_textView.getText());
+                pulse = Integer.parseInt((String) mPulse_textView.getText());
+                rr = Integer.parseInt((String) mRR_textView.getText());
+                String findings = mFindings_editText.getText().toString();
+                AssessmentItem.saveAssessment(getActivity(), mRoomNumber, systolicBP, diastolicBP, temp, pulse, rr,
+                        (String) mEdema_spinner.getSelectedItem(), findings);
+                getActivity().finish();
+            }
+        });
+
+
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
