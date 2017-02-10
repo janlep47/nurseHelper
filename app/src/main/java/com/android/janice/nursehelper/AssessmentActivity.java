@@ -16,6 +16,8 @@ public class AssessmentActivity  extends AppCompatActivity {
     AssessmentFragment mFragment;
     private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
 
+    String mRoomNumber, mPortraitFilePath;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +29,10 @@ public class AssessmentActivity  extends AppCompatActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
 
-            String roomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
-            String portraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
-            arguments.putString(MainActivity.ITEM_ROOM_NUMBER, roomNumber);
-            arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, portraitFilePath);
+            mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+            arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
 
 
             mFragment = new AssessmentFragment();
@@ -66,7 +68,13 @@ public class AssessmentActivity  extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.list_past_assessments) {
-            Log.i(LOG_TAG,"chose 'list past meds'");
+            Intent intent;
+            Bundle bundle = new Bundle();
+            bundle.putString(MainActivity.ITEM_ROOM_NUMBER,mRoomNumber);
+            bundle.putString(MainActivity.ITEM_PORTRAIT_FILEPATH,mPortraitFilePath);
+            intent = new Intent(this, PastAssessmentsActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
