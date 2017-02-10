@@ -174,7 +174,6 @@ public class ResidentContract {
         public static String getRoomNumberFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-
     }
 
 
@@ -184,12 +183,12 @@ public class ResidentContract {
     public static final class MedsGivenEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEDS).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEDS_GIVEN).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS_GIVEN;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS_GIVEN;
 
         public static final String TABLE_NAME = "medsGiven";
 
@@ -210,13 +209,13 @@ public class ResidentContract {
         public static final String COLUMN_TIME_GIVEN = "timeGiven";
 
 
-        public static Uri buildMedsWithRoomNumber(String roomNumber) {
+        public static Uri buildMedsGivenWithRoomNumber(String roomNumber) {
             return CONTENT_URI.buildUpon()
                     .appendPath(roomNumber).build();
         }
 
         //SELECT * FROM [table] WHERE [column] = [value]; (Selectors: <, >, !=; combine multiple selectors with AND, OR)
-        public static Uri buildMedsWithRoomNoAndMedName(String roomNumber, String genericName) {
+        public static Uri buildMedsGivenWithRoomNumberAndMed(String roomNumber, String genericName) {
             return CONTENT_URI.buildUpon()
                     .appendPath(roomNumber).appendPath(genericName).build();
         }
@@ -224,7 +223,9 @@ public class ResidentContract {
         public static String getRoomNumberFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-
+        public static String getMedNameFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
     }
 
 

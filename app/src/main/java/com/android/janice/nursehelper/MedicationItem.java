@@ -7,10 +7,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
+import android.text.format.Time;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by janicerichards on 2/4/17.
@@ -129,15 +134,21 @@ public class MedicationItem {
                                 String dosageUnits, boolean given) {
         Log.e(TAG,"  Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
-        uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
+        uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
+
+        short given_db;
+        if (given) given_db = 1;
+        else given_db = 0;
+
+        long time= System.currentTimeMillis();
 
         ContentValues medGivenValues = new ContentValues();
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC, genericName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE, dosage);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS, dosageUnits);
-        medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given);
-        //medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, timestamp);
+        medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given_db);
+        medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
     }

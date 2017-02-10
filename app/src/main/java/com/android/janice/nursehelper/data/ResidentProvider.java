@@ -23,7 +23,8 @@ public class ResidentProvider extends ContentProvider {
     static final int RESIDENTS = 100;              // PATH  residents path (DIR)
     static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
     static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
-    static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 401;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
+    static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
+    static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 402;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
 
     public static final String LOG_TAG = ResidentProvider.class.getSimpleName();
 
@@ -37,6 +38,10 @@ public class ResidentProvider extends ContentProvider {
     private static final String sRecentAssessmentByResidentSelection =
             ResidentContract.AssessmentEntry.TABLE_NAME+
                     "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ? ";
+
+    private static final String sMedsGivenByResidentSelection =
+            ResidentContract.MedsGivenEntry.TABLE_NAME+
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     private static final String sMedsGivenByResidentAndMedSelection =
             ResidentContract.MedsGivenEntry.TABLE_NAME+
@@ -58,7 +63,8 @@ public class ResidentProvider extends ContentProvider {
         matcher.addURI(authority, ResidentContract.PATH_RESIDENTS, RESIDENTS);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*", MEDICATIONS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*", ASSESSMENTS_WITH_ROOM_NUMBER);
-        matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*/*", MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED);
+        matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*", MEDS_GIVEN_WITH_ROOM_NUMBER);
+        matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*/*", MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED);
         return matcher;
     }
 
@@ -81,6 +87,8 @@ public class ResidentProvider extends ContentProvider {
                 return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 return ResidentContract.AssessmentEntry.CONTENT_ITEM_TYPE;   // ITEM
+            case MEDS_GIVEN_WITH_ROOM_NUMBER:
+                return ResidentContract.MedsGivenEntry.CONTENT_ITEM_TYPE;    // ITEM
             case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
                 return ResidentContract.MedsGivenEntry.CONTENT_ITEM_TYPE;    // ITEM
             default:
@@ -130,10 +138,17 @@ public class ResidentProvider extends ContentProvider {
                 break;
             }
 
+            // "medsGiven/*"
+            case MEDS_GIVEN_WITH_ROOM_NUMBER:
+            {
+                retCursor = getMedsGivenByPt(uri, projection, sortOrder);
+                break;
+            }
+
             // "medsGiven/*/*"
             case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
             {
-                retCursor = getMedsGivenByPtAndMedname(projection, sortOrder, selectionArgs);
+                retCursor = getMedsGivenByPtAndMedname(uri, projection, sortOrder);
                 break;
             }
 
@@ -160,9 +175,20 @@ public class ResidentProvider extends ContentProvider {
                 projection, sRecentAssessmentByResidentSelection, new String[] {roomNumber}, null, null, sortOrder);
     }
 
-    private Cursor getMedsGivenByPtAndMedname(String[] projection, String sortOrder, String[] selectionArgs) {
+    private Cursor getMedsGivenByPt(Uri uri, String[] projection, String sortOrder) {
+        String roomNumber = ResidentContract.MedsGivenEntry.getRoomNumberFromUri(uri);
+
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedsGivenEntry.TABLE_NAME,
-                projection, sMedsGivenByResidentAndMedSelection, selectionArgs,
+                projection, sMedsGivenByResidentSelection, new String[] {roomNumber},
+                null, null, sortOrder);
+    }
+
+    private Cursor getMedsGivenByPtAndMedname(Uri uri, String[] projection, String sortOrder) {
+        String roomNumber = ResidentContract.MedsGivenEntry.getRoomNumberFromUri(uri);
+        String medName = ResidentContract.MedsGivenEntry.getMedNameFromUri(uri);
+
+        return mOpenHelper.getReadableDatabase().query(ResidentContract.MedsGivenEntry.TABLE_NAME,
+                projection, sMedsGivenByResidentAndMedSelection, new String[] {roomNumber, medName},
                 null, null, sortOrder);
     }
 
@@ -184,14 +210,30 @@ public class ResidentProvider extends ContentProvider {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
                 if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
+                else throw new android.database.SQLException("Failed to insert row into (meds)" + uri);
                 break;
             }
             case ASSESSMENTS_WITH_ROOM_NUMBER: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.AssessmentEntry.TABLE_NAME, null, values);
                 if ( _id > 0) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
+                else throw new android.database.SQLException("Failed to insert row into (assessments)" + uri);
+                break;
+            }
+            case MEDS_GIVEN_WITH_ROOM_NUMBER: {
+                String roomNumber = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER");
+                long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, values);
+                Log.e(LOG_TAG, "  HERE in insert: values is "+values.toString());
+                if ( _id > 0) returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumber(roomNumber);
+                else throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
+                break;
+            }
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED: {
+                String roomNumber = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER");
+                String medName = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC");
+                long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, values);
+                if ( _id > 0) returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumberAndMed(roomNumber,medName);
+                else throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
                 break;
             }
             default:
@@ -222,6 +264,14 @@ public class ResidentProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         ResidentContract.AssessmentEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case MEDS_GIVEN_WITH_ROOM_NUMBER:
+                rowsDeleted = db.delete(
+                        ResidentContract.MedsGivenEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
+                rowsDeleted = db.delete(
+                        ResidentContract.MedsGivenEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -249,6 +299,13 @@ public class ResidentProvider extends ContentProvider {
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 rowsUpdated = db.update(ResidentContract.AssessmentEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case MEDS_GIVEN_WITH_ROOM_NUMBER:
+                rowsUpdated = db.update(ResidentContract.MedsGivenEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
+                rowsUpdated = db.update(ResidentContract.MedsGivenEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -293,6 +350,32 @@ public class ResidentProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(ResidentContract.AssessmentEntry.TABLE_NAME, null, value);
+                        if (_id != -1) returnCount++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case MEDS_GIVEN_WITH_ROOM_NUMBER:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, value);
+                        if (_id != -1) returnCount++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, value);
                         if (_id != -1) returnCount++;
                     }
                     db.setTransactionSuccessful();

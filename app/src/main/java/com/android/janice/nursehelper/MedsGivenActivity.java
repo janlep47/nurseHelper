@@ -11,34 +11,33 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/4/17.
  */
 
-public class MedicationsActivity  extends AppCompatActivity  implements MedicationsFragment.Callback {
+//public class MedsGivenActivity  extends AppCompatActivity  implements MedsGivenFragment.Callback {
+public class MedsGivenActivity  extends AppCompatActivity {
 
-    MedicationsFragment mFragment;
+    MedsGivenFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
-
-    String mRoomNumber, mPortraitFilePath;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meds);
+        setContentView(R.layout.activity_meds_given);
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
 
-            mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
-            mPortraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
-            arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
-            arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+            String roomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
+            String portraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            arguments.putString(MainActivity.ITEM_ROOM_NUMBER, roomNumber);
+            arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, portraitFilePath);
 
-            mFragment = new MedicationsFragment();
+            mFragment = new MedsGivenFragment();
             mFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.medications_container, mFragment)
+                    .add(R.id.meds_given_container, mFragment)
                     .commit();
 
             //mFragment = ((MedicationsFragment)getSupportFragmentManager()
@@ -50,16 +49,16 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         }
     }
 
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.medslist, menu);
         return true;
     }
+*/
 
-
-
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -67,19 +66,13 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.list_past_medications) {
-            Intent intent;
-            Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.ITEM_ROOM_NUMBER,mRoomNumber);
-            bundle.putString(MainActivity.ITEM_PORTRAIT_FILEPATH,mPortraitFilePath);
-            intent = new Intent(this, MedsGivenActivity.class);
-            intent.putExtras(bundle);
-            startActivity(intent);
+            Log.i(LOG_TAG,"chose 'list past meds'");
         }
         return super.onOptionsItemSelected(item);
     }
+*/
 
-
-
+/*
     @Override
     public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh) {
         //Intent intent;
@@ -89,6 +82,6 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         //intent.putExtras(bundle);
         //startActivity(intent);
     }
-
+*/
 
 }
