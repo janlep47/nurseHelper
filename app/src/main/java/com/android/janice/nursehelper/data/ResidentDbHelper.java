@@ -53,7 +53,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN + " TEXT, " +
                         ResidentContract.AssessmentEntry.COLUMN_PAIN + " INTEGER, " +
                         ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS + " TEXT, " +
-                        ResidentContract.AssessmentEntry.COLUMN_TIME + " TIME);";  // MAY NOT BE RIGHT!!!!
+                        ResidentContract.AssessmentEntry.COLUMN_TIME + " TIMESTAMP);";
 
         db.execSQL(SQL_CREATE_ASSESSMENTS_TABLE);
 
@@ -64,7 +64,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.MedsGivenEntry.COLUMN_DOSAGE + " REAL, " +
                         ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS + " INTEGER, " +
                         ResidentContract.MedsGivenEntry.COLUMN_GIVEN + " BOOLEAN, " +
-                        ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " TIMESTAMP);";  // MAY NOT BE RIGHT!!!!
+                        ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " TIMESTAMP);";
 
         db.execSQL(SQL_CREATE_MEDS_GIVEN_TABLE);
     }

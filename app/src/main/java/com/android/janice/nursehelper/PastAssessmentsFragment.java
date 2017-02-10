@@ -115,6 +115,8 @@ public class PastAssessmentsFragment  extends ListFragment {
                             ResidentContract.AssessmentEntry.COLUMN_PULSE,
                             ResidentContract.AssessmentEntry.COLUMN_RR,
                             ResidentContract.AssessmentEntry.COLUMN_EDEMA,
+                            ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN,
+                            ResidentContract.AssessmentEntry.COLUMN_PAIN,
                             ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS,
                             ResidentContract.AssessmentEntry.COLUMN_TIME},
                     null, null, ResidentContract.AssessmentEntry.COLUMN_TIME + " ASC");

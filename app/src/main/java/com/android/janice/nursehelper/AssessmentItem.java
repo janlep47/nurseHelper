@@ -8,6 +8,7 @@ import android.net.Uri;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -22,8 +23,11 @@ public class AssessmentItem {
     private int pulse;
     private int respiratoryRate;
     private String edema;
+    private String edemaLocn;
+    private int pain;
     private String significantFindings;
-    private Date dateTime;
+    private long timestamp;
+
 
 
     //boolean mAddProblem = false;
@@ -33,8 +37,10 @@ public class AssessmentItem {
     public final static int COL_PULSE = 3;
     public final static int COL_RR = 4;
     public final static int COL_EDEMA = 5;
-    public final static int COL_SIGNIFICANT_FINDINGS = 6;
-    public final static int COL_DATE_TIME = 7;
+    public final static int COL_EDEMA_LOCN = 6;
+    public final static int COL_PAIN = 7;
+    public final static int COL_SIGNIFICANT_FINDINGS = 8;
+    public final static int COL_TIMESTAMP = 9;
 
 
     public String getRoomNumber() { return roomNumber; }
@@ -53,9 +59,13 @@ public class AssessmentItem {
 
     public String getEdema() { return edema; }
 
+    public String getEdemaLocn() { return edemaLocn; }
+
+    public int getPain() { return pain; }
+
     public String getSignificantFindings() { return significantFindings; }
 
-    public Date getDateTime() { return dateTime; }
+    public long getTimestamp() { return timestamp; }
 
     public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
 
@@ -71,9 +81,13 @@ public class AssessmentItem {
 
     public void setEdema(String edema) { this.edema = edema; }
 
+    public void setEdemaLocn(String edemaLocn) { this.edemaLocn = edemaLocn; }
+
+    public void setPain(int pain) { this.pain = pain; }
+
     public void setSignificantFindings(String findings) { this.significantFindings = findings; }
 
-    public void setDateTime(Date dateTime) { this.dateTime = dateTime; }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
     public AssessmentItem(Cursor cursor) {
         roomNumber = cursor.getString(COL_ROOM_NUMBER);
@@ -82,17 +96,32 @@ public class AssessmentItem {
         pulse = cursor.getInt(COL_PULSE);
         respiratoryRate = cursor.getInt(COL_RR);
         edema = cursor.getString(COL_EDEMA);
+        edemaLocn = cursor.getString(COL_EDEMA_LOCN);
+        pain = cursor.getInt(COL_PAIN);
         significantFindings = cursor.getString(COL_SIGNIFICANT_FINDINGS);
+        timestamp = cursor.getLong(COL_TIMESTAMP);
         // formate the sql Time type into util Date type:  (later)
         //long time = cursor.getLong(COL_DATE_TIME);
         //dateTime = Date.
     }
+
+
+
+    public String getReadableTimestamp() {
+        Date date = new Date(timestamp);
+        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
+        return formattedDate;
+    }
+
 
     public static void putInDummyData(Context context) {
         // Add some (past) assessment data for room 200
         String roomNumber = "200";
         Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(roomNumber).build();
+
+
+        long time= System.currentTimeMillis();
 
         // Assessment #1
         ContentValues aValues = new ContentValues();
@@ -103,9 +132,11 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, 84);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 15);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "RLE");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 2);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Mild edema around R ankle. \n"+
-                "Pain 2 out of 10.");
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, "QD");
+                "Very slight headache.");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
 
@@ -119,9 +150,11 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, 92);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 17);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "LLE");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 6);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Mild edema around R ankle. \n"+
-                "Pain 3 out of 10.");
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, "QD");
+                "Says moderate pain in lower back.");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         assessmentUri = context.getContentResolver().insert(uri, aValues);
     }
@@ -134,6 +167,8 @@ public class AssessmentItem {
 
         ContentValues aValues = new ContentValues();
 
+        long time = System.currentTimeMillis();
+
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER, roomNumber);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, String.valueOf(systolicBP)+"/"+
                 String.valueOf(diastolicBP));
@@ -141,8 +176,10 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, String.valueOf(pulse));
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, String.valueOf(rr));
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, edema);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, edemaLocn);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, String.valueOf(pain));
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, findings);
-        //aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, timestamp);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
     }

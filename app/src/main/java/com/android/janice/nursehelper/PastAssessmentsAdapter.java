@@ -46,8 +46,17 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
 
         // FIX LATER
         AssessmentItem assessment = data.get(position);
-        holder.txt1.setText(assessment.getRoomNumber());
-        holder.txt2.setText(assessment.getBloodPressure());
+        //holder.txt1.setText(assessment.getRoomNumber());
+        //holder.txt2.setText(assessment.getBloodPressure());
+        holder.txt1.setText(assessment.getReadableTimestamp()+
+                "\n  BP: "+assessment.getBloodPressure()+
+                "  temp: "+assessment.getTemperature()+
+                "\n  pulse: "+assessment.getPulse()+
+                "  RR: "+assessment.getRespiratoryRate()+
+                "\n  edema: "+assessment.getEdema()+
+                ((assessment.getEdema().length()!=0) ? "  locn: "+assessment.getEdemaLocn() : " ")+
+                "\n  pain: "+String.valueOf(assessment.getPain()));
+        holder.txt2.setText("findings: \n"+assessment.getSignificantFindings());
 
         return row;
     }
