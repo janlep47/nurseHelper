@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
 
     public static final String ITEM_ROOM_NUMBER = "roomNumber";
     public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilePath";
+    public static final String ITEM_NURSE_NAME = "nurseName";
+
+    private String mNurseName;
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -29,6 +32,9 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // TEMP!!
+        mNurseName = "A. Baker";
 
         mFragment = ((ResidentlistFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_residentlist));
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
         Bundle bundle = new Bundle();
         bundle.putString(ITEM_ROOM_NUMBER,roomNumber);
         bundle.putString(ITEM_PORTRAIT_FILEPATH,portraitFilePath);
+        bundle.putString(ITEM_NURSE_NAME,mNurseName);
 
         switch (selectionType) {
             case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:

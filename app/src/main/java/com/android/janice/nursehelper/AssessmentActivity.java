@@ -44,18 +44,6 @@ public class AssessmentActivity  extends AppCompatActivity {
                         .commit();
             }
 
-            /*
-            mFragment = new AssessmentFragment();
-            mFragment.setArguments(arguments);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.assessment_container, mFragment)
-                    .commit();
-*/
-            //mFragment = ((AssessmentFragment)getSupportFragmentManager()
-            //        .findFragmentById(R.id.fragment_assessment));
-            //mFragment.setArguments(arguments);
-
             // animation mode
             supportPostponeEnterTransition();
         } else {

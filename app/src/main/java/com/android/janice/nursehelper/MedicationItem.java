@@ -131,8 +131,7 @@ public class MedicationItem {
 
     // if "given" false, med was refused.
     public static void medGiven(Context context, String roomNumber, String genericName, float dosage,
-                                String dosageUnits, boolean given) {
-        Log.e(TAG,"  Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+                                String dosageUnits, String nurseName, boolean given) {
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
@@ -148,19 +147,20 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE, dosage);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS, dosageUnits);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given_db);
+        medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NURSE, nurseName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
     }
 
 
-    public static void askUndoMedGiven(String roomNumber, String genericName, float dosage) {
+    public static void askUndoMedGiven(String roomNumber, String genericName, float dosage, String nurseName) {
         Log.e(TAG,"  UNDO Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
     }
 
 
 
-    public static void askUndoMedRefused(String roomNumber, String genericName, float dosage) {
+    public static void askUndoMedRefused(String roomNumber, String genericName, float dosage, String nurseName) {
         Log.e(TAG,"  UNDO Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
     }
 

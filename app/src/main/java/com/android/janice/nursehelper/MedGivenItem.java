@@ -26,6 +26,7 @@ public class MedGivenItem {
     private float dosage;
     private String dosageUnits;
     private short given;      // if 1, given; if 0, med was refused
+    private String nurseName;
     private long timestamp;
 
     public final static int COL_ROOM_NUMBER = 0;
@@ -33,7 +34,8 @@ public class MedGivenItem {
     public final static int COL_DOSAGE = 2;
     public final static int COL_DOSAGE_UNITS = 3;
     public final static int COL_GIVEN = 4;
-    public final static int COL_TIME_GIVEN = 5;
+    public final static int COL_NURSE_NAME = 5;
+    public final static int COL_TIME_GIVEN = 6;
 
 
     public final static String TAG = MedicationItem.class.getSimpleName();
@@ -53,6 +55,8 @@ public class MedGivenItem {
 
     public short getGiven() { return given; }
 
+    public String getNurseName() { return nurseName; }
+
     public long getTimestamp() { return timestamp; }
 
     public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
@@ -71,6 +75,8 @@ public class MedGivenItem {
 
     public void setGiven(short given) { this.given = given; }
 
+    public void setNurseName(String nurseName) { this.nurseName = nurseName; }
+
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
     public MedGivenItem(Cursor cursor) {
@@ -79,6 +85,7 @@ public class MedGivenItem {
         dosage = cursor.getFloat(COL_DOSAGE);
         dosageUnits = cursor.getString(COL_DOSAGE_UNITS);
         given = cursor.getShort(COL_GIVEN);
+        nurseName = cursor.getString(COL_NURSE_NAME);
         timestamp = cursor.getLong(COL_TIME_GIVEN);
     }
 

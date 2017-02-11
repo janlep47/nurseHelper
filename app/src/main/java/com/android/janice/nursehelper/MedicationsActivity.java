@@ -17,7 +17,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
     MedicationsFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
 
-    String mRoomNumber, mPortraitFilePath;
+    String mRoomNumber, mPortraitFilePath, mNurseName;
 
 
     @Override
@@ -32,9 +32,11 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
 
             mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            mNurseName = getIntent().getStringExtra(MainActivity.ITEM_NURSE_NAME);
 
             arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
             arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+            arguments.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
             FragmentManager fm = getSupportFragmentManager();
             mFragment = (MedicationsFragment) fm.findFragmentById(R.id.medications_container);
 
@@ -45,24 +47,13 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
                         .add(R.id.medications_container, mFragment)
                         .commit();
             }
-/*
-            mFragment = new MedicationsFragment();
-            mFragment.setArguments(arguments);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.medications_container, mFragment)
-                    .commit();
-*/
-            //mFragment = ((MedicationsFragment)getSupportFragmentManager()
-            //        .findFragmentById(R.id.fragment_medications));
-            //mFragment.setArguments(arguments);
-
             // animation mode
             supportPostponeEnterTransition();
 
         } else {
             mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
         }
 
     }
@@ -102,6 +93,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
         savedInstanceState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+        savedInstanceState.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
     }
 
     @Override
@@ -109,6 +101,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         super.onRestoreInstanceState(savedInstanceState);
         mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
         mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+        mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
     }
 
     @Override

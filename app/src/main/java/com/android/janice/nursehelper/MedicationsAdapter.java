@@ -28,6 +28,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     final private View mEmptyView;
     final private ItemChoiceManager mICM;
     final private String mRoomNumber;
+    final private String mNurseName;
 
     public static final String LOG_TAG = MedicationsAdapter.class.getSimpleName();
     /**
@@ -86,20 +87,20 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             if (button == mGiveBox) {
                 if (isChecked) {
                     // Medication given for the current med
-                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, true);
+                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, mNurseName, true);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "give" record!!
-                    MedicationItem.askUndoMedGiven(mRoomNumber, genericName, dosage);
+                    MedicationItem.askUndoMedGiven(mRoomNumber, genericName, dosage, mNurseName);
                 }
             } else if (button == mRefuseBox) {
                 if (isChecked) {
                     // Medication refused for the current med
-                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, false);
+                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, mNurseName, false);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "refuse" record!!
-                    MedicationItem.askUndoMedRefused(mRoomNumber, genericName, dosage);
+                    MedicationItem.askUndoMedRefused(mRoomNumber, genericName, dosage, mNurseName);
                 }
             }
 
@@ -122,13 +123,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     }
 
     public MedicationsAdapter(Context context, MedicationsAdapterOnClickHandler dh, View emptyView, int choiceMode,
-                              String roomNumber) {
+                              String roomNumber, String nurseName) {
         mContext = context;
         mClickHandler = dh;
         mEmptyView = emptyView;
         mICM = new ItemChoiceManager(this);
         mICM.setChoiceMode(choiceMode);
         mRoomNumber = roomNumber;
+        mNurseName = nurseName;
     }
 
     /*

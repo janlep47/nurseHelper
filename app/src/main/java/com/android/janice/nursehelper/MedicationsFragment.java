@@ -51,6 +51,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
     String mRoomNumber;
     String mPortraitFilePath;
+    String mNurseName;
 
 
     private String mInitialSelectedRoomNumber = "";
@@ -133,6 +134,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         if (arguments != null) {
             mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            mNurseName = arguments.getString(MainActivity.ITEM_NURSE_NAME);
         }
 
 
@@ -161,7 +163,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                                 vh
                         );
             }
-        }, emptyView, mChoiceMode, mRoomNumber);
+        }, emptyView, mChoiceMode, mRoomNumber, mNurseName);
 
         // specify an adapter (see also next example)
         mRecyclerView.setAdapter(mMedicationsAdapter);
@@ -313,9 +315,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         mMedicationsAdapter.swapCursor(null);
     }
 
-    public void setInitialSelectedRoomNumber(String initialSelectedRoomNumber) {
-        mInitialSelectedRoomNumber = initialSelectedRoomNumber;
-    }
 
     // Update the empty-list view if empty Resident DB or server down
     private void updateEmptyView() {

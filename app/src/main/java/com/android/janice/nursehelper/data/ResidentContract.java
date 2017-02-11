@@ -206,6 +206,8 @@ public class ResidentContract {
 
         public static final String COLUMN_GIVEN = "givenOrRefused";
 
+        public static final String COLUMN_NURSE = "nurseName";
+
         public static final String COLUMN_TIME_GIVEN = "timeGiven";
 
 

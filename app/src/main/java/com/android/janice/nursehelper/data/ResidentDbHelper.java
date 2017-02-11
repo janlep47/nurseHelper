@@ -64,6 +64,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.MedsGivenEntry.COLUMN_DOSAGE + " REAL, " +
                         ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS + " INTEGER, " +
                         ResidentContract.MedsGivenEntry.COLUMN_GIVEN + " BOOLEAN, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_NURSE + " TEXT, " +
                         ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " TIMESTAMP);";
 
         db.execSQL(SQL_CREATE_MEDS_GIVEN_TABLE);

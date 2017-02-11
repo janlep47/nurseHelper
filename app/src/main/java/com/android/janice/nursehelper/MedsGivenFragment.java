@@ -146,7 +146,6 @@ public class MedsGivenFragment  extends ListFragment {
         @Override
         protected Cursor doInBackground(String... params) {
             String roomNumber = params[0];
-            Log.i(LOG_TAG, " ********  room # is "+roomNumber);
             Uri uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
             uri = uri.buildUpon().appendPath(roomNumber).build();
             Cursor cursor = getContext().getContentResolver().query(uri,
@@ -155,6 +154,7 @@ public class MedsGivenFragment  extends ListFragment {
                             ResidentContract.MedsGivenEntry.COLUMN_DOSAGE,
                             ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS,
                             ResidentContract.MedsGivenEntry.COLUMN_GIVEN,
+                            ResidentContract.MedsGivenEntry.COLUMN_NURSE,
                             ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN},
                     null, null, ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " ASC");
             return cursor;
@@ -176,14 +176,7 @@ public class MedsGivenFragment  extends ListFragment {
                     mMedList.add(item);
                 } while (result.moveToNext());
             }
-
             mAdapter.data = mMedList;
-
-            Log.i(LOG_TAG, "  ********** here ************" );
-            for (int i = 0; i < mMedList.size(); i++) {
-                MedGivenItem item = mMedList.get(i);
-                Log.i(LOG_TAG,"   *** medgiven:   room#="+item.getRoomNumber()+"  med="+item.getGenericName());
-            }
 
             // invalidate the list adapter:
             mAdapter.notifyDataSetChanged();
