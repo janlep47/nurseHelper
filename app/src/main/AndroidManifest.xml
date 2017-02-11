@@ -34,6 +34,7 @@
         <activity
             android:name=".MedicationsActivity"
             android:label="@string/title_activity_medications"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -54,6 +55,7 @@
         <activity
             android:name=".AssessmentActivity"
             android:label="@string/title_activity_assessments"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
             <meta-data

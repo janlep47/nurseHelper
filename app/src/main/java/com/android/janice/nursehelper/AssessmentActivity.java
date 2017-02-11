@@ -2,6 +2,7 @@ package com.android.janice.nursehelper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,8 +26,6 @@ public class AssessmentActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_assessment);
 
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
             Bundle arguments = new Bundle();
 
             mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
@@ -34,20 +33,34 @@ public class AssessmentActivity  extends AppCompatActivity {
             arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
             arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
 
+            FragmentManager fm = getSupportFragmentManager();
+            mFragment = (AssessmentFragment) fm.findFragmentById(R.id.assessment_container);
 
+            if (mFragment == null) {
+                mFragment = new AssessmentFragment();
+                mFragment.setArguments(arguments);
+                fm.beginTransaction()
+                        .add(R.id.assessment_container, mFragment)
+                        .commit();
+            }
+
+            /*
             mFragment = new AssessmentFragment();
             mFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.assessment_container, mFragment)
                     .commit();
-
+*/
             //mFragment = ((AssessmentFragment)getSupportFragmentManager()
             //        .findFragmentById(R.id.fragment_assessment));
             //mFragment.setArguments(arguments);
 
             // animation mode
             supportPostponeEnterTransition();
+        } else {
+            mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
         }
     }
 
@@ -79,6 +92,21 @@ public class AssessmentActivity  extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+        savedInstanceState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
+        mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+    }
 
 /*
     @Override

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -87,20 +88,66 @@ public class AssessmentFragment extends Fragment {
     }
 
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+        } else {
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
+                mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            }
+        }
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        // We need to start the enter transition after the data has loaded
+        //if ( mTransitionAnimation ) {
+        activity.supportStartPostponedEnterTransition();
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setSubtitle("room: "+mRoomNumber);
+
+
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                | ActionBar.DISPLAY_SHOW_CUSTOM);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+
+        // Calculate ActionBar height
+        int actionBarHeight = DEFAULT_ACTION_BAR_HEIGHT;
+        TypedValue tv = new TypedValue();
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        Picasso.with(getActivity())
+                .load("file:///android_asset/"+mPortraitFilePath)
+                .placeholder(R.drawable.blank_portrait)
+                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
+                .noFade().resize(actionBarHeight, actionBarHeight)
+                .error(R.drawable.blank_portrait)
+                .into(imageView);
+
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
-            mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
-            Log.e(LOG_TAG, "mPortraitFilePath is "+mPortraitFilePath);
-        }
-
-
-        //View rootView = inflater.inflate(R.layout.fragment_assessment, container, false);
         View rootView = inflater.inflate(R.layout.item_assessment, container, false);
 
         mSystolicBP_textView = (TextView) rootView.findViewById(R.id.bp_systolic_textview);
@@ -255,56 +302,16 @@ public class AssessmentFragment extends Fragment {
             }
         });
 
-
-
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-
-        // We need to start the enter transition after the data has loaded
-        //if ( mTransitionAnimation ) {
-        activity.supportStartPostponedEnterTransition();
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setSubtitle("room: "+mRoomNumber);
-
-
-
-        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
-                | ActionBar.DISPLAY_SHOW_CUSTOM);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-
-        // Calculate ActionBar height
-        int actionBarHeight = DEFAULT_ACTION_BAR_HEIGHT;
-        TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-        }
-
-        Picasso.with(getActivity())
-                .load("file:///android_asset/"+mPortraitFilePath)
-                .placeholder(R.drawable.blank_portrait)
-                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
-                .noFade().resize(actionBarHeight, actionBarHeight)
-                .error(R.drawable.blank_portrait)
-                .into(imageView);
-
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
-                | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-
         return rootView;
     }
-
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
         super.onSaveInstanceState(outState);
+        outState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+        outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
     }
 
 }

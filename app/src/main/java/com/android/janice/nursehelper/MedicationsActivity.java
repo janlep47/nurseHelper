@@ -2,6 +2,7 @@ package com.android.janice.nursehelper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -31,23 +32,39 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
 
             mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
+
             arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
             arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+            FragmentManager fm = getSupportFragmentManager();
+            mFragment = (MedicationsFragment) fm.findFragmentById(R.id.medications_container);
 
+            if (mFragment == null) {
+                mFragment = new MedicationsFragment();
+                mFragment.setArguments(arguments);
+                fm.beginTransaction()
+                        .add(R.id.medications_container, mFragment)
+                        .commit();
+            }
+/*
             mFragment = new MedicationsFragment();
             mFragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.medications_container, mFragment)
                     .commit();
-
+*/
             //mFragment = ((MedicationsFragment)getSupportFragmentManager()
             //        .findFragmentById(R.id.fragment_medications));
             //mFragment.setArguments(arguments);
 
             // animation mode
             supportPostponeEnterTransition();
+
+        } else {
+            mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
         }
+
     }
 
 
@@ -79,6 +96,20 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
     }
 
 
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+        savedInstanceState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
+        mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+    }
 
     @Override
     public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh) {

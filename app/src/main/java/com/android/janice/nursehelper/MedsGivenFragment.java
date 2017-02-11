@@ -6,12 +6,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by janicerichards on 2/4/17.
  */
@@ -31,7 +37,7 @@ public class MedsGivenFragment  extends ListFragment {
     List<MedGivenItem> mMedList = new ArrayList<>();
     //TextView mProblemText;
 
-    String mRoomNumber;
+    String mRoomNumber, mPortraitFilePath;
 
     //boolean mAddProblem = false;
 
@@ -56,7 +62,8 @@ public class MedsGivenFragment  extends ListFragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mRoomNumber = arguments.getString("roomNumber");
+            mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
+            mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
         }
 
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_meds_given, container, false);
@@ -68,6 +75,46 @@ public class MedsGivenFragment  extends ListFragment {
         mLoadingPanel = (View) root.findViewById(R.id.loadingPanel);
 
         activity.supportStartPostponedEnterTransition();
+
+
+        // We need to start the enter transition after the data has loaded
+        //if ( mTransitionAnimation ) {
+        activity.supportStartPostponedEnterTransition();
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setSubtitle("room: "+mRoomNumber);
+
+
+
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                | ActionBar.DISPLAY_SHOW_CUSTOM);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+
+        // Calculate ActionBar height
+        int actionBarHeight = AssessmentFragment.DEFAULT_ACTION_BAR_HEIGHT;
+        TypedValue tv = new TypedValue();
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        Picasso.with(getActivity())
+                .load("file:///android_asset/"+mPortraitFilePath)
+                .placeholder(R.drawable.blank_portrait)
+                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
+                .noFade().resize(actionBarHeight, actionBarHeight)
+                .error(R.drawable.blank_portrait)
+                .into(imageView);
+
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
 
 
         ListView mListView = (ListView) root.findViewById(android.R.id.list);
