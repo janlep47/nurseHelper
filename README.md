@@ -18,8 +18,8 @@ release-version of this app.
 The code is written in java and xml.
 See [how to use Android Studio.](http://www.instructables.com/id/How-To-Create-An-Android-App-With-Android-Studio/)
 
-## Licence
-See LICENCE.md
+## License
+See LICENSE.md
 
 ## Some Remaining Tasks
 Change nurseHelper to alert nurses to lists of patients/medications that are due 
