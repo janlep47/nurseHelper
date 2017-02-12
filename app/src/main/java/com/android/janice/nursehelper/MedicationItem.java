@@ -10,6 +10,7 @@ import android.util.Log;
 import android.text.format.Time;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.data.ResidentProvider;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -55,6 +56,8 @@ public class MedicationItem {
     public void setTradeName(String tradeName) {
         this.tradeName = tradeName;
     }
+
+
 
     public MedicationItem(Cursor cursor) {
         roomNumber = cursor.getString(COL_ROOM_NUMBER);
@@ -130,8 +133,11 @@ public class MedicationItem {
     }
 
     // if "given" false, med was refused.
-    public static void medGiven(Context context, String roomNumber, String genericName, float dosage,
-                                String dosageUnits, String nurseName, boolean given) {
+    public static void medGiven(Context context, Cursor cursor, String roomNumber, String nurseName, boolean given) {
+        String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
+        float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
+        String dosageUnits = cursor.getString(MedicationsFragment.COL_DOSAGE_UNITS);
+
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
@@ -151,16 +157,30 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
+
+        ContentValues meds = new ContentValues();
+        meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+
+        uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
+        uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
+        int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
+                ResidentProvider.sMedsByResidentAndMedSelection,
+                new String[]{roomNumber, genericName});
+        Log.e("meditem", "  rowsUpdate = "+rowsUpdated);
     }
 
 
-    public static void askUndoMedGiven(String roomNumber, String genericName, float dosage, String nurseName) {
+    public static void askUndoMedGiven(Cursor cursor, String roomNumber, String nurseName) {
+        String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
+        float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         Log.e(TAG,"  UNDO Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
     }
 
 
 
-    public static void askUndoMedRefused(String roomNumber, String genericName, float dosage, String nurseName) {
+    public static void askUndoMedRefused(Cursor cursor, String roomNumber, String nurseName) {
+        String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
+        float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         Log.e(TAG,"  UNDO Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
     }
 

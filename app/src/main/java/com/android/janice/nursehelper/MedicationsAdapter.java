@@ -16,6 +16,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by janicerichards on 2/2/17.
  */
@@ -43,7 +46,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         public final TextView mDosageRouteView;
         public final TextView mFrequencyView;
         public final TextView mAdminTimesView;
-        public final TextView mLastDateGivenView;
         public final TextView mLastTimeGivenView;
         public final TextView mLastGivenByView;
 
@@ -63,7 +65,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             mDosageRouteView = (TextView) view.findViewById(R.id.medication_dosage_route_textview);
             mFrequencyView = (TextView) view.findViewById(R.id.medication_frequency_textview);
             mAdminTimesView = (TextView) view.findViewById(R.id.medication_admin_times_textview);
-            mLastDateGivenView = (TextView) view.findViewById(R.id.medication_last_given_date_textview);
             mLastTimeGivenView = (TextView) view.findViewById(R.id.medication_last_given_time_textview);
             mLastGivenByView = (TextView) view.findViewById(R.id.medication_last_given_nurse_textview);
 
@@ -81,26 +82,23 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         public void onCheckedChanged(CompoundButton button, boolean isChecked) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            String genericName = mCursor.getString(MedicationsFragment.COL_GENERIC);
-            float dosage = mCursor.getFloat(MedicationsFragment.COL_DOSAGE);
-            String dosageUnits = mCursor.getString(MedicationsFragment.COL_DOSAGE_UNITS);
             if (button == mGiveBox) {
                 if (isChecked) {
                     // Medication given for the current med
-                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, mNurseName, true);
+                    MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, true);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "give" record!!
-                    MedicationItem.askUndoMedGiven(mRoomNumber, genericName, dosage, mNurseName);
+                    MedicationItem.askUndoMedGiven(mCursor, mRoomNumber, mNurseName);
                 }
             } else if (button == mRefuseBox) {
                 if (isChecked) {
                     // Medication refused for the current med
-                    MedicationItem.medGiven(mContext, mRoomNumber, genericName, dosage, dosageUnits, mNurseName, false);
+                    MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, false);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "refuse" record!!
-                    MedicationItem.askUndoMedRefused(mRoomNumber, genericName, dosage, mNurseName);
+                    MedicationItem.askUndoMedRefused(mCursor, mRoomNumber, mNurseName);
                 }
             }
 
@@ -165,6 +163,15 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         String dosageRoute = mCursor.getString(MedicationsFragment.COL_DOSAGE_ROUTE);
         String freq = mCursor.getString(MedicationsFragment.COL_FREQUENCY);
         String adminTimes = mCursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
+        long lastGivenTime = mCursor.getLong(MedicationsFragment.COL_LAST_GIVEN);
+
+
+        // TEMP put in Utility later.
+        Date date = new Date(lastGivenTime);
+        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
+
+
+
 
         medicationsAdapterViewHolder.mGenericNameView.setText(genericName);
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
@@ -173,6 +180,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         medicationsAdapterViewHolder.mDosageRouteView.setText(dosageRoute);
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);
+        medicationsAdapterViewHolder.mLastTimeGivenView.setText(formattedDate);
 
         mICM.onBindViewHolder(medicationsAdapterViewHolder, position);
     }

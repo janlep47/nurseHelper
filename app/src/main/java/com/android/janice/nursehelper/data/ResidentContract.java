@@ -100,6 +100,8 @@ public class ResidentContract {
 
         public static final String COLUMN_TIMES = "adminTimes";   // THIS IS AN ARRAY OF TIMES (hr:min)
 
+        public static final String COLUMN_LAST_GIVEN = "lastGivenTime";
+
 
         public static Uri buildMedsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -113,7 +115,9 @@ public class ResidentContract {
         public static String getRoomNumberFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-
+        public static String getMedNameFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
     }
 
 

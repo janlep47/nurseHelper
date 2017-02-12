@@ -22,6 +22,7 @@ public class ResidentProvider extends ContentProvider {
 
     static final int RESIDENTS = 100;              // PATH  residents path (DIR)
     static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
+    static final int MEDICATIONS_WITH_ROOM_NUMBER_AND_MED = 202;  // PATH/*  medications path followed by a String (ITEM)
     static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
     static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
     static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 402;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
@@ -33,6 +34,13 @@ public class ResidentProvider extends ContentProvider {
     private static final String sMedsByResidentSelection =
             ResidentContract.MedicationEntry.TABLE_NAME+
                     "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? ";
+
+    // get list of all medications by room# (or patient id)
+    public static final String sMedsByResidentAndMedSelection =
+            ResidentContract.MedicationEntry.TABLE_NAME+
+                    "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? AND "+
+                    ResidentContract.MedicationEntry.TABLE_NAME+
+                    "." + ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC + " = ? ";
 
     // get most recent assessment by room# (or patient id)
     private static final String sRecentAssessmentByResidentSelection =
@@ -62,6 +70,7 @@ public class ResidentProvider extends ContentProvider {
         // Create a corresponding code.
         matcher.addURI(authority, ResidentContract.PATH_RESIDENTS, RESIDENTS);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*", MEDICATIONS_WITH_ROOM_NUMBER);
+        matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*/*", MEDICATIONS_WITH_ROOM_NUMBER_AND_MED);
         matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*", ASSESSMENTS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*", MEDS_GIVEN_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*/*", MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED);
@@ -84,6 +93,8 @@ public class ResidentProvider extends ContentProvider {
             case RESIDENTS:
                 return ResidentContract.ResidentEntry.CONTENT_TYPE;        // DIR
             case MEDICATIONS_WITH_ROOM_NUMBER:
+                return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
                 return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 return ResidentContract.AssessmentEntry.CONTENT_ITEM_TYPE;   // ITEM
@@ -131,6 +142,12 @@ public class ResidentProvider extends ContentProvider {
                 break;
             }
 
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
+            {
+                retCursor = getMedicationsByPatientAndMed(uri, projection, sortOrder);
+                break;
+            }
+
             // "assessments/*"
             case ASSESSMENTS_WITH_ROOM_NUMBER:
             {
@@ -165,6 +182,15 @@ public class ResidentProvider extends ContentProvider {
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedicationEntry.TABLE_NAME,
                 projection, sMedsByResidentSelection, new String[] {roomNumber}, null, null, sortOrder);
+    }
+
+
+    private Cursor getMedicationsByPatientAndMed(Uri uri, String[] projection, String sortOrder) {
+        String roomNumber = ResidentContract.MedicationEntry.getRoomNumberFromUri(uri);
+        String medName = ResidentContract.MedicationEntry.getMedNameFromUri(uri);
+
+        return mOpenHelper.getReadableDatabase().query(ResidentContract.MedicationEntry.TABLE_NAME,
+                projection, sMedsByResidentAndMedSelection, new String[] {roomNumber,medName}, null, null, sortOrder);
     }
 
 
@@ -207,6 +233,13 @@ public class ResidentProvider extends ContentProvider {
                 break;
             }
             case MEDICATIONS_WITH_ROOM_NUMBER: {
+                String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
+                long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
+                if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
+                else throw new android.database.SQLException("Failed to insert row into (meds)" + uri);
+                break;
+            }
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
                 if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
@@ -260,6 +293,10 @@ public class ResidentProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         ResidentContract.MedicationEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
+                rowsDeleted = db.delete(
+                        ResidentContract.MedicationEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 rowsDeleted = db.delete(
                         ResidentContract.AssessmentEntry.TABLE_NAME, selection, selectionArgs);
@@ -294,6 +331,9 @@ public class ResidentProvider extends ContentProvider {
                 rowsUpdated = db.update(ResidentContract.ResidentEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case MEDICATIONS_WITH_ROOM_NUMBER:
+                rowsUpdated = db.update(ResidentContract.MedicationEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
                 rowsUpdated = db.update(ResidentContract.MedicationEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case ASSESSMENTS_WITH_ROOM_NUMBER:
@@ -333,6 +373,19 @@ public class ResidentProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             case MEDICATIONS_WITH_ROOM_NUMBER:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, value);
+                        if (_id != -1) returnCount++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
                 db.beginTransaction();
                 try {
                     for (ContentValues value : values) {
