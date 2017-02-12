@@ -106,12 +106,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
 
     @Override
     public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh) {
-        //Intent intent;
-        //Bundle bundle = new Bundle();
-        //bundle.putString("roomNumber",roomNumber);
-        //intent = new Intent(this, DisplayMedicationActivity.class);
-        //intent.putExtras(bundle);
-        //startActivity(intent);
+        //NOT USED YET
     }
 
 

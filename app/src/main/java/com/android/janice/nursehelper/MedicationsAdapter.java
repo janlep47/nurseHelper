@@ -29,7 +29,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     final private Context mContext;
     final private MedicationsAdapterOnClickHandler mClickHandler;
     final private View mEmptyView;
-    final private ItemChoiceManager mICM;
+    //final private ItemChoiceManager mICM;
     final private String mRoomNumber;
     final private String mNurseName;
 
@@ -37,8 +37,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     /**
      * Cache of the children views for a Medications list item.
      */
-    public class MedicationsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-                                                                        CompoundButton.OnCheckedChangeListener {
+    public class MedicationsAdapterViewHolder extends RecyclerView.ViewHolder
+            implements CompoundButton.OnCheckedChangeListener {
         public final TextView mGenericNameView;
         public final TextView mTradeNameView;
         public final TextView mDosageView;
@@ -75,7 +75,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
             mGiveBox.setOnCheckedChangeListener(this);
             mRefuseBox.setOnCheckedChangeListener(this);
-            view.setOnClickListener(this);
         }
 
         @Override
@@ -103,30 +102,19 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             }
 
         }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            //int roomNumberColumnIndex = mCursor.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);
-
-
-            mClickHandler.onClick(mRoomNumber, this);
-            mICM.onClick(this);
-        }
     }
 
     public static interface MedicationsAdapterOnClickHandler {
         void onClick(String roomNumber, MedicationsAdapterViewHolder vh);
     }
 
-    public MedicationsAdapter(Context context, MedicationsAdapterOnClickHandler dh, View emptyView, int choiceMode,
+    public MedicationsAdapter(Context context, MedicationsAdapterOnClickHandler dh, View emptyView,
                               String roomNumber, String nurseName) {
         mContext = context;
         mClickHandler = dh;
         mEmptyView = emptyView;
-        mICM = new ItemChoiceManager(this);
-        mICM.setChoiceMode(choiceMode);
+        //mICM = new ItemChoiceManager(this);
+        //mICM.setChoiceMode(choiceMode);
         mRoomNumber = roomNumber;
         mNurseName = nurseName;
     }
@@ -181,20 +169,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);
         medicationsAdapterViewHolder.mLastTimeGivenView.setText(formattedDate);
-
-        mICM.onBindViewHolder(medicationsAdapterViewHolder, position);
-    }
-
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mICM.onRestoreInstanceState(savedInstanceState);
-    }
-
-    public void onSaveInstanceState(Bundle outState) {
-        mICM.onSaveInstanceState(outState);
-    }
-
-    public int getSelectedItemPosition() {
-        return mICM.getSelectedItemPosition();
     }
 
     @Override
@@ -211,13 +185,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
     public Cursor getCursor() {
         return mCursor;
-    }
-
-    public void selectView(RecyclerView.ViewHolder viewHolder) {
-        if ( viewHolder instanceof MedicationsAdapterViewHolder ) {
-            MedicationsAdapterViewHolder vfh = (MedicationsAdapterViewHolder)viewHolder;
-            vfh.onClick(vfh.itemView);
-        }
     }
 
 }

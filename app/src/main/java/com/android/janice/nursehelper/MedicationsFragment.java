@@ -45,18 +45,11 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     public static final String LOG_TAG = MedicationsFragment.class.getSimpleName();
     private MedicationsAdapter mMedicationsAdapter;
     private RecyclerView mRecyclerView;
-    private boolean mAutoSelectView;
-    private int mChoiceMode;
     private boolean mHoldForTransition;
 
     String mRoomNumber;
     String mPortraitFilePath;
     String mNurseName;
-
-
-    private String mInitialSelectedRoomNumber = "";
-
-    private static final String SELECTED_KEY = "selected_position";
 
     private static final int MEDICATIONS_LOADER = 0;
 
@@ -121,8 +114,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         super.onInflate(context, attrs, savedInstanceState);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ResidentlistFragment,
                 0, 0);
-        mChoiceMode = a.getInt(R.styleable.ResidentlistFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
-        mAutoSelectView = a.getBoolean(R.styleable.ResidentlistFragment_autoSelectView, false);
+
         mHoldForTransition = a.getBoolean(R.styleable.ResidentlistFragment_sharedElementTransitions, false);
         a.recycle();
     }
@@ -165,18 +157,18 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                                 vh
                         );
             }
-        }, emptyView, mChoiceMode, mRoomNumber, mNurseName);
+        }, emptyView, mRoomNumber, mNurseName);
 
         // specify an adapter (see also next example)
         mRecyclerView.setAdapter(mMedicationsAdapter);
 
 
         // For when device is rotated
-        if (savedInstanceState != null) {
-            mMedicationsAdapter.onRestoreInstanceState(savedInstanceState);
-        } else {
+        //if (savedInstanceState != null) {
+            //mMedicationsAdapter.onRestoreInstanceState(savedInstanceState);
+        //} else {
             //ResidentSyncAdapter.syncImmediately(getContext());
-        }
+        //}
 
         return rootView;
     }
@@ -200,7 +192,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
-        mMedicationsAdapter.onSaveInstanceState(outState);
+        //mMedicationsAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -236,37 +228,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                     // Since we know we're going to get items, we keep the listener around until
                     // we see Children.
                     if (mRecyclerView.getChildCount() > 0) {
-                        mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int position = mMedicationsAdapter.getSelectedItemPosition();
-                        //if (position == RecyclerView.NO_POSITION &&
-                        //        -1 != mInitialSelectedDate) {
-                        if (position == RecyclerView.NO_POSITION && !mInitialSelectedRoomNumber.equals("")) {
-                            Cursor data = mMedicationsAdapter.getCursor();
-                            int count = data.getCount();
-                            //int dateColumn = data.getColumnIndex(ResidentsContract.ResidentEntry.COLUMN_DATE);
-                            int roomNumberColumn = data.getColumnIndex(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER);
-                            for (int i = 0; i < count; i++) {
-                                data.moveToPosition(i);
-                                //if ( data.getLong(dateColumn) == mInitialSelectedDate ) {
-                                if ((data.getString(roomNumberColumn)).equals(mInitialSelectedRoomNumber)) {
-                                    position = i;
-                                    break;
-                                }
-                            }
-                        }
-                        if (position == RecyclerView.NO_POSITION) position = 0;
-                        // If we don't need to restart the loader, and there's a desired position to restore
-                        // to, do so now.
-                        mRecyclerView.smoothScrollToPosition(position);
-                        RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(position);
-                        if (null != vh && mAutoSelectView) {
-                            mMedicationsAdapter.selectView(vh);
-                        }
-                        if (mHoldForTransition) {
-                            getActivity().supportStartPostponedEnterTransition();
-                        }
-
-
                         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
                         // We need to start the enter transition after the data has loaded
@@ -293,7 +254,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                         layoutParams.rightMargin = 40;
                         imageView.setLayoutParams(layoutParams);
                         actionBar.setCustomView(imageView);
-
                         return true;
                     }
                     return false;
@@ -324,7 +284,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_medications_empty);
             if ( null != tv ) {
 
-
                 /*
                 // if cursor is empty, why? do we have an invalid location
                 int message = R.string.empty_Medications;
@@ -343,10 +302,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                 tv.setText(message);
             }
         }
-    }
-
-    public void dataUpdated() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
 
