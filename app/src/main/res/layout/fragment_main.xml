@@ -14,19 +14,19 @@
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:orientation="vertical">
-        <android.support.v7.widget.Toolbar
+        <!--android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:elevation="0dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-        <ImageView
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/-->
+        <!--ImageView
             android:layout_width="match_parent"
             android:layout_height="?attr/listPreferredItemHeight"
             android:layout_gravity="center"
             android:scaleType="center"
             android:src="@drawable/ic_stat_name"
-            android:contentDescription="@string/app_name"/>
+            android:contentDescription="@string/app_name"/-->
     </LinearLayout>
 </RelativeLayout>

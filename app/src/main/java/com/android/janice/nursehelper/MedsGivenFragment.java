@@ -71,7 +71,7 @@ public class MedsGivenFragment  extends ListFragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         mActivity = activity;
 
-        Toolbar toolbarView = (Toolbar) root.findViewById(R.id.toolbar);
+        //Toolbar toolbarView = (Toolbar) root.findViewById(R.id.toolbar);
         mLoadingPanel = (View) root.findViewById(R.id.loadingPanel);
 
         activity.supportStartPostponedEnterTransition();

@@ -244,7 +244,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
 
                         AppCompatActivity activity = (AppCompatActivity) getActivity();
-                        Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+                        //Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
 
                         // We need to start the enter transition after the data has loaded
                         //if ( mTransitionAnimation ) {
