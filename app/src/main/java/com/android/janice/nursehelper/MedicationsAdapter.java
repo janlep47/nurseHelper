@@ -153,18 +153,12 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         String adminTimes = mCursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
         long lastGivenTime = mCursor.getLong(MedicationsFragment.COL_LAST_GIVEN);
 
-
-        // TEMP put in Utility later.
-        Date date = new Date(lastGivenTime);
-        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
-
-
-
-
-        medicationsAdapterViewHolder.mGenericNameView.setText(genericName);
+        String formattedDate = MedicationItem.getReadableTimestamp(lastGivenTime);
+        
+        medicationsAdapterViewHolder.mGenericNameView.setText("   ("+genericName+")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
         medicationsAdapterViewHolder.mDosageView.setText(String.valueOf(dosage));
-        medicationsAdapterViewHolder.mDosageUnitsView.setText(dosageUnits);
+        medicationsAdapterViewHolder.mDosageUnitsView.setText(" "+dosageUnits);
         medicationsAdapterViewHolder.mDosageRouteView.setText(dosageRoute);
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);

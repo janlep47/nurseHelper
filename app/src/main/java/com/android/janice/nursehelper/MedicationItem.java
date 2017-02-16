@@ -59,6 +59,15 @@ public class MedicationItem {
 
 
 
+    public static String getReadableTimestamp(long timestamp) {
+        //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+        //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
+        java.util.Date date = new java.util.Date(timestamp);
+        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
+        return formattedDate;
+    }
+
+
     public MedicationItem(Cursor cursor) {
         roomNumber = cursor.getString(COL_ROOM_NUMBER);
         genericName = cursor.getString(COL_GENERIC_NAME);
@@ -74,6 +83,7 @@ public class MedicationItem {
         String roomNumber = "200";
         Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
+        long time= System.currentTimeMillis();
 
         // Med #1
         ContentValues medValues = new ContentValues();
@@ -86,6 +96,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
 
         Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -101,6 +112,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "TID");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -115,6 +127,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -129,6 +142,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
         medUri = context.getContentResolver().insert(uriMeds, medValues);
     }
 
