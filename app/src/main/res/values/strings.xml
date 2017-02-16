@@ -8,7 +8,7 @@
     <string name="title_activity_list">NurseHelper</string>
     <string name="title_activity_medications">Medications</string>
     <string name="title_activity_meds_given">MedsGiven</string>
-    <string name="title_activity_assessments">Assessments</string>
+    <string name="title_activity_assessments">Assess</string>
     <string name="title_activity_past_assessments">Past Assessments</string>
 
     <string name="blood_pressure_label">blood pressure: </string>
