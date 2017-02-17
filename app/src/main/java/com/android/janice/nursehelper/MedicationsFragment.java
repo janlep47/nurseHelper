@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -163,6 +164,49 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         mRecyclerView.setAdapter(mMedicationsAdapter);
 
 
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        // We need to start the enter transition after the data has loaded
+        //if ( mTransitionAnimation ) {
+        activity.supportStartPostponedEnterTransition();
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setSubtitle("room: "+mRoomNumber);
+
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                | ActionBar.DISPLAY_SHOW_CUSTOM);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+
+        // Calculate ActionBar height
+        int actionBarHeight = AssessmentFragment.DEFAULT_ACTION_BAR_HEIGHT;
+        TypedValue tv = new TypedValue();
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        Picasso.with(getActivity())
+                .load("file:///android_asset/"+mPortraitFilePath)
+                .placeholder(R.drawable.blank_portrait)
+                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
+                .noFade().resize(actionBarHeight, actionBarHeight)
+                .error(R.drawable.blank_portrait)
+                .into(imageView);
+
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+
+
+
+
         // For when device is rotated
         //if (savedInstanceState != null) {
             //mMedicationsAdapter.onRestoreInstanceState(savedInstanceState);
@@ -179,10 +223,12 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         // We hold for transition here just in-case the activity
         // needs to be re-created. In a standard return transition,
         // this doesn't actually make a difference.
+
         if ( mHoldForTransition ) {
             getActivity().supportPostponeEnterTransition();
         }
         getLoaderManager().initLoader(MEDICATIONS_LOADER, null, this);
+
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -228,6 +274,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                     // Since we know we're going to get items, we keep the listener around until
                     // we see Children.
                     if (mRecyclerView.getChildCount() > 0) {
+                        /*
                         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
                         // We need to start the enter transition after the data has loaded
@@ -254,6 +301,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                         layoutParams.rightMargin = 40;
                         imageView.setLayoutParams(layoutParams);
                         actionBar.setCustomView(imageView);
+                        */
                         return true;
                     }
                     return false;

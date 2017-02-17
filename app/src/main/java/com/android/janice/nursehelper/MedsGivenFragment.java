@@ -74,9 +74,6 @@ public class MedsGivenFragment  extends ListFragment {
         //Toolbar toolbarView = (Toolbar) root.findViewById(R.id.toolbar);
         mLoadingPanel = (View) root.findViewById(R.id.loadingPanel);
 
-        activity.supportStartPostponedEnterTransition();
-
-
         // We need to start the enter transition after the data has loaded
         //if ( mTransitionAnimation ) {
         activity.supportStartPostponedEnterTransition();
