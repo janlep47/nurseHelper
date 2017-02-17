@@ -34,4 +34,8 @@ Two additional components are needed to create a functional package:
   Also a package to maintain the server database.
 
 2. XML Schema - generated code, to allow this entire package to be more easily 
-customized for individual care facitilities.
+customized for individual care facitilities.  Possibly also some code-generation 
+programs to create the Android ContentProvider code, based on the input XML schema
+files.
+
+3. Design and implement a voice-to-text version of NurseHelper
