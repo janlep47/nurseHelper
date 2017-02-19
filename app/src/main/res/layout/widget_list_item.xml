@@ -11,11 +11,16 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeight"
+        android:paddingLeft="2dp"
+        android:paddingStart="2dp"
+        android:paddingRight="2dp"
+        android:paddingEnd="2dp"
+        android:orientation="horizontal">
+        <!--
         android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
         android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
         android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-        android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
-        android:orientation="horizontal">
+        android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material" -->
 
         <TextView
             android:id="@+id/widget_room_number"
@@ -27,7 +32,7 @@
             android:textSize="@dimen/widget_text_size"/>
 
 
-        <LinearLayout
+        <!--LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -57,7 +62,7 @@
             android:backgroundTint="@color/colorAssessment"
             android:textSize="@dimen/widget_subtext_size"/>
 
-        </LinearLayout>
+        </LinearLayout-->
 
     </LinearLayout>
 

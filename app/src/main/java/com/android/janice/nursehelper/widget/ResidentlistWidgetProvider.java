@@ -51,6 +51,18 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
             //        ? new Intent(context, DetailActivity.class)
             //        : new Intent(context, MainActivity.class);
 
+
+
+            Intent clickIntentTemplate = new Intent(context, MainActivity.class);
+
+            PendingIntent clickPendingMedsIntentTemplate = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(clickIntentTemplate)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setPendingIntentTemplate(R.id.widget_list, clickPendingMedsIntentTemplate);
+
+
+            /*
+
             Intent clickIntentMedsTemplate = new Intent(context, MedicationsActivity.class);
 
             PendingIntent clickPendingMedsIntentTemplate = TaskStackBuilder.create(context)
@@ -66,6 +78,9 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_last_assessment, clickPendingAssessmentIntentTemplate);
             views.setEmptyView(R.id.widget_last_assessment, R.id.widget_empty);
+*/
+
+            views.setEmptyView(R.id.widget_list, R.id.widget_empty);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -77,10 +92,13 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
 
         // FOR NOW:
+/*
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                 new ComponentName(context, getClass()));
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+*/
+
         /*
         if (ResidentlistSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);

@@ -23,7 +23,7 @@ import com.android.janice.nursehelper.data.ResidentContract;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
     private static final String[] RESIDENTLIST_COLUMNS = {
-            ResidentContract.ResidentEntry.COLUMN_ID,
+            ResidentContract.ResidentEntry.TABLE_NAME + "." + ResidentContract.ResidentEntry._ID,
             ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER
     };
     // These indices are tied to above.
@@ -37,6 +37,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
 
             @Override
             public void onCreate() {
+
                 // Nothing to do
             }
 
@@ -82,7 +83,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 //    setRemoteContentDescription(views, description);
                 //}
 
-
+/*
                 final Intent medsIntent = new Intent();
                 Uri medsUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
                 medsIntent.setData(medsUri);
@@ -92,7 +93,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
                 assessmentIntent.setData(assessementUri);
                 views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
-
+*/
                 return views;
             }
 

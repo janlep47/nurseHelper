@@ -45,7 +45,7 @@
     <string name="content_authority">com.android.janice.nursehelper</string>
 
     <!-- Empty Residentlist Database -->
-    <string name="empty_residentlist">No Resident Information Available</string>
+    <string name="empty_residentlist">No Pt. Info</string>
     <string name="empty_residentlist_no_network">No resident information available. The network is not available to fetch resident data.</string>
     <string name="empty_residentlist_server_down">No resident information available. The server is not returning data.</string>
     <string name="empty_residentlist_server_error">No resident information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
