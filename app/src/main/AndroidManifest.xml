@@ -79,6 +79,24 @@
             android:exported="false"
             android:syncable="true" />
 
+        <!-- collection widget -->
+        <receiver
+            android:name=".widget.ResidentlistWidgetProvider"
+            android:label="@string/title_widget_residentlist"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.android.stocks.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_list" />
+        </receiver>
+        <service
+            android:name=".widget.ResidentlistWidgetRemoteViewsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+
     </application>
 
 </manifest>
