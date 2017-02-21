@@ -83,7 +83,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 //    setRemoteContentDescription(views, description);
                 //}
 
-/*
+
                 final Intent medsIntent = new Intent();
                 Uri medsUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
                 medsIntent.setData(medsUri);
@@ -93,7 +93,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
                 assessmentIntent.setData(assessementUri);
                 views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
-*/
+
                 return views;
             }
 

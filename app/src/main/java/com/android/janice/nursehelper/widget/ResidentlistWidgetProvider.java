@@ -55,13 +55,11 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
 
             Intent clickIntentTemplate = new Intent(context, MainActivity.class);
 
-            PendingIntent clickPendingMedsIntentTemplate = TaskStackBuilder.create(context)
+            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setPendingIntentTemplate(R.id.widget_list, clickPendingMedsIntentTemplate);
+            views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
 
-
-            /*
 
             Intent clickIntentMedsTemplate = new Intent(context, MedicationsActivity.class);
 
@@ -78,7 +76,6 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_last_assessment, clickPendingAssessmentIntentTemplate);
             views.setEmptyView(R.id.widget_last_assessment, R.id.widget_empty);
-*/
 
             views.setEmptyView(R.id.widget_list, R.id.widget_empty);
 

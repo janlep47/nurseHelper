@@ -32,7 +32,7 @@
             android:textSize="@dimen/widget_text_size"/>
 
 
-        <!--LinearLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -62,7 +62,7 @@
             android:backgroundTint="@color/colorAssessment"
             android:textSize="@dimen/widget_subtext_size"/>
 
-        </LinearLayout-->
+        </LinearLayout>
 
     </LinearLayout>
 
