@@ -54,8 +54,8 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
                 "\n  pulse: "+assessment.getPulse()+
                 "  RR: "+assessment.getRespiratoryRate()+
                 "\n  edema: "+assessment.getEdema()+
-                ((assessment.getEdema().length()!=0) ? "  locn: "+assessment.getEdemaLocn() : " ")+
-                ((assessment.getPitting() ? "  pitting" : "  non-pitting"))+
+                ((!assessment.getEdema().equals("0")) ? "  locn: "+assessment.getEdemaLocn()+
+                        ((assessment.getPitting()) ? "  pitting" : "  non-pitting") : " ") +
                 "\n  pain: "+String.valueOf(assessment.getPain()));
         holder.txt2.setText("findings: \n"+assessment.getSignificantFindings());
 

@@ -158,7 +158,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, "98.7 F");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, 92);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 17);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "NONE");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "0");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, 0);  // false
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 6);
