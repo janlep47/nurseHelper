@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -43,8 +44,10 @@ public class AssessmentFragment extends Fragment {
     private NumberPicker mPulse_picker;
     private NumberPicker mRR_picker;
     private Spinner mEdema_spinner;
-    private Spinner mEdema_location_spinner;
+    //private Spinner mEdema_location_spinner;
     private NumberPicker mPain_picker;
+    private CheckBox mEdema_LLE, mEdema_RLE, mEdema_LUE, mEdema_RUE;
+
 
     private TextView mSystolicBP_textView;
     private TextView mDiastolicBP_textView;
@@ -166,10 +169,13 @@ public class AssessmentFragment extends Fragment {
         mPulse_picker = (NumberPicker) rootView.findViewById(R.id.pulse_numberpicker);
         mRR_picker = (NumberPicker) rootView.findViewById(R.id.rr_numberpicker);
         mEdema_spinner = (Spinner) rootView.findViewById(R.id.edema_spinner);
-        mEdema_location_spinner = (Spinner) rootView.findViewById(R.id.edema_locn_spinner);
+        //mEdema_location_spinner = (Spinner) rootView.findViewById(R.id.edema_locn_spinner);
+        mEdema_LLE = (CheckBox) rootView.findViewById(R.id.edema_LLE);
+        mEdema_RLE = (CheckBox) rootView.findViewById(R.id.edema_RLE);
+        mEdema_LUE = (CheckBox) rootView.findViewById(R.id.edema_LUE);
+        mEdema_RUE = (CheckBox) rootView.findViewById(R.id.edema_RUE);
         mPain_picker = (NumberPicker) rootView.findViewById(R.id.pain_picker);
         mDone_button = (Button) rootView.findViewById(R.id.done_button);
-
 
         mSystolicBP_picker.setMinValue(60);
         mSystolicBP_picker.setMaxValue(250);
@@ -259,11 +265,13 @@ public class AssessmentFragment extends Fragment {
         // Apply the adapter to the spinner
         mEdema_spinner.setAdapter(adapter);
 
+        /*
         // Do the same for the edemaLocationSpinner:
         adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.edema_locn_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mEdema_location_spinner.setAdapter(adapter);
+        */
 
         mPain_picker.setMinValue(0);
         mPain_picker.setMaxValue(10);
@@ -295,8 +303,16 @@ public class AssessmentFragment extends Fragment {
                 rr = Integer.parseInt((String) mRR_textView.getText());
                 pain = Integer.parseInt((String) mPain_textView.getText());
                 String findings = mFindings_editText.getText().toString();
+                String edemaLocations = "";
+                if (mEdema_spinner.getSelectedItemPosition() != 0) {
+                    if (mEdema_LLE.isChecked()) edemaLocations += " LLE";
+                    if (mEdema_LUE.isChecked()) edemaLocations += " LUE";
+                    if (mEdema_RLE.isChecked()) edemaLocations += " RLE";
+                    if (mEdema_RUE.isChecked()) edemaLocations += " RUE";
+                }
                 AssessmentItem.saveAssessment(getActivity(), mRoomNumber, systolicBP, diastolicBP, temp, pulse, rr,
-                        (String) mEdema_spinner.getSelectedItem(), (String) mEdema_location_spinner.getSelectedItem(),
+                        //(String) mEdema_spinner.getSelectedItem(), (String) mEdema_location_spinner.getSelectedItem(),
+                        (String) mEdema_spinner.getSelectedItem(), edemaLocations,
                         pain, findings);
                 getActivity().finish();
             }
