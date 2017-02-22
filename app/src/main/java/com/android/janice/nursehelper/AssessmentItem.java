@@ -24,6 +24,7 @@ public class AssessmentItem {
     private int respiratoryRate;
     private String edema;
     private String edemaLocn;
+    private boolean edemaPitting;
     private int pain;
     private String significantFindings;
     private long timestamp;
@@ -38,9 +39,10 @@ public class AssessmentItem {
     public final static int COL_RR = 4;
     public final static int COL_EDEMA = 5;
     public final static int COL_EDEMA_LOCN = 6;
-    public final static int COL_PAIN = 7;
-    public final static int COL_SIGNIFICANT_FINDINGS = 8;
-    public final static int COL_TIMESTAMP = 9;
+    public final static int COL_EDEMA_PITTING = 7;
+    public final static int COL_PAIN = 8;
+    public final static int COL_SIGNIFICANT_FINDINGS = 9;
+    public final static int COL_TIMESTAMP = 10;
 
 
     public String getRoomNumber() { return roomNumber; }
@@ -60,6 +62,8 @@ public class AssessmentItem {
     public String getEdema() { return edema; }
 
     public String getEdemaLocn() { return edemaLocn; }
+
+    public boolean getPitting() { return edemaPitting; }
 
     public int getPain() { return pain; }
 
@@ -83,6 +87,8 @@ public class AssessmentItem {
 
     public void setEdemaLocn(String edemaLocn) { this.edemaLocn = edemaLocn; }
 
+    public void setPitting(boolean pitting) { this.edemaPitting = pitting; }
+
     public void setPain(int pain) { this.pain = pain; }
 
     public void setSignificantFindings(String findings) { this.significantFindings = findings; }
@@ -97,6 +103,8 @@ public class AssessmentItem {
         respiratoryRate = cursor.getInt(COL_RR);
         edema = cursor.getString(COL_EDEMA);
         edemaLocn = cursor.getString(COL_EDEMA_LOCN);
+        short pitting = cursor.getShort(COL_EDEMA_PITTING);
+        edemaPitting = ((pitting == 0) ? false : true);
         pain = cursor.getInt(COL_PAIN);
         significantFindings = cursor.getString(COL_SIGNIFICANT_FINDINGS);
         timestamp = cursor.getLong(COL_TIMESTAMP);
@@ -133,8 +141,9 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 15);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "RLE");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, 1);  // true
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 2);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Mild edema around R ankle. \n"+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "C/O stiffness in R ankle. \n"+
                 "Very slight headache.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
@@ -149,11 +158,11 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, "98.7 F");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, 92);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 17);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "LLE");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "NONE");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, 0);  // false
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 6);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Mild edema around R ankle. \n"+
-                "Says moderate pain in lower back.");
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Pt. says moderate pain in lower back.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         assessmentUri = context.getContentResolver().insert(uri, aValues);
@@ -161,7 +170,8 @@ public class AssessmentItem {
 
     // Later, format the values...
     public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
-                                      int pulse, int rr, String edema, String edemaLocn, int pain, String findings) {
+                                      int pulse, int rr, String edema, String edemaLocn, boolean edemaPitting,
+                                      int pain, String findings) {
         Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(roomNumber).build();
 
@@ -177,6 +187,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, String.valueOf(rr));
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, edema);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, edemaLocn);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, edemaPitting);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, String.valueOf(pain));
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, findings);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);

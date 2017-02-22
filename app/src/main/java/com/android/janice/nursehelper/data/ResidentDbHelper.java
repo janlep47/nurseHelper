@@ -53,6 +53,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.AssessmentEntry.COLUMN_RR + " INTEGER, " +
                         ResidentContract.AssessmentEntry.COLUMN_EDEMA + " TEXT, " +
                         ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN + " TEXT, " +
+                        ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING + " BOOLEAN, " +
                         ResidentContract.AssessmentEntry.COLUMN_PAIN + " INTEGER, " +
                         ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS + " TEXT, " +
                         ResidentContract.AssessmentEntry.COLUMN_TIME + " TIMESTAMP);";

@@ -163,6 +163,8 @@ public class ResidentContract {
 
         public static final String COLUMN_EDEMA_LOCN = "edemaLocn";
 
+        public static final String COLUMN_EDEMA_PITTING = "edemaPitting";
+
         public static final String COLUMN_PAIN = "pain";
 
         public static final String COLUMN_SIGNIFICANT_FINDINGS = "significantFindings";

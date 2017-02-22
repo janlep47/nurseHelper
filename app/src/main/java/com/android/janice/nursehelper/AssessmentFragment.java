@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -47,7 +48,7 @@ public class AssessmentFragment extends Fragment {
     //private Spinner mEdema_location_spinner;
     private NumberPicker mPain_picker;
     private CheckBox mEdema_LLE, mEdema_RLE, mEdema_LUE, mEdema_RUE;
-
+    private RadioButton mEdema_pitting, mEdema_non_pitting;
 
     private TextView mSystolicBP_textView;
     private TextView mDiastolicBP_textView;
@@ -62,10 +63,9 @@ public class AssessmentFragment extends Fragment {
 
     String mRoomNumber;
     String mPortraitFilePath;
+    private boolean edemaPitting = false;
 
     public static final int DEFAULT_ACTION_BAR_HEIGHT = 60;
-
-
 
     private static final String[] ASSESSMENT_COLUMNS = {
             ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
@@ -174,6 +174,8 @@ public class AssessmentFragment extends Fragment {
         mEdema_RLE = (CheckBox) rootView.findViewById(R.id.edema_RLE);
         mEdema_LUE = (CheckBox) rootView.findViewById(R.id.edema_LUE);
         mEdema_RUE = (CheckBox) rootView.findViewById(R.id.edema_RUE);
+        mEdema_pitting = (RadioButton) rootView.findViewById(R.id.edema_pitting);
+        mEdema_non_pitting = (RadioButton) rootView.findViewById(R.id.edema_non_pitting);
         mPain_picker = (NumberPicker) rootView.findViewById(R.id.pain_picker);
         mDone_button = (Button) rootView.findViewById(R.id.done_button);
 
@@ -265,6 +267,17 @@ public class AssessmentFragment extends Fragment {
         // Apply the adapter to the spinner
         mEdema_spinner.setAdapter(adapter);
 
+        mEdema_pitting.setOnClickListener(new RadioButton.OnClickListener() {
+            public void onClick(View view) {
+                edemaPitting = ((RadioButton) view).isChecked();
+            }
+        });
+        mEdema_non_pitting.setOnClickListener(new RadioButton.OnClickListener() {
+            public void onClick(View view) {
+                edemaPitting = !((RadioButton) view).isChecked();
+            }
+        });
+
         /*
         // Do the same for the edemaLocationSpinner:
         adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -310,9 +323,10 @@ public class AssessmentFragment extends Fragment {
                     if (mEdema_RLE.isChecked()) edemaLocations += " RLE";
                     if (mEdema_RUE.isChecked()) edemaLocations += " RUE";
                 }
+                boolean edemaPitting = false;
                 AssessmentItem.saveAssessment(getActivity(), mRoomNumber, systolicBP, diastolicBP, temp, pulse, rr,
                         //(String) mEdema_spinner.getSelectedItem(), (String) mEdema_location_spinner.getSelectedItem(),
-                        (String) mEdema_spinner.getSelectedItem(), edemaLocations,
+                        (String) mEdema_spinner.getSelectedItem(), edemaLocations, edemaPitting,
                         pain, findings);
                 getActivity().finish();
             }

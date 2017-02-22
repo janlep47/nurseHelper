@@ -23,6 +23,12 @@
     <string name="rr_label">respiratory rate: </string>
     <string name="edema_label">edema: </string>
     <string name="edema_location_label">location: </string>
+    <string name="edema_LLE_label">LLE:</string>
+    <string name="edema_RLE_label">LLE:</string>
+    <string name="edema_LUE_label">LLE:</string>
+    <string name="edema_RUE_label">LLE:</string>
+    <string name="edema_pitting_label">pitting:</string>
+    <string name="edema_non_pitting_label">non-pitting:</string>
     <string name="pain_label">pain: </string>
     <string name="significant_findings_label">significant findings: </string>
     <string name="done_button_label">DONE</string>
