@@ -15,6 +15,8 @@
 
     <string name="med_last_given_label">last given:</string>
     <string name="med_due_time_label">next due time:</string>
+    <string name="med_give_label">Give:</string>
+    <string name="med_refuse_label">Refuse:</string>
 
     <string name="blood_pressure_label">blood pressure: </string>
     <string name="temperature_label">temperature: </string>

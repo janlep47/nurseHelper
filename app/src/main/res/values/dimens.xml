@@ -21,6 +21,7 @@
     <dimen name="widget_list_min_resize_height">@dimen/widget_list_default_height</dimen>
 
     <dimen name="list_item_extra_padding">3dp</dimen>
+    <dimen name="list_item_double_extra_padding">6dp</dimen>
 
 
 </resources>
