@@ -102,6 +102,8 @@ public class ResidentContract {
 
         public static final String COLUMN_LAST_GIVEN = "lastGivenTime";
 
+        public static final String COLUMN_NEXT_DOSAGE_TIME = "nextTimeToGive";
+
 
         public static Uri buildMedsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

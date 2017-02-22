@@ -48,6 +48,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         public final TextView mAdminTimesView;
         public final TextView mLastTimeGivenView;
         public final TextView mLastGivenByView;
+        public final TextView mNextDueTimeView;
 
         public final TextView mGiveLabelView;
         public final CheckBox mGiveBox;
@@ -67,6 +68,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             mAdminTimesView = (TextView) view.findViewById(R.id.medication_admin_times_textview);
             mLastTimeGivenView = (TextView) view.findViewById(R.id.medication_last_given_time_textview);
             mLastGivenByView = (TextView) view.findViewById(R.id.medication_last_given_nurse_textview);
+            mNextDueTimeView = (TextView) view.findViewById(R.id.medication_due_time_textview);
 
             mGiveLabelView = (TextView) view.findViewById(R.id.give_med_textview);
             mGiveBox = (CheckBox) view.findViewById(R.id.give_med_checkbox);
@@ -152,8 +154,10 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         String freq = mCursor.getString(MedicationsFragment.COL_FREQUENCY);
         String adminTimes = mCursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
         long lastGivenTime = mCursor.getLong(MedicationsFragment.COL_LAST_GIVEN);
+        long nextTimeToGive = mCursor.getLong(MedicationsFragment.COL_NEXT_GIVE_TIME);
 
         String formattedDate = MedicationItem.getReadableTimestamp(lastGivenTime);
+        String formattedNextDate = MedicationItem.getReadableTimestamp(nextTimeToGive);
         
         medicationsAdapterViewHolder.mGenericNameView.setText("   ("+genericName+")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
@@ -163,6 +167,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);
         medicationsAdapterViewHolder.mLastTimeGivenView.setText(formattedDate);
+        medicationsAdapterViewHolder.mNextDueTimeView.setText(formattedNextDate);
     }
 
     @Override

@@ -87,7 +87,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textSize="@dimen/residentlist_subtext_size"
-                android:text="   "/>
+                android:text="@string/med_list_item_spacer"/>
 
             <TextView
                 android:id="@+id/medication_frequency_textview"
@@ -116,7 +116,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="last given:"
+            android:text="@string/med_last_given_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             android:textSize="@dimen/residentlist_subtext_size"
             android:textColor="@color/colorAssessment"/>
@@ -143,7 +143,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textSize="@dimen/residentlist_subtext_size"
             android:textColor="@color/colorMeds"
-            android:text="give in: "/>
+            android:text="@string/med_due_time_label"/>
 
         <TextView
             android:id="@+id/medication_due_time_textview"
@@ -151,8 +151,7 @@ android:paddingEnd="@dimen/list_item_extra_padding">
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textSize="@dimen/residentlist_subtext_size"
-            android:textColor="@color/colorMeds"
-            android:text="1 hour"/>
+            android:textColor="@color/colorMeds"/>
 
     </LinearLayout>
 

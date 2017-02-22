@@ -63,7 +63,8 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
             ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE,
             ResidentContract.MedicationEntry.COLUMN_FREQUENCY,
             ResidentContract.MedicationEntry.COLUMN_TIMES,
-            ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN
+            ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN,
+            ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME
     };
 
 
@@ -77,6 +78,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     static final int COL_FREQUENCY = 6;
     static final int COL_ADMIN_TIMES = 7;
     static final int COL_LAST_GIVEN = 8;
+    static final int COL_NEXT_GIVE_TIME = 9;
 
 
     public interface Callback {

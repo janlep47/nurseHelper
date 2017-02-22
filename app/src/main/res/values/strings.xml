@@ -13,6 +13,10 @@
 
     <string name="title_widget_residentlist">NurseHelper</string>
 
+    <string name="med_list_item_spacer">   </string>
+    <string name="med_last_given_label">last given:</string>
+    <string name="med_due_time_label">next due time:</string>
+
     <string name="blood_pressure_label">blood pressure: </string>
     <string name="temperature_label">temperature: </string>
     <string name="pulse_label">pulse: </string>
