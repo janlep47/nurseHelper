@@ -13,7 +13,6 @@
 
     <string name="title_widget_residentlist">NurseHelper</string>
 
-    <string name="med_list_item_spacer">   </string>
     <string name="med_last_given_label">last given:</string>
     <string name="med_due_time_label">next due time:</string>
 

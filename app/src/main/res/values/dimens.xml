@@ -20,7 +20,7 @@
     <dimen name="widget_list_min_resize_width">220dp</dimen>
     <dimen name="widget_list_min_resize_height">@dimen/widget_list_default_height</dimen>
 
-    <dimen name="list_item_extra_padding">0dp</dimen>
+    <dimen name="list_item_extra_padding">3dp</dimen>
 
 
 </resources>
