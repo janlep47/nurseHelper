@@ -156,8 +156,15 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         long lastGivenTime = mCursor.getLong(MedicationsFragment.COL_LAST_GIVEN);
         long nextTimeToGive = mCursor.getLong(MedicationsFragment.COL_NEXT_GIVE_TIME);
 
-        String formattedDate = MedicationItem.getReadableTimestamp(lastGivenTime);
-        String formattedNextDate = MedicationItem.getReadableTimestamp(nextTimeToGive);
+        String formattedDate, formattedNextDate;
+        if (!DateAndTimeUtils.timeIsNull(lastGivenTime))
+            formattedDate = MedicationItem.getReadableTimestamp(lastGivenTime);
+        else
+            formattedDate = "* This medication has not been given yet *";
+        if (!DateAndTimeUtils.timeIsNull(nextTimeToGive))
+            formattedNextDate = MedicationItem.getReadableTimestamp(nextTimeToGive);
+        else
+            formattedNextDate = "* No scheduled time *";
         
         medicationsAdapterViewHolder.mGenericNameView.setText("   ("+genericName+")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
