@@ -66,7 +66,7 @@
     <string name="pref_time_interval_1hr">1 HR</string>
 
     <string name="pref_time_intervals_key" translatable="false">med_check_time_interval</string>
-    <string name="pref_time_intervals_label">Check for medications due:</string>
+    <string name="pref_time_intervals_label">Check when meds due:</string>
 
     <!-- Strings related to Medications-alert on/off Enabled preference -->
     <string name="pref_enable_med_alerts_key" translatable="false">enable_med_alerts</string>

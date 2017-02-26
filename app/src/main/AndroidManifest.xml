@@ -23,7 +23,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -74,7 +76,7 @@
         </activity>
 
         <!-- The manifest entry for our SettingsActivity. Each Activity requires a manifest entry -->
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity"/>
 
         <provider
             android:authorities="@string/content_authority"
