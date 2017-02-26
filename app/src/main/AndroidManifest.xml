@@ -73,11 +73,15 @@
                 android:value="com.android.janice.nursehelper.AssessmentActivity" />
         </activity>
 
+        <!-- The manifest entry for our SettingsActivity. Each Activity requires a manifest entry -->
+        <activity android:name=".SettingsActivity" />
+
         <provider
             android:authorities="@string/content_authority"
             android:name=".data.ResidentProvider"
             android:exported="false"
             android:syncable="true" />
+
 
         <!-- collection widget -->
         <receiver

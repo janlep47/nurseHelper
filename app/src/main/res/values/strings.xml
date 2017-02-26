@@ -2,6 +2,7 @@
     <string name="app_name">NurseHelper</string>
 
     <string name="action_about">about</string>
+    <string name="action_settings">Settings</string>
     <string name="action_show_past_meds">Show meds given</string>
     <string name="action_show_past_assessments">Show previous assessments</string>
 
@@ -49,6 +50,33 @@
         <item>LUE</item>
         <item>RUE</item>
     </string-array>
+
+
+
+    <!-- Label for the medications-check time interval preference -->
+    <string name="pref_units_label">Temperature Units</string>
+    <string name="pref_time_interval_15min_label">every 15 minutes</string>
+    <string name="pref_time_interval_30min_label">every 30 minutes</string>
+    <string name="pref_time_interval_45min_label">every 45 minutes</string>
+    <string name="pref_time_interval_1hr_label">every hour</string>
+
+    <string name="pref_time_interval_15min">15 MIN</string>
+    <string name="pref_time_interval_30min">30 MIN</string>
+    <string name="pref_time_interval_45min">45 MIN</string>
+    <string name="pref_time_interval_1hr">1 HR</string>
+
+    <string name="pref_time_intervals_key" translatable="false">med_check_time_interval</string>
+    <string name="pref_time_intervals_label">Check for medications due:</string>
+
+    <!-- Strings related to Medications-alert on/off Enabled preference -->
+    <string name="pref_enable_med_alerts_key" translatable="false">enable_med_alerts</string>
+    <string name="pref_enable_med_alerts_label">Medication Alerts</string>
+
+    <string name="pref_enable_med_alerts_true">Enabled</string>
+    <string name="pref_enable_med_alerts_false">Not Enabled</string>
+
+    <string name="pref_last_med_alert">last_med_alert</string>
+
 
 
     <!-- SyncAdapter related -->

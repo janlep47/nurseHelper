@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_time_intervals_options">
+        <item>@string/pref_time_interval_15min_label</item>
+        <item>@string/pref_time_interval_30min_label</item>
+        <item>@string/pref_time_interval_45min_label</item>
+        <item>@string/pref_time_interval_1hr_label</item>
+    </string-array>
+
+    <string-array name="pref_time_intervals_values">
+        <item>@string/pref_time_interval_15min</item>
+        <item>@string/pref_time_interval_30min</item>
+        <item>@string/pref_time_interval_45min</item>
+        <item>@string/pref_time_interval_1hr</item>
+    </string-array>
+
+</resources>
