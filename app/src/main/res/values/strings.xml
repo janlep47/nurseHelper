@@ -19,6 +19,35 @@
     <string name="med_give_label">Give:</string>
     <string name="med_refuse_label">Refuse:</string>
 
+    <string name="prn_string">PRN</string>
+    <!-- ? once or not at all
+         * 0 or more times
+         + 1 or more times
+
+         NOTE that adminTimes can be EITHER empty (already tested for), OR this: -->
+    <string name="format_admin_times">(\\d\\d*(:\\d\\d)? (\\w\\w)?,?)+</string>
+
+    <!-- the first match for this, will be hours ONLY -->
+    <string name="format_admin_hours">\\d+</string>
+    <!-- mins must be in ":nn" format, if any -->
+    <string name="format_admin_mins">:\\d\\d</string>
+    <!-- am/pm/a/p  will also catch ":", if any -->
+    <!-- if NO am/pm/a/p, we'll assume military time -->
+    <string name="format_admin_am_or_pm">\\s*\\D*</string>
+
+
+    <!--string name="format_admin_date_time">MM-dd-yyyy HH:mm</string-->
+    <string name="format_admin_date_time">MM-dd-YY HH:mm</string>
+    <!--string name="format_admin_frequencies">Q *\d\d* *\w+</string-->
+    <string name="format_frequency_value">\\d+</string>
+    <string name="format_frequency_time_period">\\D+</string>
+    <!--string name="format_admin_frequencies">Q *(\\d\\d*) *(\\w+)</string-->
+    <!--string name="format_admin_times">
+        <xliff:g id="hour">%1$d</xliff:g>
+        <xliff:g id="am_or_pm">%2$s</xliff:g>
+    </string-->
+
+
     <string name="blood_pressure_label">blood pressure: </string>
     <string name="temperature_label">temperature: </string>
     <string name="pulse_label">pulse: </string>
