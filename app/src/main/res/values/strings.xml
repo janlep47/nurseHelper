@@ -38,6 +38,7 @@
 
     <!--string name="format_admin_date_time">MM-dd-yyyy HH:mm</string-->
     <string name="format_admin_date_time">MM-dd-YY HH:mm</string>
+    <!--string name="format_admin_time">%1dd:%2dd</string-->
     <!--string name="format_admin_frequencies">Q *\d\d* *\w+</string-->
     <string name="format_frequency_value">\\d+</string>
     <string name="format_frequency_time_period">\\D+</string>

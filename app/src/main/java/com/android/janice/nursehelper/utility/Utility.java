@@ -9,6 +9,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -42,7 +43,11 @@ public class Utility {
     public static final int QID = 3;
 
     public static final String[] ALLOWED_TIME_PERIODS = {
-            "MIN", "HOUR", "DAY", "WEEK", "MONTH"
+            "MINUTES", "HOURS", "DAYS", "WEEKS", "MONTHS"
+    };
+
+    public static final String[] ALLOWED_TIME_PERIODS_ABBREV = {
+            "MINS", "HRS", "DAYS", "WKS", "MNTHS"
     };
 
     public static final int MINS = 0;
@@ -58,29 +63,31 @@ public class Utility {
 
 
 
-    public static long calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven) {
-        if (aPrnMed(context, adminTimes, freq)) return 0;
+    public static String calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven) {
+        if (aPrnMed(context, adminTimes, freq)) return "";
+
+        // Get current time:
+        Calendar calendar = Calendar.getInstance();
+        AdminTimeInfo adminTimeInfo = null;
+
         if (anyAdminTimes(adminTimes)) {
             if (!anyFreq(freq)) {
-                long junk = getNextAdminTime(context, adminTimes, timeLastGiven);
-                Log.i("UTILS","  returned best adminTime:"+
-                  DateAndTimeUtils.getFormattedDateFromLong(context,junk));
-                return junk;
-                //return getNextAdminTime(context, adminTimes, timeLastGiven);
+                adminTimeInfo = getNextAdminTime(context, adminTimes, timeLastGiven, calendar);
             } else {
-                long nextAdminTime = getNextAdminTime(context, adminTimes, timeLastGiven);
-                Log.i("UTILS","  ... best adminTime:"+
-                        DateAndTimeUtils.getFormattedDateFromLong(context,nextAdminTime));
-                long nextFreqTime = getNextFreqTime(context, freq, timeLastGiven);
-                return chooseBestTime(nextAdminTime, nextFreqTime, timeLastGiven);
+                AdminTimeInfo adminTimeInfo1 = getNextAdminTime(context, adminTimes, timeLastGiven, calendar);
+                AdminTimeInfo adminTimeInfo2 = getNextFreqTime(context, freq, timeLastGiven, calendar);
+                adminTimeInfo = chooseBestTime(adminTimeInfo1, adminTimeInfo2, timeLastGiven, calendar);
             }
         } else {
-            // Assuming frequencey is an assigned string!
-            return getNextFreqTime(context, freq, timeLastGiven);
+            // Assuming frequency is an assigned string!
+            adminTimeInfo = getNextFreqTime(context, freq, timeLastGiven, calendar);
         }
+        if (adminTimeInfo == null) return "";
+        else return adminTimeInfo.getDisplayableTime();
     }
 
-    private static long chooseBestTime(long nextAdminTime, long nextFreqTime, long timeLastGiven) {
+    private static AdminTimeInfo chooseBestTime(AdminTimeInfo nextAdminTime, AdminTimeInfo nextFreqTime,
+                                                long timeLastGiven, Calendar today) {
         // FOR NOW, we'll just return nextFreqTime.  Later, we may need to do some fancier
         //  processing ...
         return nextFreqTime;
@@ -105,39 +112,29 @@ public class Utility {
     }
 
 
-    private static long getNextAdminTime(Context context, String adminTimes, long timeLastGiven) {
+    private static AdminTimeInfo getNextAdminTime(Context context, String adminTimes, long timeLastGiven,
+                                            Calendar today) {
         /*
             <!-- the first match for this, will be hours ONLY -->
-    <string name="format_admin_hours">\\d+</string>
-    <!-- mins must be in ":nn" format, if any -->
-    <string name="format_admin_mins">:\\d\\d</string>
-    <!-- am/pm/a/p  will also catch ":", if any -->
-    <!-- if NO am/pm/a/p, we'll assume military time -->
-    <string name="format_admin_am_or_pm">\\D*</string>
+            <string name="format_admin_hours">\\d+</string>
+            <!-- mins must be in ":nn" format, if any -->
+            <string name="format_admin_mins">:\\d\\d</string>
+            <!-- am/pm/a/p  will also catch ":", if any -->
+            <!-- if NO am/pm/a/p, we'll assume military time -->
+            <string name="format_admin_am_or_pm">\\D*</string>
+        */
+        //
+        ArrayList<AdminTimeInfo> timesToAdmin = new ArrayList<AdminTimeInfo>();
+        AdminTimeInfo adminTimeInfo = null;
 
-         */
-        long today = System.currentTimeMillis();
-        long reallyToday = DateAndTimeUtils.getNormalizedUtcDateForToday();
-        long reallyToday2 = DateAndTimeUtils.normalizeDate(today);
-        String todayString = DateAndTimeUtils.getFormattedDateFromLong(context,today);
-        long now = DateAndTimeUtils.getLongFromFormattedDate(context,todayString);
-        String nowString = DateAndTimeUtils.getFormattedDateFromLong(context,now);
-        String todayMidnightString = todayString.substring(0,8)+" 00:00";
-        //Log.i("UTIL"," today: "+todayString+"  todayMidnightString: "+todayMidnightString);
-        //Log.i("UTIL"," today: "+todayString+"  today1: "+String.valueOf(reallyToday)+
-        //"   today2: "+String.valueOf(reallyToday2));
-        Log.i("UTIL"," now: "+String.valueOf(now)+"   now string: "+nowString+"  vs. todayString: "+
-            todayString);
-        //String nowish = "02-26-17 20:26";
-        //long nowishVal = DateAndTimeUtils.getLongFromFormattedDate(context,nowish);
-        //        Log.i("UTIL"," todayVal: "+String.valueOf(today)+"  02-26-17 20:26 "+String.valueOf(nowishVal));
-        String nineAmString = "02-26-17 09:00";
-        String tenPmString = "02-26-17 22:00";
-        long nineAmVal = DateAndTimeUtils.getLongFromFormattedDate(context, nineAmString);
-        long tenPmVal = DateAndTimeUtils.getLongFromFormattedDate(context, tenPmString);
-        Log.e("UTILS", "  IMPORTANT  nineAmVal="+nineAmVal+"  tenPmVal="+tenPmVal);
-        long todayMidnight = DateAndTimeUtils.getLongFromFormattedDate(context,todayMidnightString);
-        ArrayList<Long> timesToAdmin = new ArrayList<Long>();
+        int year, month, day, hour, min, sec;
+        year = today.get(Calendar.YEAR) - 1900;
+        month = today.get(Calendar.MONTH);
+        day = today.get(Calendar.DAY_OF_YEAR);
+        hour = today.get(Calendar.HOUR);
+        min = today.get(Calendar.MINUTE);
+        sec = today.get(Calendar.SECOND);
+        if (sec > 30) min += 1;
 
         while (true) {
 
@@ -177,32 +174,24 @@ public class Utility {
                     adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_am_or_pm),"");
                 }
             }
-            //Log.i("UTILITY", "  from adminTimes: '" + adminTimes + "'  get: ");
-            //Log.i("UTILITY", "  hours: '" + hoursString + "'  mins: '" + minsString +
-            //        "'   amOrPm: '" + amOrPmString + "'");
-
-            // convert hours and minutes to longs
-            long hours = 0, minutes = 0;
+            int scheduledHour = 0, scheduledMin = 0;
             try {
                 if (hoursString.length() > 0)
-                    hours = Long.parseLong(hoursString);
+                    scheduledHour = Integer.parseInt(hoursString);
                 if (minsString.length() > 0)
-                    minutes = Long.parseLong(minsString);
+                    scheduledMin = Integer.parseInt(minsString);
             } catch (NumberFormatException e) {
                 Log.e("UTILITY", "  numberformatexception: " + e.toString() + "\n" +
                         " hours = '" + hoursString + "'  minutes = '" + minsString + "'");
             }
-            //Log.i("UTILITY", " minutes val = " + String.valueOf(minutes) + "  hours val = " +
-            //        String.valueOf(hours));
-            if (pm) hours += 12;  // convert to military time
-            //long time = DateAndTimeUtils.getTimestampForHoursAndMins(hours, minutes);
-            long time = todayMidnight + hours*HOUR_IN_MILLIS + minutes*MINUTE_IN_MILLIS;
-            Log.i("UTILS"," hours = "+String.valueOf(hours)+"  hours*HOUR_IN_MILLIS="+
-                    String.valueOf(hours*HOUR_IN_MILLIS)+ "  todayMidnight="+todayMidnight +
-                    "  time="+time);
-            timesToAdmin.add(new Long(time));
+
+            //int minsFromNow = scheduledHour*60 + scheduledMin;
+            //timesToAdmin.add(new Integer(minsFromNow));
+            adminTimeInfo = new AdminTimeInfo(scheduledHour, scheduledMin, pm);
+            timesToAdmin.add(adminTimeInfo);
         }
 
+        // THIS CASE NEEDS MORE PLANNING, AT THE SERVER-SIDE ....
         if (timesToAdmin.size() == 0) {
             // Must be a special admin time, an actual date
             //  For now, assume must be in this format:
@@ -213,14 +202,84 @@ public class Utility {
 
             try {
                 Date date = (Date) formatter.parse(adminTimes);
-                long time = date.getTime();
-                timesToAdmin.add(time);
+                Calendar scheduledTime = Calendar.getInstance();
+                scheduledTime.setTime(date);
+                adminTimeInfo = new AdminTimeInfo(scheduledTime);
+                return adminTimeInfo;
             } catch (ParseException e) {
                 Log.e("UTILITY"," !!!! PROBLEM ... PARSE EXCEPTION  adminTimes="+adminTimes);
-                return 0;
+                return null;
             }
         }
-        return DateAndTimeUtils.getNearestTimeFromNow(now, timesToAdmin);
+        return getNearestTimeFromNow(today, timesToAdmin);
+    }
+
+
+    private static AdminTimeInfo getNearestTimeFromNow(Calendar today, ArrayList<AdminTimeInfo>timesToAdmin) {
+        int year, month, day, hour, min, sec;
+        year = today.get(Calendar.YEAR) - 1900;
+        month = today.get(Calendar.MONTH);
+        day = today.get(Calendar.DAY_OF_YEAR);
+        hour = today.get(Calendar.HOUR);
+        min = today.get(Calendar.MINUTE);
+        sec = today.get(Calendar.SECOND);
+        if (sec > 30) min += 1;
+
+        int diff = 30000;
+        int minimumScheduledHour = 99;
+        AdminTimeInfo minimumAdminTimeInfo = null;
+
+        Calendar newTime = Calendar.getInstance();
+        if (timesToAdmin.size() == 0) return null;
+        int scheduledHour = 0;
+        int scheduledMin = 0;
+        AdminTimeInfo bestTime = null;
+        for (int i = 0; i < timesToAdmin.size(); i++) {
+            AdminTimeInfo timeInfo = timesToAdmin.get(i);
+            scheduledHour = timeInfo.getHrs();
+            scheduledMin = timeInfo.getMins();
+            if (scheduledHour <= 0 && scheduledMin <= 0) continue;
+
+            boolean pm = timeInfo.getIsPM();
+            newTime.set(Calendar.HOUR, scheduledHour);
+            newTime.set(Calendar.MINUTE, scheduledMin);
+            newTime.set(Calendar.SECOND, 0);
+            newTime.set(Calendar.AM_PM,(pm ? Calendar.PM : Calendar.AM));
+            Log.e("TAG","today: "+today.toString());
+            Log.e("TAG","newtime: "+newTime.toString());
+            if (today.before(newTime)) {
+                Log.e("TAG","  ok, today is before newtime");
+                int minDiff = (scheduledHour * 60 + scheduledMin) - (hour * 60 + min);
+                if (minDiff < diff) {
+                    diff = minDiff;
+                    Log.e("TAG"," good ... setting bestTime");
+                    bestTime = timeInfo;
+                }
+            } else {
+                if (scheduledHour < minimumScheduledHour) {
+                    minimumScheduledHour = scheduledHour;
+                    minimumAdminTimeInfo = timeInfo;
+                    minimumAdminTimeInfo.setCalendar(newTime);
+                }
+            }
+        }
+        // If we're at the end of the day, and no scheduled times for today, start with tomorrow's time
+        if (bestTime == null) {
+            if (minimumAdminTimeInfo == null) {
+                Log.e("UTILITY", "ERROR: no sheduled times found!!!");
+                return null;
+            }
+            //newTime = Calendar.getInstance();
+            //newTime.set(Calendar.DAY_OF_MONTH,day+1);
+            //newTime.set(Calendar.HOUR_OF_DAY, minimumAdminTimeInfo.getHrs());
+            //newTime.set(Calendar.MINUTE, minimumAdminTimeInfo.getMins());
+            //newTime.set(Calendar.AM_PM,(minimumAdminTimeInfo.getIsPM() ? Calendar.PM : Calendar.AM));
+            //minimumAdminTimeInfo.setCalendar(newTime);
+            Calendar newTimeCalendar = minimumAdminTimeInfo.getCalendar();
+            newTimeCalendar.set(Calendar.DAY_OF_YEAR,day+1);
+            return minimumAdminTimeInfo;
+        }
+        return bestTime;
     }
 
     private static boolean isPM(String amOrPmString) {
@@ -235,103 +294,60 @@ public class Utility {
 
 
 
-    private static long OLDgetNextAdminTime(Context context, String adminTimes, long timeLastGiven) {
-        ArrayList<Long> timesToAdmin = new ArrayList<Long>();
-        Pattern pattern = Pattern.compile(context.getString(R.string.format_admin_times));
-        Matcher matcher = pattern.matcher(adminTimes);
-        boolean found = false;
-        // Note: pattern is this
-        // (\d\d*(:\d\d)? (\w\w)?,?)+
-        //   .... so for example: 9:30 AM, 10 PM is valid
-        //    ..... so is military time: 0900, 2200.
-        //  Already checked for adminTimes empty string, so must be at least one time in string.
-        while (matcher.find()) {
-            found = true;
-            String timeString = matcher.group().trim();
-            Log.i("UTILITY", "  time: "+timeString+"   ... from adminTimes: "+adminTimes);
-            // Now convert the time string to a long time
-            if (timeString.endsWith(",")) timeString.replace(',',' ');
-            boolean pm = false;
-            if (timeString.indexOf(PM_STRING) >= 0) {
-                timeString = timeString.substring(0,timeString.indexOf(PM_STRING));
-                pm = true;
-            } else if (timeString.indexOf(AM_STRING) != 0) {
-                timeString = timeString.substring(0,timeString.indexOf(AM_STRING));
-            }
-            Log.i("UTILITY", "  ... now timeString = "+timeString+" and pm is "+String.valueOf(pm));
-            //String hours = timeString;
-            String hoursString;
-            String minutesString = "";
-            if (timeString.indexOf(HOUR_MIN_SEPARATOR) >= 0) {
-                minutesString = timeString.substring(timeString.indexOf(HOUR_MIN_SEPARATOR));
-                hoursString = timeString.substring(0,timeString.indexOf(HOUR_MIN_SEPARATOR));
-                Log.i("UTILITY", " minutes = "+minutesString+"  hours = "+hoursString);
-            } else {
-                hoursString = timeString;
-                Log.i("UTILITY", " minutes = "+minutesString+"  hours = "+hoursString);
-            }
-            // convert hours and minutes to longs
-            long hours = 0, minutes = 0;
-            try {
-                hours = Long.parseLong(hoursString);
-                minutes = Long.parseLong(minutesString);
-            } catch (NumberFormatException e) {
-                Log.e("UTILITY","  numberformatexception: "+e.toString()+"\n"+
-                        " hours = '"+hoursString+"'  minutes = '"+minutesString+"'");
-            }
-            Log.i("UTILITY", " minutes val = "+String.valueOf(minutes)+"  hours val = "+
-                    String.valueOf(hours));
-            long time = DateAndTimeUtils.getTimestampForHoursAndMins(hours,minutes);
-            timesToAdmin.add(new Long(time));
-        }
-        if (!found) {
-            // Must be a special admin time, an actual date
-            //  For now, assume must be in this format:
-            //        "MM-dd-yyyy HH:mm"
-            String adminTimeFormat = context.getString(R.string.format_admin_date_time);
-            //DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
-            DateFormat formatter = new SimpleDateFormat(adminTimeFormat);
-
-            try {
-                Date date = (Date) formatter.parse(adminTimes);
-                long time = date.getTime();
-                timesToAdmin.add(time);
-            } catch (ParseException e) {
-                Log.i("UTILITY"," !!!! PROBLEM ... PARSE EXCEPTION  adminTimes="+adminTimes);
-                return 0;
-            }
-        }
-        return DateAndTimeUtils.getNearestTimeFromNow(0,timesToAdmin);
-    }
-
-
-
 
 
     // IMPORTANT: for now this assumes ONLY Q<#><time-period>, where # even specified if it's = 1!!
     //
-    private static long getNextFreqTime(Context context, String freq, long timeLastGiven) {
-        ArrayList<Long> timesToAdmin = new ArrayList<Long>();
+    private static AdminTimeInfo getNextFreqTime(Context context, String freq, long timeLastGiven,
+                                                 Calendar today) {
+        /*
+        int year, month, day, hour, min, sec;
+        year = today.get(Calendar.YEAR) - 1900;
+        month = today.get(Calendar.MONTH);
+        day = today.get(Calendar.DAY_OF_YEAR);
+        hour = today.get(Calendar.HOUR);
+        min = today.get(Calendar.MINUTE);
+        sec = today.get(Calendar.SECOND);
+        if (sec > 30) min += 1;
+*/
+
+        Calendar adminTime = Calendar.getInstance();
+        adminTime.setTimeInMillis(timeLastGiven);
+        int year = adminTime.get(Calendar.YEAR) - 1900;
+        int month = adminTime.get(Calendar.MONTH);
+        int week = adminTime.get(Calendar.WEEK_OF_YEAR);
+        int day = adminTime.get(Calendar.DAY_OF_YEAR);
+        int hour = adminTime.get(Calendar.HOUR);
+        int min = adminTime.get(Calendar.MINUTE);
+
+        AdminTimeInfo adminTimeInfo = null;
+
         // First see if freq is one of the common ones
         int freqType = getFreqType(freq);
         if (freqType >= 0) {
             switch (freqType){
                 case QD:
                     // Select lastTimeGiven + 24Hours
-                    return DateAndTimeUtils.getTimeWithAddedHrsAndMins(timeLastGiven, 24, 0);
+                    adminTime.set(Calendar.DAY_OF_YEAR,day+1);
+                    break;
                 case BID:
                     // Select lastTimeGiven + 12Hours
-                    return DateAndTimeUtils.getTimeWithAddedHrsAndMins(timeLastGiven, 12, 0);
+                    adminTime.set(Calendar.HOUR,hour+12);
+                    break;
                 case TID:
                     // Select lastTimeGiven + 8Hours
-                    return DateAndTimeUtils.getTimeWithAddedHrsAndMins(timeLastGiven, 8, 0);
+                    adminTime.set(Calendar.HOUR,hour+8);
+                    break;
                 case QID:
                     // Select lastTimeGiven + 6Hours
-                    return DateAndTimeUtils.getTimeWithAddedHrsAndMins(timeLastGiven, 6, 0);
+                    adminTime.set(Calendar.HOUR,hour+6);
+                    break;
                 default:
                     Log.e("UTILITY", "ERROR added another frequency type, but not handled!");
-                    return 0;
+                    return null;
             }
+            adminTimeInfo = new AdminTimeInfo(adminTime);
+            return adminTimeInfo;
         }
         // Otherwise, this is a more unusual frequency, e.g. in form Q<#><mins/hours/days/weeks/months>
         // Note: pattern is \d+ for #    and   pattern is \D+ for <time-period>
@@ -361,40 +377,52 @@ public class Utility {
             }
         }
         Log.i("UTILITY", "  numberString="+numberString+"  timePeriod="+timePeriodString);
-        if (numberString.length() == 0) return 0;
-        long number = 0;
+        if (numberString.length() == 0) {
+            Log.e("UTILITY"," !!!! PROBLEM ... numberString is EMPTY");
+            return null;
+        }
+        int number = 0;
         try {
-            number = Long.parseLong(numberString);
+            number = Integer.parseInt(numberString);
         } catch (NumberFormatException e) {
-            Log.i("UTILITY"," !!!! PROBLEM ... PARSE EXCEPTION  freq="+freq+
+            Log.e("UTILITY"," !!!! PROBLEM ... PARSE EXCEPTION  freq="+freq+
                     "\n  numberString = '"+numberString+"'");
-            return 0;
+            return null;
         }
 
+        Log.e("TAG","  number = "+String.valueOf(number));
         int timePeriod = getTimePeriod(timePeriodString);
         if (timePeriod >= 0) {
+            Log.e("TAG", "  found a time period.");
             switch (timePeriod) {
                 case MINS:
                     // Select lastTimeGiven + number (in minutes)
-                    return DateAndTimeUtils.getTimeWithAddedHrsAndMins(timeLastGiven, 0, number);
+                    adminTime.set(Calendar.MINUTE,min+number);
+                    break;
                 case HOURS:
+                    Log.e("TAG", " time period is hours  hour="+hour+" number="+number);
                     // Select lastTimeGiven + number (in hours)
-                    return DateAndTimeUtils.getTimeWithAddedHrsAndMins(timeLastGiven, number, 0);
+                    adminTime.set(Calendar.HOUR,hour+number);
+                    break;
                 case DAYS:
                     // Select lastTimeGiven + number (in days)
-                    return DateAndTimeUtils.getTimeWithAddedWeeksAndDays(timeLastGiven, 0, number);
+                    adminTime.set(Calendar.DAY_OF_YEAR,day+number);
+                    break;
                 case WEEKS:
                     // Select lastTimeGiven + number (in weeks)
-                    return DateAndTimeUtils.getTimeWithAddedWeeksAndDays(timeLastGiven, number, 0);
+                    adminTime.set(Calendar.WEEK_OF_YEAR,week+number);
+                    break;
                 case MONTHS:
                     // Select lastTimeGiven + number (in months)
-                    return DateAndTimeUtils.getTimeWithAddedMonths(timeLastGiven, number);
+                    adminTime.set(Calendar.MONTH,month+number);
+                    break;
                 default:
                     Log.e("UTILITY", "ERROR added another frequency/time-period type, but not handled!");
-                    return 0;
+                    return null;
             }
         }
-        return 0;
+        adminTimeInfo = new AdminTimeInfo(adminTime);
+        return adminTimeInfo;
     }
 
 
@@ -408,10 +436,22 @@ public class Utility {
     }
 
     private static int getTimePeriod(String timePeriod) {
-        for (int i = 0; i < ALLOWED_TIME_PERIODS.length; i++) {
-            if (timePeriod.equals(ALLOWED_TIME_PERIODS[i])) return i;
+        timePeriod = timePeriod.trim();
+        for (int i = 0; i < ALLOWED_TIME_PERIODS.length && i < ALLOWED_TIME_PERIODS_ABBREV.length; i++) {
+            if (ALLOWED_TIME_PERIODS[i].indexOf(timePeriod) >= 0) return i;
+            else if (ALLOWED_TIME_PERIODS_ABBREV[i].indexOf(timePeriod) >= 0) return i;
         }
         return -1;
+    }
+
+
+    public static boolean timeIsNull(long dateTime) {
+        long daysSinceEpoch = elapsedDaysSinceEpoch(dateTime);
+        if (daysSinceEpoch == 0) return true;
+        return false;
+    }
+    private static long elapsedDaysSinceEpoch(long utcDate) {
+        return TimeUnit.MILLISECONDS.toDays(utcDate);
     }
 
 
@@ -462,4 +502,5 @@ public class Utility {
         spe.apply();
     }
 */
+
 }

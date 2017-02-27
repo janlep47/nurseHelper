@@ -19,6 +19,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.android.janice.nursehelper.utility.Utility;
+
 /**
  * Created by janicerichards on 2/2/17.
  */
@@ -157,11 +159,11 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         long nextTimeToGive = mCursor.getLong(MedicationsFragment.COL_NEXT_GIVE_TIME);
 
         String formattedDate, formattedNextDate;
-        if (!DateAndTimeUtils.timeIsNull(lastGivenTime))
+        if (!Utility.timeIsNull(lastGivenTime))
             formattedDate = MedicationItem.getReadableTimestamp(lastGivenTime);
         else
             formattedDate = "* This medication has not been given yet *";
-        if (!DateAndTimeUtils.timeIsNull(nextTimeToGive))
+        if (!Utility.timeIsNull(nextTimeToGive))
             formattedNextDate = MedicationItem.getReadableTimestamp(nextTimeToGive);
         else
             formattedNextDate = "* No scheduled time *";
