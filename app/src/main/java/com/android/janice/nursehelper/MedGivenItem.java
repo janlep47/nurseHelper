@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.utility.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -90,12 +91,10 @@ public class MedGivenItem {
     }
 
 
-    public String getReadableTimestamp() {
+    public String getReadableTimestamp(Context context) {
         //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
-        Date date = new Date(timestamp);
-        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
-        return formattedDate;
+        return Utility.getReadableTimestamp(context, timestamp);
     }
 
 

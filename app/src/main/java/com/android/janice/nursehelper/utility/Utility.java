@@ -63,6 +63,27 @@ public class Utility {
 
 
 
+
+
+    public static String getReadableTimestamp(Context context, long timestamp) {
+        //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+        //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
+        java.util.Date date = new java.util.Date(timestamp);
+        String dateFormatter = context.getString(R.string.format_admin_date_time);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if (calendar.get(Calendar.HOUR) > 12) {
+            calendar.set(Calendar.HOUR, Calendar.HOUR - 12);
+            calendar.set(Calendar.AM_PM, Calendar.PM);
+        } else {
+            calendar.set(Calendar.AM_PM, Calendar.AM);
+        }
+
+        String formattedDate = new SimpleDateFormat(dateFormatter, Locale.US).format(calendar.getTime());
+        return formattedDate;
+    }
+
+
     public static String calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven) {
         if (aPrnMed(context, adminTimes, freq)) return "";
 
@@ -107,7 +128,6 @@ public class Utility {
 
     private static boolean anyFreq(String freq) {
         if (freq.trim().length() == 0) return false;
-        Log.i("UTILS","  any frequency is TRUE");
         return true;
     }
 
@@ -245,14 +265,10 @@ public class Utility {
             newTime.set(Calendar.MINUTE, scheduledMin);
             newTime.set(Calendar.SECOND, 0);
             newTime.set(Calendar.AM_PM,(pm ? Calendar.PM : Calendar.AM));
-            Log.e("TAG","today: "+today.toString());
-            Log.e("TAG","newtime: "+newTime.toString());
             if (today.before(newTime)) {
-                Log.e("TAG","  ok, today is before newtime");
                 int minDiff = (scheduledHour * 60 + scheduledMin) - (hour * 60 + min);
                 if (minDiff < diff) {
                     diff = minDiff;
-                    Log.e("TAG"," good ... setting bestTime");
                     bestTime = timeInfo;
                 }
             } else {
@@ -269,12 +285,6 @@ public class Utility {
                 Log.e("UTILITY", "ERROR: no sheduled times found!!!");
                 return null;
             }
-            //newTime = Calendar.getInstance();
-            //newTime.set(Calendar.DAY_OF_MONTH,day+1);
-            //newTime.set(Calendar.HOUR_OF_DAY, minimumAdminTimeInfo.getHrs());
-            //newTime.set(Calendar.MINUTE, minimumAdminTimeInfo.getMins());
-            //newTime.set(Calendar.AM_PM,(minimumAdminTimeInfo.getIsPM() ? Calendar.PM : Calendar.AM));
-            //minimumAdminTimeInfo.setCalendar(newTime);
             Calendar newTimeCalendar = minimumAdminTimeInfo.getCalendar();
             newTimeCalendar.set(Calendar.DAY_OF_YEAR,day+1);
             return minimumAdminTimeInfo;
@@ -285,10 +295,8 @@ public class Utility {
     private static boolean isPM(String amOrPmString) {
         if (amOrPmString.trim().toUpperCase().equals("PM") ||
             amOrPmString.trim().toUpperCase().equals("P")) {
-            //Log.i("UTILITY","   PM is TRUE for: "+amOrPmString);
             return true;
         }
-        //Log.i("UTILITY","   PM is FALSE for: "+amOrPmString);
         return false;
     }
 
@@ -300,17 +308,6 @@ public class Utility {
     //
     private static AdminTimeInfo getNextFreqTime(Context context, String freq, long timeLastGiven,
                                                  Calendar today) {
-        /*
-        int year, month, day, hour, min, sec;
-        year = today.get(Calendar.YEAR) - 1900;
-        month = today.get(Calendar.MONTH);
-        day = today.get(Calendar.DAY_OF_YEAR);
-        hour = today.get(Calendar.HOUR);
-        min = today.get(Calendar.MINUTE);
-        sec = today.get(Calendar.SECOND);
-        if (sec > 30) min += 1;
-*/
-
         Calendar adminTime = Calendar.getInstance();
         adminTime.setTimeInMillis(timeLastGiven);
         int year = adminTime.get(Calendar.YEAR) - 1900;
@@ -376,7 +373,6 @@ public class Utility {
                 }
             }
         }
-        Log.i("UTILITY", "  numberString="+numberString+"  timePeriod="+timePeriodString);
         if (numberString.length() == 0) {
             Log.e("UTILITY"," !!!! PROBLEM ... numberString is EMPTY");
             return null;
@@ -390,17 +386,14 @@ public class Utility {
             return null;
         }
 
-        Log.e("TAG","  number = "+String.valueOf(number));
         int timePeriod = getTimePeriod(timePeriodString);
         if (timePeriod >= 0) {
-            Log.e("TAG", "  found a time period.");
             switch (timePeriod) {
                 case MINS:
                     // Select lastTimeGiven + number (in minutes)
                     adminTime.set(Calendar.MINUTE,min+number);
                     break;
                 case HOURS:
-                    Log.e("TAG", " time period is hours  hour="+hour+" number="+number);
                     // Select lastTimeGiven + number (in hours)
                     adminTime.set(Calendar.HOUR,hour+number);
                     break;

@@ -256,7 +256,6 @@ public class ResidentProvider extends ContentProvider {
             case MEDS_GIVEN_WITH_ROOM_NUMBER: {
                 String roomNumber = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, values);
-                Log.e(LOG_TAG, "  HERE in insert: values is "+values.toString());
                 if ( _id > 0) returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumber(roomNumber);
                 else throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
                 break;
@@ -314,7 +313,6 @@ public class ResidentProvider extends ContentProvider {
         }
         // Because a null deletes all rows
         if (rowsDeleted != 0) getContext().getContentResolver().notifyChange(uri, null);
-        Log.e(LOG_TAG,String.valueOf(rowsDeleted) + " DB ROWS DELETED ...");
         return rowsDeleted;
     }
 
