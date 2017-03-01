@@ -40,7 +40,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.MedicationEntry.COLUMN_FREQUENCY + " TEXT NOT NULL, " +
                         ResidentContract.MedicationEntry.COLUMN_TIMES + " TEXT, " +
                         ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN + " TIMESTAMP, "+
-                        ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME + " TIMESTAMP);";
+                        ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME + " TEXT NOT NULL);";
 
         db.execSQL(SQL_CREATE_MEDICATIONS_TABLE);
 

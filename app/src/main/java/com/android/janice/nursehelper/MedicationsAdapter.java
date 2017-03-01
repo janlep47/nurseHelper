@@ -156,17 +156,13 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         String freq = mCursor.getString(MedicationsFragment.COL_FREQUENCY);
         String adminTimes = mCursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
         long lastGivenTime = mCursor.getLong(MedicationsFragment.COL_LAST_GIVEN);
-        long nextTimeToGive = mCursor.getLong(MedicationsFragment.COL_NEXT_GIVE_TIME);
+        String nextTimeToGive = mCursor.getString(MedicationsFragment.COL_NEXT_GIVE_TIME);
 
         String formattedDate, formattedNextDate;
         if (!Utility.timeIsNull(lastGivenTime))
             formattedDate = MedicationItem.getReadableTimestamp(lastGivenTime);
         else
             formattedDate = "* This medication has not been given yet *";
-        if (!Utility.timeIsNull(nextTimeToGive))
-            formattedNextDate = MedicationItem.getReadableTimestamp(nextTimeToGive);
-        else
-            formattedNextDate = "* No scheduled time *";
         
         medicationsAdapterViewHolder.mGenericNameView.setText("   ("+genericName+")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
@@ -176,7 +172,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);
         medicationsAdapterViewHolder.mLastTimeGivenView.setText(formattedDate);
-        medicationsAdapterViewHolder.mNextDueTimeView.setText(formattedNextDate);
+        medicationsAdapterViewHolder.mNextDueTimeView.setText(nextTimeToGive);
     }
 
     @Override
