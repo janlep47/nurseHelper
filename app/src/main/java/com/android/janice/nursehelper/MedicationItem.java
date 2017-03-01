@@ -11,12 +11,14 @@ import android.text.format.Time;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.data.ResidentProvider;
+import com.android.janice.nursehelper.utility.Utility;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by janicerichards on 2/4/17.
@@ -55,16 +57,6 @@ public class MedicationItem {
 
     public void setTradeName(String tradeName) {
         this.tradeName = tradeName;
-    }
-
-
-
-    public static String getReadableTimestamp(long timestamp) {
-        //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-        //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
-        java.util.Date date = new java.util.Date(timestamp);
-        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
-        return formattedDate;
     }
 
 
@@ -152,6 +144,9 @@ public class MedicationItem {
         float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         String dosageUnits = cursor.getString(MedicationsFragment.COL_DOSAGE_UNITS);
 
+        String adminTimes = cursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
+        String freq = cursor.getString(MedicationsFragment.COL_FREQUENCY);
+
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
@@ -160,6 +155,7 @@ public class MedicationItem {
         else given_db = 0;
 
         long time= System.currentTimeMillis();
+        String nextAdminTime = Utility.calculateNextDueTime(context, adminTimes, freq, time);
 
         ContentValues medGivenValues = new ContentValues();
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER, roomNumber);
@@ -169,18 +165,19 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given_db);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NURSE, nurseName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
+        //medGivenValues.put(ResidentContract.Meds)
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
 
         ContentValues meds = new ContentValues();
         meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
 
         uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
         int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
                 ResidentProvider.sMedsByResidentAndMedSelection,
                 new String[]{roomNumber, genericName});
-        Log.e("meditem", "  rowsUpdate = "+rowsUpdated);
     }
 
 
