@@ -1,5 +1,9 @@
 package com.android.janice.nursehelper.utility;
 
+import android.content.Context;
+
+import com.android.janice.nursehelper.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +49,7 @@ public class AdminTimeInfo {
         return adminCalendarTime;
     }
 
-    public String getDisplayableTime() {
+    public String getDisplayableTime(Context context) {
         String dateTimeString = "";
         if (adminCalendarTime != null) {
             mins = adminCalendarTime.get(Calendar.MINUTE);
@@ -59,17 +63,21 @@ public class AdminTimeInfo {
             //    pm = true;
             //}
             Date date = adminCalendarTime.getTime();
-            dateTimeString = new SimpleDateFormat("MM-dd-YY", Locale.US).format(date) + " ";
+            String dateFormat = context.getString(R.string.format_admin_date);
+            dateTimeString = new SimpleDateFormat(dateFormat, Locale.US).format(date) + " ";
         }
 
         String minsString = String.valueOf(mins);
+        // add leading zero for minutes, if any
         if (mins < 10) minsString = "0"+minsString;
         dateTimeString += String.valueOf(hrs)+((mins != 0) ?
                 ":"+minsString : "");
         if (pm) {
-            dateTimeString += " PM";
+            String pmString = context.getString(R.string.pm_string);
+            dateTimeString += " "+pmString;
         } else {
-            dateTimeString += " AM";
+            String amString = context.getString(R.string.am_string);
+            dateTimeString += " "+amString;
         }
         return dateTimeString;
     }

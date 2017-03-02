@@ -104,7 +104,7 @@ public class Utility {
             adminTimeInfo = getNextFreqTime(context, freq, timeLastGiven, calendar);
         }
         if (adminTimeInfo == null) return "";
-        else return adminTimeInfo.getDisplayableTime();
+        else return adminTimeInfo.getDisplayableTime(context);
     }
 
     private static AdminTimeInfo chooseBestTime(AdminTimeInfo nextAdminTime, AdminTimeInfo nextFreqTime,
