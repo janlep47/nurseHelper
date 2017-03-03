@@ -79,11 +79,7 @@
     <string name="pref_time_interval_30min_label">every 30 minutes</string>
     <string name="pref_time_interval_45min_label">every 45 minutes</string>
     <string name="pref_time_interval_1hr_label">every hour</string>
-
-    <string name="pref_time_interval_15min">15 MIN</string>
-    <string name="pref_time_interval_30min">30 MIN</string>
-    <string name="pref_time_interval_45min">45 MIN</string>
-    <string name="pref_time_interval_1hr">1 HR</string>
+    <string name="pref_time_interval_default">30 MIN</string>
 
     <string name="pref_time_intervals_key" translatable="false">med_check_time_interval</string>
     <string name="pref_time_intervals_label">Check when meds due:</string>
