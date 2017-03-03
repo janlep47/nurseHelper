@@ -18,8 +18,14 @@ public class AdminTimeInfo {
     private int mins = -1;
     private Calendar adminCalendarTime = null;
     private boolean pm = false;
+    private long time = 0;
 
     public AdminTimeInfo(int hrs, int mins, boolean pm) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, hrs);
+        calendar.set(Calendar.MINUTE, mins);
+        calendar.set(Calendar.AM_PM,pm ? Calendar.PM : Calendar.AM);
+        time = calendar.getTimeInMillis();
         this.hrs = hrs;
         this.mins = mins;
         this.pm = pm;
@@ -27,6 +33,7 @@ public class AdminTimeInfo {
 
     public AdminTimeInfo(Calendar calendar) {
         adminCalendarTime = calendar;
+        time = calendar.getTimeInMillis();
     }
 
     public int getHrs() {
@@ -43,10 +50,15 @@ public class AdminTimeInfo {
 
     public void setCalendar(Calendar calendar) {
         adminCalendarTime = calendar;
+        time = calendar.getTimeInMillis();
     }
 
     public Calendar getCalendar() {
         return adminCalendarTime;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     public String getDisplayableTime(Context context) {

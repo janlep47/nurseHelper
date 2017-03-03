@@ -11,6 +11,7 @@ import android.text.format.Time;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.data.ResidentProvider;
+import com.android.janice.nursehelper.utility.AdminTimeInfo;
 import com.android.janice.nursehelper.utility.Utility;
 
 import java.io.IOException;
@@ -103,7 +104,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "TID");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "");  // also tried "TID"
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
@@ -155,7 +156,9 @@ public class MedicationItem {
         else given_db = 0;
 
         long time= System.currentTimeMillis();
-        String nextAdminTime = Utility.calculateNextDueTime(context, adminTimes, freq, time);
+        AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
+        String nextAdminTime = info.getDisplayableTime(context);
+        long nextAdminTimeLong = info.getTime();
 
         ContentValues medGivenValues = new ContentValues();
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER, roomNumber);
@@ -172,6 +175,7 @@ public class MedicationItem {
         ContentValues meds = new ContentValues();
         meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
         meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
+        meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, nextAdminTimeLong);
 
         uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();

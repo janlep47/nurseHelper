@@ -84,8 +84,8 @@ public class Utility {
     }
 
 
-    public static String calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven) {
-        if (aPrnMed(context, adminTimes, freq)) return "";
+    public static AdminTimeInfo calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven) {
+        if (aPrnMed(context, adminTimes, freq)) return null;
 
         // Get current time:
         Calendar calendar = Calendar.getInstance();
@@ -103,8 +103,8 @@ public class Utility {
             // Assuming frequency is an assigned string!
             adminTimeInfo = getNextFreqTime(context, freq, timeLastGiven, calendar);
         }
-        if (adminTimeInfo == null) return "";
-        else return adminTimeInfo.getDisplayableTime(context);
+        if (adminTimeInfo == null) return null;
+        else return adminTimeInfo;
     }
 
     private static AdminTimeInfo chooseBestTime(AdminTimeInfo nextAdminTime, AdminTimeInfo nextFreqTime,
