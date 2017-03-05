@@ -27,6 +27,8 @@ import android.support.v7.preference.PreferenceScreen;
 
 import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
+import com.android.janice.nursehelper.utility.Utility;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
 
 /**
@@ -97,12 +99,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         if (key.equals(getString(R.string.pref_time_intervals_key))) {
             // we've changed the Med-alert Time interval
-            NurseHelperPreferences.getMedAlertTimeInterval(activity);
-            //ResidentSyncTask.syncResidentsMeds(activity);
+            int newTimeInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(activity);
+            MedCheckSyncAdapter.changeAlertInterval(activity, newTimeInterval);
+            MedCheckSyncAdapter.syncImmediately(activity);
         } else if (key.equals(getString(R.string.pref_enable_med_alerts_key))) {
             // turn med-alerts on/off
-            NurseHelperPreferences.areMedAlertsEnabled(activity);
-            //activity.getContentResolver().notifyChange(ResidentContract.MedicationEntry.CONTENT_URI, null);
+            boolean enableAlerts = NurseHelperPreferences.areMedAlertsEnabled(activity);
+            if (enableAlerts) {
+                int alertInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(activity);
+                MedCheckSyncAdapter.setAlertsOn();
+                MedCheckSyncAdapter.changeAlertInterval(activity, alertInterval);
+                MedCheckSyncAdapter.syncImmediately(activity);
+            } else {
+                MedCheckSyncAdapter.setAlertsOff(activity);
+            }
         }
         Preference preference = findPreference(key);
         if (null != preference) {

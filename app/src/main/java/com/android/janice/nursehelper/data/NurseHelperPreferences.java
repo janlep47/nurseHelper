@@ -30,25 +30,24 @@ import com.android.janice.nursehelper.R;
 public final class NurseHelperPreferences {
 
 
-    /**
-     * Returns true if the user has selected metric temperature display.
-     *
-     * @param context Context used to get the SharedPreferences
-     * @return true if metric display should be used, false if imperial display should be used
-     */
-    public static String getMedAlertTimeInterval(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String keyForTimeInterval = context.getString(R.string.pref_time_intervals_key);
-        String defaultTimeInterval = context.getString(R.string.pref_time_interval_default);
-        String preferredTimeInterval = sp.getString(keyForTimeInterval, defaultTimeInterval);
-        Log.i("PREF","  preferredTimeInterval = "+String.valueOf(preferredTimeInterval));
-        return preferredTimeInterval;
+    /**
+     * Returns the time-interval in minutes the user prefers before checking for MedAlerts in NurseHelper.
+     * This preference can be changed by the user within the SettingsFragment.
+     *
+     * @param context Used to access SharedPreferences
+     * @return int the number of minutes the user prefers to wait to check for meds-due
+     */
+
+    public static int getPreferredAlertTimeInterval(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getInt(context.getString(R.string.pref_time_intervals_key),
+                (R.integer.pref_time_interval_default));
     }
 
 
     /**
-     * Returns true if the user prefers to see MedAlerts from Sunshine, false otherwise. This
+     * Returns true if the user prefers to see MedAlerts in NurseHelper, false otherwise. This
      * preference can be changed by the user within the SettingsFragment.
      *
      * @param context Used to access SharedPreferences

@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
+
 public class MainActivity extends AppCompatActivity  implements ResidentlistFragment.Callback {
 
     private ResidentlistFragment mFragment;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
         //ResidentItem.putInDummyData(this);
         //MedicationItem.putInDummyData(this);
         //AssessmentItem.putInDummyData(this);
-
+        MedCheckSyncAdapter.initializeSyncAdapter(this);
     }
 
 

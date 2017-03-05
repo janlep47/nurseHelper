@@ -31,6 +31,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.android.janice.nursehelper.R;
+import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentDbHelper;
 import com.android.janice.nursehelper.utility.Utility;
 import com.android.janice.nursehelper.data.ResidentContract;
@@ -53,16 +54,18 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
     //  alert-time-interval, the app will notify the nurse.  (Note that notifications may also be turned off).
     //  (1800 = 30 min)  ( 30*60 = 1800 )
     private static int SYNC_INTERVAL;
-    public static int SYNC_FLEXTIME;
+    private static int SYNC_FLEXTIME;
+    private static Account mAccount = null;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int MEDS_NOTIFICATION_ID = 1234;  //
     private Context mContext;
+    private static boolean mAlertsOn = true;
 
     public MedCheckSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         Log.i(LOG_TAG," Here in MedCheckSyncAdapter constructor");
         mContext = context;
-        int interval = Utility.getPreferredAlertTimeInterval(mContext);
+        int interval = NurseHelperPreferences.getPreferredAlertTimeInterval(mContext);
         SYNC_INTERVAL = interval*60;  // 'interval' is in minutes
         SYNC_FLEXTIME = SYNC_INTERVAL / 3;
     }
@@ -103,6 +106,24 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
             ContentResolver.addPeriodicSync(account,
                     authority, new Bundle(), syncInterval);
         }
+    }
+
+    public static void changeAlertInterval(Context context, int secondsInterval) {
+        if (mAccount == null) mAccount = getSyncAccount(context);
+        SYNC_INTERVAL = secondsInterval * 60;
+        SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+        com.android.janice.nursehelper.sync.MedCheckSyncAdapter.configurePeriodicSync(context,SYNC_INTERVAL, SYNC_FLEXTIME);
+        ContentResolver.setSyncAutomatically(mAccount, context.getString(R.string.content_authority), true);
+        syncImmediately(context);
+    }
+
+    public static void setAlertsOn() {
+        mAlertsOn = true;
+    }
+
+    public static void setAlertsOff(Context context) {
+        mAlertsOn = false;
+        com.android.janice.nursehelper.sync.MedCheckSyncAdapter.changeAlertInterval(context, 0);
     }
 
     /**
@@ -176,7 +197,7 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     public static void initializeSyncAdapter(Context context) {
-        getSyncAccount(context);
+        mAccount = getSyncAccount(context);
     }
 
 }
