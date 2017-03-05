@@ -40,7 +40,7 @@ public final class NurseHelperPreferences {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         String keyForTimeInterval = context.getString(R.string.pref_time_intervals_key);
-        String defaultTimeInterval = context.getString(R.string.pref_time_interval_30min);
+        String defaultTimeInterval = context.getString(R.string.pref_time_interval_default);
         String preferredTimeInterval = sp.getString(keyForTimeInterval, defaultTimeInterval);
         Log.i("PREF","  preferredTimeInterval = "+String.valueOf(preferredTimeInterval));
         return preferredTimeInterval;

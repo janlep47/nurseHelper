@@ -448,6 +448,13 @@ public class Utility {
     }
 
 
+    public static int getPreferredAlertTimeInterval(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getInt(context.getString(R.string.pref_time_intervals_key),
+                (R.integer.pref_time_interval_default));
+    }
+
+
     /**
      * Returns true if the network is available or about to become available.
      *
