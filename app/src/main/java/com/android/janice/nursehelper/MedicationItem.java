@@ -77,6 +77,7 @@ public class MedicationItem {
         Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
         long time= System.currentTimeMillis();
+        String timeString = Utility.getReadableTimestamp(context,time);
 
         // Med #1
         ContentValues medValues = new ContentValues();
@@ -90,13 +91,16 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time);
 
         Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
 
 
         // Med #2
         medValues = new ContentValues();
+
+        timeString = Utility.getReadableTimestamp(context,time+5);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metformin HCL");
@@ -107,12 +111,15 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "");  // also tried "TID"
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time+5);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+5);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
         // Med #3
         medValues = new ContentValues();
+
+        timeString = Utility.getReadableTimestamp(context,time+2);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metaprolol tartrate");
@@ -123,7 +130,8 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time+2);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+2);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -139,7 +147,8 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME,"");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
         medUri = context.getContentResolver().insert(uriMeds, medValues);
     }
 
@@ -161,8 +170,12 @@ public class MedicationItem {
 
         long time= System.currentTimeMillis();
         AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
-        String nextAdminTime = info.getDisplayableTime(context);
-        long nextAdminTimeLong = info.getTime();
+        String nextAdminTime = "";
+        long nextAdminTimeLong = 0;
+        if (info != null) {
+            nextAdminTime = info.getDisplayableTime(context);
+            nextAdminTimeLong = info.getTime();
+        }
 
         ContentValues medGivenValues = new ContentValues();
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER, roomNumber);
