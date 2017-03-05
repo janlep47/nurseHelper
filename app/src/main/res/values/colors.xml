@@ -7,6 +7,7 @@
     <color name="colorMeds">#0066ff</color>
     <color name="colorAssessment">#00cc00</color>
     <color name="colorCarePlan">#FF4081</color>
+    <color name="colorMedTime">#555555</color>
 
     <!-- the activated state color -->
     <color name="activated">#E0E0E0</color>

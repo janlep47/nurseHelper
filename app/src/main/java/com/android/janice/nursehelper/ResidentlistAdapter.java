@@ -21,6 +21,7 @@ import android.widget.TextView;
 public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapter.ResidentlistAdapterViewHolder> {
 
     private Cursor mCursor;
+    private Cursor mTimeCursor;
     final private Context mContext;
     final private ResidentlistAdapterOnClickHandler mClickHandler;
     final private View mEmptyView;
@@ -38,6 +39,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
         public final TextView mMeds;
         public final TextView mAssessment;
         public final TextView mCarePlan;
+        public final TextView mMedTime;
         public final static int PATIENT_SELECTED = 0;
         public final static int MEDICATIONS_SELECTED = 1;
         public final static int ASSESSMENT_SELECTED = 2;
@@ -51,6 +53,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
             mMeds = (TextView) view.findViewById(R.id.list_item_medications_textview);
             mAssessment = (TextView) view.findViewById(R.id.list_item_assessment_textview);
             mCarePlan = (TextView) view.findViewById(R.id.list_item_careplan_textview);
+            mMedTime = (TextView) view.findViewById(R.id.list_item_medtime_textview);
             mMeds.setOnClickListener(this);
             mAssessment.setOnClickListener(this);
             mCarePlan.setOnClickListener(this);
@@ -61,6 +64,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
+            if (mTimeCursor != null) mTimeCursor.moveToPosition(adapterPosition);
             int roomNumberColumnIndex = mCursor.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);
             int portraitIndex = mCursor.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH);
 
@@ -119,6 +123,14 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
         residentlistAdapterViewHolder.mRoomNumberView.setText(roomNumber);
         residentlistAdapterViewHolder.mRoomNumberView.setContentDescription(mContext.getString(R.string.a11y_roomNumber, roomNumber));
 
+        // Read next-time-to-admin from timeCursor:
+        String nextAdminTime = "";
+        if (mTimeCursor != null) {
+            mTimeCursor.moveToPosition(position);
+            nextAdminTime = mTimeCursor.getString(ResidentlistFragment.COL_NEXT_ADMIN_TIME);
+        }
+        residentlistAdapterViewHolder.mMedTime.setText(nextAdminTime);
+
         // Read filename of resident's portrait from cursor
         String filePath = mCursor.getString(ResidentlistFragment.COL_PORTRAIT);
 
@@ -155,9 +167,16 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
+    public void swapTimeCursor(Cursor newTimeCursor) {
+        mTimeCursor = newTimeCursor;
+        notifyDataSetChanged();
+    }
+
     public Cursor getCursor() {
         return mCursor;
     }
+
+    public Cursor getTimeCursor() { return mTimeCursor; }
 
     public void selectView(RecyclerView.ViewHolder viewHolder) {
         if ( viewHolder instanceof ResidentlistAdapterViewHolder ) {

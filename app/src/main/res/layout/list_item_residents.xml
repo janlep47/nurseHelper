@@ -77,6 +77,14 @@
                 android:textColor="@color/colorCarePlan"
                 android:text="Care Plan"/>
 
+            <TextView
+                android:id="@+id/list_item_medtime_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+                android:textSize="@dimen/residentlist_medtime_size"
+                android:textColor="@color/colorMedTime"/>
+
         </LinearLayout>
 
 

@@ -49,6 +49,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     private static final String SELECTED_KEY = "selected_position";
 
     private static final int RESIDENTLIST_LOADER = 0;
+    private static final int MEDTIME_LOADER = 1;
 
     private static final String[] RESIDENTLIST_COLUMNS = {
             ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER,
@@ -57,6 +58,10 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     // These indices are tied to above.
     static final int COL_ROOM_NUMBER = 0;
     static final int COL_PORTRAIT = 1;
+
+    // This index is tied to the timeCursor (index 0 is room number, in the same (asc) sorted
+    //   order as room number in "cursor"
+    static final int COL_NEXT_ADMIN_TIME = 1;
 
 
     public interface Callback {
@@ -169,6 +174,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             getActivity().supportPostponeEnterTransition();
         }
         getLoaderManager().initLoader(RESIDENTLIST_LOADER, null, this);
+        getLoaderManager().initLoader(MEDTIME_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -186,21 +192,33 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // This is called when a new Loader needs to be created.  This
-        // fragment only uses one loader, so we don't care about checking the id.
+        // fragment only uses two loaders, so we care about checking the id.
+        if (i == RESIDENTLIST_LOADER) {
+            // Sort order:  Ascending, by Resident symbol.
+            String sortOrder = ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ASC";
 
-        // Sort order:  Ascending, by Resident symbol.
-        String sortOrder = ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ASC";
-
-        return new CursorLoader(getActivity(),
-                ResidentContract.ResidentEntry.CONTENT_URI,
-                RESIDENTLIST_COLUMNS,
-                null,
-                null,
-                sortOrder);
+            return new CursorLoader(getActivity(),
+                    ResidentContract.ResidentEntry.CONTENT_URI,
+                    RESIDENTLIST_COLUMNS,
+                    null,
+                    null,
+                    sortOrder);
+        } else {  // MEDTIME_LOADER
+            // This call will do a special raw-query, which will find the earliest (if any)
+            //   time due for scheduled meds, for each resident.
+            return new CursorLoader(getActivity(),ResidentContract.MedicationEntry.CONTENT_URI, null,
+                    null, null, null);
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        if (loader.getId() == MEDTIME_LOADER) {
+            mResidentlistAdapter.swapTimeCursor(data);
+            return;
+        }
+        // Otherwise, RESIDENT_LOADER
         mResidentlistAdapter.swapCursor(data);
         updateEmptyView();
         if ( data.getCount() == 0 ) {
@@ -218,6 +236,11 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                         //        -1 != mInitialSelectedDate) {
                         if (position == RecyclerView.NO_POSITION && !mInitialSelectedRoomNumber.equals("")) {
                             Cursor data = mResidentlistAdapter.getCursor();
+
+
+                            Cursor medData = mResidentlistAdapter.getTimeCursor();
+
+
                             int count = data.getCount();
                             //int dateColumn = data.getColumnIndex(ResidentsContract.ResidentEntry.COLUMN_DATE);
                             int roomNumberColumn = data.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);

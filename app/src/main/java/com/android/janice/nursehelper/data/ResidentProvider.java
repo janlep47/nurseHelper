@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+import com.android.janice.nursehelper.utility.Utility;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,14 +65,17 @@ public class ResidentProvider extends ContentProvider {
 
     private static final String sResidentsWithNextScheduledMedTime =
             "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
-            ", meds.earliestMed FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res INNER JOIN "+
-            "( SELECT "+ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+", MIN("+
-            ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG+") earliestMed FROM "+
-            ResidentContract.MedicationEntry.TABLE_NAME+" GROUP BY "+
-            ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+" ) meds ON meds."+
-            ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+"=res."+
-            ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
-            ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
+                    ", meds."+ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+
+                    ", meds.earliestMed FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res LEFT JOIN "+
+                    "( SELECT "+ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+", "+
+                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+", MIN("+
+                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG+") earliestMed FROM "+
+                    ResidentContract.MedicationEntry.TABLE_NAME+" GROUP BY "+
+                    ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+" ) meds ON meds."+
+                    ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+"=res."+
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
+
 
 
     static UriMatcher buildUriMatcher() {
@@ -154,16 +159,7 @@ public class ResidentProvider extends ContentProvider {
             // "meds"  NOTE: this will select only one record for each room#, which has the MINIMUM
             //  next-admin-time
             case MEDICATIONS: {
-                //retCursor = mOpenHelper.getReadableDatabase().rawQuery(selection,null);
                 retCursor = mOpenHelper.getReadableDatabase().rawQuery(sResidentsWithNextScheduledMedTime, null);
-                /*
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        ResidentContract.MedicationEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null, null, sortOrder);
-                        */
                 break;
             }
 

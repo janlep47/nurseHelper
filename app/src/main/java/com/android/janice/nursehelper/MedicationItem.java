@@ -150,6 +150,46 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME,"");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
         medUri = context.getContentResolver().insert(uriMeds, medValues);
+
+
+        // Med #1 for later patient
+        medValues = new ContentValues();
+
+        timeString = Utility.getReadableTimestamp(context,time+50);
+
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "208");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "atavan");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "Zzzaway");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 15);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 1 PM / 7 PM / 1 AM");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QID");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+50);
+
+        medUri = context.getContentResolver().insert(uriMeds, medValues);
+
+        // Med #2 for later patient
+        medValues = new ContentValues();
+
+        timeString = Utility.getReadableTimestamp(context,time+25);
+
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "208");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "haldoperitol");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, "DePyche");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, 25);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, "mg");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "8 AM / 8 PM");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+25);
+
+        medUri = context.getContentResolver().insert(uriMeds, medValues);
+
     }
 
     // if "given" false, med was refused.
