@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity  implements ResidentlistFrag
         //MedicationItem.putInDummyData(this);
         //AssessmentItem.putInDummyData(this);
 
-        //ResidentSyncAdapter.initializeSyncAdapter(this);
     }
 
 
