@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by janicerichards on 2/1/17.
  */
@@ -21,10 +24,11 @@ public class ResidentProvider extends ContentProvider {
     private ResidentDbHelper mOpenHelper;
 
     static final int RESIDENTS = 100;              // PATH  residents path (DIR)
+    static final int MEDICATIONS = 200;            // PATH  medications path (DIR)
     static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
     static final int MEDICATIONS_WITH_ROOM_NUMBER_AND_MED = 202;  // PATH/*  medications path followed by a String (ITEM)
     static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
-    static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
+    static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/* medsGiven path followed by 1 strings (ITEM)
     static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 402;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
 
     public static final String LOG_TAG = ResidentProvider.class.getSimpleName();
@@ -57,6 +61,18 @@ public class ResidentProvider extends ContentProvider {
                     ResidentContract.MedsGivenEntry.TABLE_NAME+
                     "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ? ";
 
+    private static final String sResidentsWithNextScheduledMedTime =
+            "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
+            ", meds.earliestMed FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res INNER JOIN "+
+            "( SELECT "+ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+", MIN("+
+            ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG+") earliestMed FROM "+
+            ResidentContract.MedicationEntry.TABLE_NAME+" GROUP BY "+
+            ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+" ) meds ON meds."+
+            ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+"=res."+
+            ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
+            ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
+
+
     static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
         // expressions instead?  Because you're not crazy, that's why.
@@ -69,12 +85,17 @@ public class ResidentProvider extends ContentProvider {
 
         // Create a corresponding code.
         matcher.addURI(authority, ResidentContract.PATH_RESIDENTS, RESIDENTS);
+        matcher.addURI(authority, ResidentContract.PATH_MEDS, MEDICATIONS);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*", MEDICATIONS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*/*", MEDICATIONS_WITH_ROOM_NUMBER_AND_MED);
         matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*", ASSESSMENTS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*", MEDS_GIVEN_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*/*", MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED);
         return matcher;
+    }
+
+    public ResidentDbHelper getDbHelper() {
+        return mOpenHelper;
     }
 
     @Override
@@ -92,6 +113,8 @@ public class ResidentProvider extends ContentProvider {
         switch (match) {
             case RESIDENTS:
                 return ResidentContract.ResidentEntry.CONTENT_TYPE;        // DIR
+            case MEDICATIONS:
+                return ResidentContract.MedicationEntry.CONTENT_TYPE;      // DIR
             case MEDICATIONS_WITH_ROOM_NUMBER:
                 return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
             case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
@@ -107,14 +130,7 @@ public class ResidentProvider extends ContentProvider {
         }
     }
 
-    private Cursor getResidents(Uri uri) {
-        Cursor cursor = mOpenHelper.getReadableDatabase().query(
-                ResidentContract.ResidentEntry.TABLE_NAME,
-                new String[] {ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER},
-                null,null,
-                null, null, "ASC");
-        return cursor;
-    }
+
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
@@ -132,6 +148,22 @@ public class ResidentProvider extends ContentProvider {
                         selection,
                         selectionArgs,
                         null, null, sortOrder);
+                break;
+            }
+
+            // "meds"  NOTE: this will select only one record for each room#, which has the MINIMUM
+            //  next-admin-time
+            case MEDICATIONS: {
+                //retCursor = mOpenHelper.getReadableDatabase().rawQuery(selection,null);
+                retCursor = mOpenHelper.getReadableDatabase().rawQuery(sResidentsWithNextScheduledMedTime, null);
+                /*
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ResidentContract.MedicationEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null, null, sortOrder);
+                        */
                 break;
             }
 

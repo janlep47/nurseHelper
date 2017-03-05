@@ -65,7 +65,21 @@ public class ResidentItem {
             Log.e("RESIDENTITEM"," NO FILES READ FROM ASSETS");
             return;
         }
+        /*
         for (int i = 0; i < files.length; i++){
+            String fileName = files[i];
+            if (!fileName.startsWith("av")) continue;
+            String roomNumber = String.valueOf(200+i);
+
+            ContentValues residentValues = new ContentValues();
+
+            residentValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, roomNumber);
+            residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, fileName);
+            Log.i("ResidentItem", "   ok room#="+roomNumber+"  filename = "+fileName);
+            Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
+        }
+        */
+        for (int i = files.length - 1; i >= 0; i--) {
             String fileName = files[i];
             if (!fileName.startsWith("av")) continue;
             String roomNumber = String.valueOf(200+i);

@@ -44,7 +44,7 @@ import java.util.HashMap;
  */
 
 public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
-    public static final String LOG_TAG = com.android.janice.nursehelper.sync.NurseHelperSyncAdapter.class.getSimpleName();
+    public static final String LOG_TAG = com.android.janice.nursehelper.sync.MedCheckSyncAdapter.class.getSimpleName();
     public static final String ACTION_DATA_UPDATED =
             "com.example.android.sunshine.app.ACTION_DATA_UPDATED";
     // Interval at which to check which medications due, in seconds.

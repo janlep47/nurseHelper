@@ -90,6 +90,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time);
 
         Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -106,6 +107,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "");  // also tried "TID"
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time+5);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -121,6 +123,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time+2);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -136,6 +139,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, time);
         medUri = context.getContentResolver().insert(uriMeds, medValues);
     }
 
