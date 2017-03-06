@@ -51,7 +51,7 @@
             android:backgroundTint="@color/colorMeds"
             android:textSize="@dimen/widget_subtext_size"/>
 
-        <TextView
+        <!--TextView
             android:id="@+id/widget_last_assessment"
             android:layout_width="@dimen/widget_time_width"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:fontFamily="sans-serif-light"
             android:textColor="@color/black"
             android:backgroundTint="@color/colorAssessment"
-            android:textSize="@dimen/widget_subtext_size"/>
+            android:textSize="@dimen/widget_subtext_size"/-->
 
         </LinearLayout>
 

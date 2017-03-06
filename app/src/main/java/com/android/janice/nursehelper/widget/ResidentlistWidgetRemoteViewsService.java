@@ -16,6 +16,9 @@ import android.widget.RemoteViewsService;
 import com.android.janice.nursehelper.R;
 import com.android.janice.nursehelper.data.ResidentContract;
 
+import static com.android.janice.nursehelper.MainActivity.ITEM_PORTRAIT_FILEPATH;
+import static com.android.janice.nursehelper.MainActivity.ITEM_ROOM_NUMBER;
+
 /**
  * Created by janicerichards on 2/18/17.
  */
@@ -23,17 +26,26 @@ import com.android.janice.nursehelper.data.ResidentContract;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
     private static final String[] RESIDENTLIST_COLUMNS = {
-            ResidentContract.ResidentEntry.TABLE_NAME + "." + ResidentContract.ResidentEntry._ID,
-            ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER
+            ResidentContract.ResidentEntry.TABLE_NAME + "." + ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER,
+            ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH
     };
     // These indices are tied to above.
-    static final int COL_ID = 0;
-    static final int COL_ROOM_NUMBER = 1;
+    static final int COL_ROOM_NUMBER = 0;
+    static final int COL_PORTRAIT_FILEPATH = 1;
+
+    private static final String[] MEDLIST_COLUMNS = {
+            ResidentContract.MedicationEntry.TABLE_NAME + "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER,
+            ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME
+    };
+    // These indices are tied to above.
+    //static final int COL_ROOM_NUMBER = 0;
+    static final int COL_MED_TIME = 1;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
             private Cursor data = null;
+            private Cursor medData = null;
 
             @Override
             public void onCreate() {
@@ -46,12 +58,19 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 if (data != null) {
                     data.close();
                 }
+                if (medData != null) {
+                    medData.close();
+                }
                 final long identityToken = Binder.clearCallingIdentity();
+
                 data = getContentResolver().query(ResidentContract.ResidentEntry.CONTENT_URI,
                         RESIDENTLIST_COLUMNS,
                         null,
                         null,
                         ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ASC");
+
+                medData = getContentResolver().query(ResidentContract.MedicationEntry.CONTENT_URI,
+                        MEDLIST_COLUMNS, null, null, null);
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -60,6 +79,10 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 if (data != null) {
                     data.close();
                     data = null;
+                }
+                if (medData != null) {
+                    medData.close();
+                    medData = null;
                 }
             }
 
@@ -73,26 +96,35 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 if (position == AdapterView.INVALID_POSITION ||
                         data == null || !data.moveToPosition(position)) {
                     return null;
+                } else if (medData == null || !medData.moveToPosition(position)) {
+                    return null;
                 }
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_list_item);
                 String roomNumber = data.getString(COL_ROOM_NUMBER);
+                String portraitFilePath = data.getString(COL_PORTRAIT_FILEPATH);
+                String medAdminTime = medData.getString(COL_MED_TIME);
 
                 views.setTextViewText(R.id.widget_room_number, roomNumber);
+                views.setTextViewText(R.id.widget_meds_due, medAdminTime);
                 //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 //    setRemoteContentDescription(views, description);
                 //}
 
 
                 final Intent medsIntent = new Intent();
+                medsIntent.putExtra(ITEM_ROOM_NUMBER, roomNumber);
+                medsIntent.putExtra(ITEM_PORTRAIT_FILEPATH, portraitFilePath);
+
                 Uri medsUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
                 medsIntent.setData(medsUri);
-                views.setOnClickFillInIntent(R.id.widget_meds_due, medsIntent);
+                views.setOnClickFillInIntent(R.id.widget_list_item, medsIntent);
+                //views.setOnClickFillInIntent(R.id.widget_meds_due, medsIntent);
 
-                final Intent assessmentIntent = new Intent();
-                Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
-                assessmentIntent.setData(assessementUri);
-                views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
+                //final Intent assessmentIntent = new Intent();
+                //Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
+                //assessmentIntent.setData(assessementUri);
+                //views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
 
                 return views;
             }
@@ -114,9 +146,8 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
 
             @Override
             public long getItemId(int position) {
-                if (data.moveToPosition(position))
-                    return data.getLong(COL_ID);
-                    //return data.getLong(INDEX_STOCK_ID);
+                data.moveToPosition(position);
+                medData.moveToPosition(position);
                 return position;
             }
 
