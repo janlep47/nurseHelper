@@ -40,6 +40,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
     // These indices are tied to above.
     //static final int COL_ROOM_NUMBER = 0;
     static final int COL_MED_TIME = 1;
+    static final int COL_MED_TIME_LONG = 2;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -104,6 +105,16 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 String roomNumber = data.getString(COL_ROOM_NUMBER);
                 String portraitFilePath = data.getString(COL_PORTRAIT_FILEPATH);
                 String medAdminTime = medData.getString(COL_MED_TIME);
+
+                long medAdminTimeLong = medData.getLong(COL_MED_TIME_LONG);
+                long currTime = System.currentTimeMillis();
+                if (currTime > medAdminTimeLong) {
+                    views.setTextColor(R.id.widget_meds_due,
+                            ContextCompat.getColor(getApplicationContext(), R.color.adminTimeAlertColor));
+                } else {
+                    views.setTextColor(R.id.widget_meds_due,
+                            ContextCompat.getColor(getApplicationContext(), R.color.colorMedTime));
+                }
 
                 views.setTextViewText(R.id.widget_room_number, roomNumber);
                 views.setTextViewText(R.id.widget_meds_due, medAdminTime);
