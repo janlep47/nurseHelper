@@ -9,6 +9,9 @@
     <color name="colorCarePlan">#FF4081</color>
     <color name="colorMedTime">#555555</color>
 
+    <color name="adminTimeAlertColor">#c42946</color>
+    <!--color name="adminTimeAlertColor">#f42946</color-->
+
     <!-- the activated state color -->
     <color name="activated">#E0E0E0</color>
 

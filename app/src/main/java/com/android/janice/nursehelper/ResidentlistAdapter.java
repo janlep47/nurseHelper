@@ -3,6 +3,7 @@ package com.android.janice.nursehelper;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -125,9 +126,19 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
 
         // Read next-time-to-admin from timeCursor:
         String nextAdminTime = "";
+        long nextAdminTimeLong = 0;
         if (mTimeCursor != null) {
             mTimeCursor.moveToPosition(position);
             nextAdminTime = mTimeCursor.getString(ResidentlistFragment.COL_NEXT_ADMIN_TIME);
+            nextAdminTimeLong = mTimeCursor.getLong(ResidentlistFragment.COL_NEXT_ADMIN_TIME_LONG);
+            long currTime = System.currentTimeMillis();
+            if (currTime > nextAdminTimeLong) {
+                residentlistAdapterViewHolder.mMedTime.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.adminTimeAlertColor));
+            } else {
+                residentlistAdapterViewHolder.mMedTime.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.colorMedTime));
+            }
         }
         residentlistAdapterViewHolder.mMedTime.setText(nextAdminTime);
 

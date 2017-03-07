@@ -62,6 +62,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     // This index is tied to the timeCursor (index 0 is room number, in the same (asc) sorted
     //   order as room number in "cursor"
     static final int COL_NEXT_ADMIN_TIME = 1;
+    static final int COL_NEXT_ADMIN_TIME_LONG = 2;
 
 
     public interface Callback {
