@@ -35,21 +35,32 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
-            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
             android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/widget_meds_due"
-            android:layout_width="@dimen/widget_time_width"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="right"
-            android:fontFamily="sans-serif-light"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/colorMeds"
-            android:textSize="@dimen/widget_subtext_size"/>
+            <TextView
+                android:id="@+id/widget_meds_due"
+                android:layout_width="@dimen/widget_time_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/white"
+                android:background="@drawable/widget_med_time_background"
+                android:textStyle="bold"
+                android:textSize="@dimen/widget_subtext_size"/>
+
+            <TextView
+                android:id="@+id/widget_last_assessment"
+                android:layout_width="@dimen/widget_time_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/white"
+                android:background="@drawable/widget_assess_time_background"
+                android:textStyle="bold"
+                android:textSize="@dimen/widget_subtext_size"/>
+        </LinearLayout>
 
         <!--TextView
             android:id="@+id/widget_last_assessment"
@@ -61,8 +72,6 @@
             android:textColor="@color/black"
             android:backgroundTint="@color/colorAssessment"
             android:textSize="@dimen/widget_subtext_size"/-->
-
-        </LinearLayout>
 
     </LinearLayout>
 

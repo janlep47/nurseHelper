@@ -109,8 +109,10 @@
     <string name="empty_medications_no_network">No medication information available. The network is not available to fetch medication data.</string>
     <string name="empty_assessment_no_network">No assessment information available. The network is not available to fetch assessment data.</string>
 
-    <string name="a11y_roomNumber">Symbol: <xliff:g id="symbol">%1$s</xliff:g></string>
+    <string name="widget_room_number_title">room#</string>
+    <string name="widget_med_due_title">meds due</string>
 
+    <string name="roomNumber_desc">The room number of the resident/patient</string>
 
     <!-- Key name for storing internet-type status in SharedPreferences -->
     <string name="pref_status_key" translatable="false">int-status</string>

@@ -58,16 +58,7 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
                     .addNextIntentWithParentStack(clickIntentMedsTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_list, clickPendingMedsIntentTemplate);
-            //views.setEmptyView(R.id.widget_meds_due, R.id.widget_empty);
-/*
-            Intent clickIntentAssessmentTemplate = new Intent(context, AssessmentActivity.class);
 
-            PendingIntent clickPendingAssessmentIntentTemplate = TaskStackBuilder.create(context)
-                    .addNextIntentWithParentStack(clickIntentAssessmentTemplate)
-                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setPendingIntentTemplate(R.id.widget_last_assessment, clickPendingAssessmentIntentTemplate);
-            views.setEmptyView(R.id.widget_last_assessment, R.id.widget_empty);
-*/
             views.setEmptyView(R.id.widget_list, R.id.widget_empty);
 
             // Tell the AppWidgetManager to perform an update on the current app widget

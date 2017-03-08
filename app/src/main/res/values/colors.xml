@@ -7,13 +7,17 @@
     <color name="colorMeds">#0066ff</color>
     <color name="colorAssessment">#00cc00</color>
     <color name="colorCarePlan">#FF4081</color>
-    <color name="colorMedTime">#555555</color>
+    <!--color name="colorMedTime">#555555</color-->
+    <color name="colorMedTime">#FFFFFF</color>
 
     <color name="adminTimeAlertColor">#c42946</color>
     <!--color name="adminTimeAlertColor">#f42946</color-->
+    <!--color name="widgetTimeAlertColor">#f79902</color-->
+    <color name="widgetTimeAlertColor">#f59aed</color>
 
     <!-- the activated state color -->
     <color name="activated">#E0E0E0</color>
 
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>

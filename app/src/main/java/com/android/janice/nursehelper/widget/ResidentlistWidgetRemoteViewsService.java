@@ -127,26 +127,34 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 String roomNumber = data.getString(COL_ROOM_NUMBER);
                 String portraitFilePath = data.getString(COL_PORTRAIT_FILEPATH);
                 String medAdminTime = medData.getString(COL_MED_TIME);
+
                 long vsTimeLong = vsData.getLong(COL_TIME_ASSESSED);
-                String vsTime = Utility.getReadableTimestamp(getApplicationContext(),vsTimeLong);
+                String vsTime;
+                if (vsTimeLong == 0) {
+                    vsTime = "No assessments done";
+                } else {
+                    vsTime = Utility.getReadableTimestamp(getApplicationContext(),vsTimeLong);
+                }
 
                 long medAdminTimeLong = medData.getLong(COL_MED_TIME_LONG);
                 long currTime = System.currentTimeMillis();
-                if (currTime > medAdminTimeLong) {
+                if (medAdminTimeLong == 0) {
+                    views.setTextColor(R.id.widget_meds_due,
+                            ContextCompat.getColor(getApplicationContext(), R.color.colorMedTime));
+                    medAdminTime = "No meds due";
+                } else if (currTime > medAdminTimeLong) {
                     views.setTextColor(R.id.widget_meds_due,
                             ContextCompat.getColor(getApplicationContext(), R.color.widgetTimeAlertColor));
                 } else {
                     views.setTextColor(R.id.widget_meds_due,
                             ContextCompat.getColor(getApplicationContext(), R.color.colorMedTime));
                 }
-
                 views.setTextViewText(R.id.widget_room_number, roomNumber);
                 views.setTextViewText(R.id.widget_meds_due, medAdminTime);
                 views.setTextViewText(R.id.widget_last_assessment, vsTime);
                 //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 //    setRemoteContentDescription(views, description);
                 //}
-
 
                 final Intent medsIntent = new Intent();
                 medsIntent.putExtra(ITEM_ROOM_NUMBER, roomNumber);
@@ -155,12 +163,6 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 Uri medsUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
                 medsIntent.setData(medsUri);
                 views.setOnClickFillInIntent(R.id.widget_list_item, medsIntent);
-                views.setOnClickFillInIntent(R.id.widget_meds_due, medsIntent);
-
-                final Intent assessmentIntent = new Intent();
-                Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
-                assessmentIntent.setData(assessementUri);
-                views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
 
                 return views;
             }
