@@ -15,6 +15,7 @@ import android.widget.RemoteViewsService;
 
 import com.android.janice.nursehelper.R;
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.utility.Utility;
 
 import static com.android.janice.nursehelper.MainActivity.ITEM_PORTRAIT_FILEPATH;
 import static com.android.janice.nursehelper.MainActivity.ITEM_ROOM_NUMBER;
@@ -42,11 +43,19 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
     static final int COL_MED_TIME = 1;
     static final int COL_MED_TIME_LONG = 2;
 
+    private static final String[] VSLIST_COLUMNS = {
+            ResidentContract.AssessmentEntry.TABLE_NAME + "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
+            ResidentContract.AssessmentEntry.COLUMN_TIME
+    };
+    // static final int COL_ROOM_NUMBER = 0;
+    static final int COL_TIME_ASSESSED = 1;
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
             private Cursor data = null;
             private Cursor medData = null;
+            private Cursor vsData = null;
 
             @Override
             public void onCreate() {
@@ -62,6 +71,9 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 if (medData != null) {
                     medData.close();
                 }
+                if (vsData != null) {
+                    vsData.close();
+                }
                 final long identityToken = Binder.clearCallingIdentity();
 
                 data = getContentResolver().query(ResidentContract.ResidentEntry.CONTENT_URI,
@@ -72,6 +84,10 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
 
                 medData = getContentResolver().query(ResidentContract.MedicationEntry.CONTENT_URI,
                         MEDLIST_COLUMNS, null, null, null);
+
+                vsData = getContentResolver().query(ResidentContract.AssessmentEntry.CONTENT_URI,
+                        VSLIST_COLUMNS, null, null, null);
+
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -84,6 +100,10 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 if (medData != null) {
                     medData.close();
                     medData = null;
+                }
+                if (vsData != null) {
+                    vsData.close();
+                    vsData = null;
                 }
             }
 
@@ -99,18 +119,22 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                     return null;
                 } else if (medData == null || !medData.moveToPosition(position)) {
                     return null;
+                } else if (vsData == null || !vsData.moveToPosition(position)) {
+                    return null;
                 }
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_list_item);
                 String roomNumber = data.getString(COL_ROOM_NUMBER);
                 String portraitFilePath = data.getString(COL_PORTRAIT_FILEPATH);
                 String medAdminTime = medData.getString(COL_MED_TIME);
+                long vsTimeLong = vsData.getLong(COL_TIME_ASSESSED);
+                String vsTime = Utility.getReadableTimestamp(getApplicationContext(),vsTimeLong);
 
                 long medAdminTimeLong = medData.getLong(COL_MED_TIME_LONG);
                 long currTime = System.currentTimeMillis();
                 if (currTime > medAdminTimeLong) {
                     views.setTextColor(R.id.widget_meds_due,
-                            ContextCompat.getColor(getApplicationContext(), R.color.adminTimeAlertColor));
+                            ContextCompat.getColor(getApplicationContext(), R.color.widgetTimeAlertColor));
                 } else {
                     views.setTextColor(R.id.widget_meds_due,
                             ContextCompat.getColor(getApplicationContext(), R.color.colorMedTime));
@@ -118,6 +142,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
 
                 views.setTextViewText(R.id.widget_room_number, roomNumber);
                 views.setTextViewText(R.id.widget_meds_due, medAdminTime);
+                views.setTextViewText(R.id.widget_last_assessment, vsTime);
                 //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 //    setRemoteContentDescription(views, description);
                 //}
@@ -130,12 +155,12 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 Uri medsUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
                 medsIntent.setData(medsUri);
                 views.setOnClickFillInIntent(R.id.widget_list_item, medsIntent);
-                //views.setOnClickFillInIntent(R.id.widget_meds_due, medsIntent);
+                views.setOnClickFillInIntent(R.id.widget_meds_due, medsIntent);
 
-                //final Intent assessmentIntent = new Intent();
-                //Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
-                //assessmentIntent.setData(assessementUri);
-                //views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
+                final Intent assessmentIntent = new Intent();
+                Uri assessementUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
+                assessmentIntent.setData(assessementUri);
+                views.setOnClickFillInIntent(R.id.widget_last_assessment, assessmentIntent);
 
                 return views;
             }

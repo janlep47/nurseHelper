@@ -146,7 +146,7 @@ public class ResidentContract {
         // primary key:  room Number
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
-        // Time, stored as long in milliseconds (for the current stock price listed)
+        // Time, stored as long in milliseconds (when this assessment was done)
         public static final String COLUMN_TIME = "time";
 
         // ###/###

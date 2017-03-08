@@ -29,6 +29,7 @@ public class ResidentProvider extends ContentProvider {
     static final int MEDICATIONS = 200;            // PATH  medications path (DIR)
     static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
     static final int MEDICATIONS_WITH_ROOM_NUMBER_AND_MED = 202;  // PATH/*  medications path followed by a String (ITEM)
+    static final int ASSESSMENTS = 300;            // PATH  assessments path (DIR)
     static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
     static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/* medsGiven path followed by 1 strings (ITEM)
     static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 402;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
@@ -76,6 +77,17 @@ public class ResidentProvider extends ContentProvider {
                     ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
                     ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
 
+    private static final String sResidentsWithMostRecentAssessmentTime =
+            "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
+                    ", vs.latestCheck FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res LEFT JOIN "+
+                    "( SELECT "+ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+", "+
+                    "MAX("+ResidentContract.AssessmentEntry.COLUMN_TIME+") latestCheck FROM "+
+                    ResidentContract.AssessmentEntry.TABLE_NAME+" GROUP BY "+
+                    ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+" ) vs ON vs."+
+                    ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+"=res."+
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
+
 
 
     static UriMatcher buildUriMatcher() {
@@ -93,6 +105,7 @@ public class ResidentProvider extends ContentProvider {
         matcher.addURI(authority, ResidentContract.PATH_MEDS, MEDICATIONS);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*", MEDICATIONS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*/*", MEDICATIONS_WITH_ROOM_NUMBER_AND_MED);
+        matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS, ASSESSMENTS);
         matcher.addURI(authority, ResidentContract.PATH_ASSESSMENTS + "/*", ASSESSMENTS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*", MEDS_GIVEN_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS_GIVEN + "/*/*", MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED);
@@ -124,6 +137,8 @@ public class ResidentProvider extends ContentProvider {
                 return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
             case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
                 return ResidentContract.MedicationEntry.CONTENT_ITEM_TYPE;   // ITEM
+            case ASSESSMENTS:
+                return ResidentContract.AssessmentEntry.CONTENT_TYPE;      // DIR
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 return ResidentContract.AssessmentEntry.CONTENT_ITEM_TYPE;   // ITEM
             case MEDS_GIVEN_WITH_ROOM_NUMBER:
@@ -173,6 +188,11 @@ public class ResidentProvider extends ContentProvider {
             case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
             {
                 retCursor = getMedicationsByPatientAndMed(uri, projection, sortOrder);
+                break;
+            }
+
+            case ASSESSMENTS: {
+                retCursor = mOpenHelper.getReadableDatabase().rawQuery(sResidentsWithMostRecentAssessmentTime, null);
                 break;
             }
 
