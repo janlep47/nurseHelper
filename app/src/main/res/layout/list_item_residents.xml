@@ -29,6 +29,7 @@
                 android:id="@+id/list_item_room_number_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/roomNumber_desc"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textSize="@dimen/residentlist_text_size"/>
 
