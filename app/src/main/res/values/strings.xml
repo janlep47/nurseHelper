@@ -110,7 +110,7 @@
     <string name="empty_assessment_no_network">No assessment information available. The network is not available to fetch assessment data.</string>
 
     <string name="widget_room_number_title">room#</string>
-    <string name="widget_med_due_title">meds due</string>
+    <string name="widget_med_due_title">meds due / last assessment</string>
 
     <string name="roomNumber_desc">The room number of the resident/patient</string>
 
