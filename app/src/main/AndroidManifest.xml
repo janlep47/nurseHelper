@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.janice.nursehelper">
 
+    <!-- for OAUTH token for google identity ... ?  -->
+    <!--uses-permission android:name="android.permission.ACCOUNT_MANAGER" /-->
     <!-- To allow network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- for google location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Permissions required by the sync adapter -->
     <uses-permission
