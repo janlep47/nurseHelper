@@ -3,6 +3,7 @@ package com.android.janice.nursehelper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
@@ -49,6 +50,19 @@ public class ResidentItem {
 
 
     public static void putInDummyData(Context context) {
+        // First see if any data in already; if so, just return
+        Cursor cursor = context.getContentResolver().query(ResidentContract.ResidentEntry.CONTENT_URI,
+                new String[]{ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER},
+                null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                cursor.close();
+                return;
+            } else {
+                cursor.close();
+            }
+        }
+
         String[] files = null;
         AssetManager assetManager = context.getAssets();
         //assetManager.

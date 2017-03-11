@@ -123,9 +123,24 @@ public class AssessmentItem {
 
 
     public static void putInDummyData(Context context) {
+        // First see if any data in already; if so, just return
+        Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath("200").build();
+        Cursor cursor = context.getContentResolver().query(uri,
+                new String[]{ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER},
+                null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                cursor.close();
+                return;
+            } else {
+                cursor.close();
+            }
+        }
+
         // Add some (past) assessment data for room 200
         String roomNumber = "200";
-        Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
+        uri = ResidentContract.AssessmentEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(roomNumber).build();
 
 

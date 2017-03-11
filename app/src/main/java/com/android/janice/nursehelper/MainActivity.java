@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity  implements GoogleApiClient.
 
 
 
-        //ResidentItem.putInDummyData(this);
-        //MedicationItem.putInDummyData(this);
-        //AssessmentItem.putInDummyData(this);
+        ResidentItem.putInDummyData(this);
+        MedicationItem.putInDummyData(this);
+        AssessmentItem.putInDummyData(this);
 
 
         //MedCheckSyncAdapter.initializeSyncAdapter(this);

@@ -72,6 +72,20 @@ public class MedicationItem {
 
 
     public static void putInDummyData(Context context) {
+        // First see if any data in already; if so, just return
+        Uri uri = ResidentContract.MedicationEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath("200").build();
+        Cursor cursor = context.getContentResolver().query(uri,
+                new String[]{ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER},
+                null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                cursor.close();
+                return;
+            } else {
+                cursor.close();
+            }
+        }
 
         String roomNumber = "200";
         Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
