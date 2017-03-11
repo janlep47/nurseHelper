@@ -76,14 +76,6 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
         Cursor nextMedsCursor = mContext.getContentResolver().query(ResidentContract.MedicationEntry.CONTENT_URI, null,
                 null, null, null);
 
-        // list query stuff:
-        if (nextMedsCursor.moveToFirst()) {
-            do {
-                Log.e(LOG_TAG, "room# "+nextMedsCursor.getString(0)+
-                "  next time to admin: "+Utility.getReadableTimestamp(mContext,nextMedsCursor.getLong(1)));
-            } while (nextMedsCursor.moveToNext());
-        }
-
         // Next, verify that none of these next-time-to-admin date/times are ALREADY PASSED!!  If so,
         //  update them:
     }
@@ -131,7 +123,7 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param context The context used to access the account service
      */
     public static void syncImmediately(Context context) {
-        Log.e(LOG_TAG, "here in syncImmediately");
+        Log.d(LOG_TAG, "here in syncImmediately");
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -179,7 +171,7 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private static void onAccountCreated(Account newAccount, Context context) {
-        Log.e(LOG_TAG, " ..... here in onAccountCreated() ...");
+        Log.d(LOG_TAG, " ..... here in onAccountCreated() ...");
         /*
          * Since we've created an account
          */

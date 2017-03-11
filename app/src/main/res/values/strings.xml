@@ -31,8 +31,11 @@
     <!-- if NO am/pm/a/p, we'll assume military time -->
     <string name="format_admin_am_or_pm">\\s*\\D*</string>
 
-    <string name="format_admin_date_time">MM-dd-YY HH:mm</string>
-    <string name="format_admin_date">MM-dd-YY</string>
+    <!--string name="format_admin_date_time">MM-dd-YY HH:mm</string>
+    <string name="format_admin_date">MM-dd-YY</string-->
+    <!-- NOTE: 'Y' gives error on my MOTO-4!!! -->
+    <string name="format_admin_date_time">MM-dd-yy HH:mm</string>
+    <string name="format_admin_date">MM-dd-yy</string>
     <string name="am_string">AM</string>
     <string name="pm_string">PM</string>
     <string name="format_frequency_value">\\d+</string>
