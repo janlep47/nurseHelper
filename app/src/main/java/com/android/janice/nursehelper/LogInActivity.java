@@ -110,7 +110,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             case R.id.sign_in_button:
                 // force the user to choose an account ... only problem is how to force entering
                 //  the password?  (this doesn't really help yet)
-                mGoogleApiClient.clearDefaultAccountAndReconnect();
+                //mGoogleApiClient.clearDefaultAccountAndReconnect();
                 signIn();
                 break;
         }
@@ -210,6 +210,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onStop() {
+        Log.e(LOG_TAG, " here in ON-STOP");
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
@@ -217,6 +218,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             FirebaseAuth.getInstance().signOut();
             mGoogleApiClient.disconnect();
+            Log.e(LOG_TAG, " googleapiclient disconnected");
         }
     }
 

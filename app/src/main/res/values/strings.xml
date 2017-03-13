@@ -126,6 +126,11 @@
     To see MAR, care-plan, or to enter assessment data, click on the appropriate patient.
     </string>
 
+    <string name="invalid_location_message">This device is not located in a registered area.\
+    NurseHelper may only be run at a supported facility.</string>
+    <string name="dialog_invalid_location">Invalid Device Location</string>
+    <string name="ok">ok</string>
+
     <string name="password_hint">Password</string>
     <string name="email_hint">Email</string>
     <string name="sign_up_button_label">Sign Up</string>
