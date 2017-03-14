@@ -66,21 +66,32 @@ public class Utility {
 
 
     public static String getReadableTimestamp(Context context, long timestamp) {
-        //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-        //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
         java.util.Date date = new java.util.Date(timestamp);
-        String dateFormatter = context.getString(R.string.format_admin_date_time);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        if (calendar.get(Calendar.HOUR) > 12) {
-            calendar.set(Calendar.HOUR, Calendar.HOUR - 12);
-            calendar.set(Calendar.AM_PM, Calendar.PM);
-        } else {
-            calendar.set(Calendar.AM_PM, Calendar.AM);
-        }
 
-        String formattedDate = new SimpleDateFormat(dateFormatter, Locale.US).format(calendar.getTime());
-        return formattedDate;
+        String dateTimeString;
+        boolean pm;
+        int mins = calendar.get(Calendar.MINUTE);
+        int hrs = calendar.get(Calendar.HOUR);
+        int amOrPm = calendar.get(Calendar.AM_PM);
+        if (amOrPm == Calendar.AM) pm = false;
+        else pm = true;
+        // LATER, instead of just "AM/PM", allow military time as a sharedPreference ...
+        String dateFormat = context.getString(R.string.format_admin_date);
+        dateTimeString = new SimpleDateFormat(dateFormat, Locale.US).format(date) + " ";
+
+        String minsString = String.valueOf(mins);
+        // add leading zero for minutes, if any
+        if (mins < 10 && mins > 0) minsString = "0"+minsString;
+        dateTimeString += String.valueOf(hrs)+((mins != 0) ?
+            ":"+minsString : "");
+        if (pm) {
+            dateTimeString += " "+context.getString(R.string.pm_string);
+        } else {
+            dateTimeString += " "+context.getString(R.string.am_string);
+        }
+        return dateTimeString;
     }
 
 

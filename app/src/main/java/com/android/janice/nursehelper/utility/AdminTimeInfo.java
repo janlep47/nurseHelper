@@ -81,15 +81,13 @@ public class AdminTimeInfo {
 
         String minsString = String.valueOf(mins);
         // add leading zero for minutes, if any
-        if (mins < 10) minsString = "0"+minsString;
+        if (mins < 10 && mins > 0) minsString = "0"+minsString;
         dateTimeString += String.valueOf(hrs)+((mins != 0) ?
                 ":"+minsString : "");
         if (pm) {
-            String pmString = context.getString(R.string.pm_string);
-            dateTimeString += " "+pmString;
+            dateTimeString += " "+context.getString(R.string.pm_string);
         } else {
-            String amString = context.getString(R.string.am_string);
-            dateTimeString += " "+amString;
+            dateTimeString += " "+context.getString(R.string.am_string);
         }
         return dateTimeString;
     }
