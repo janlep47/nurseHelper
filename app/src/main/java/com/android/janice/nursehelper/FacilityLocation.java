@@ -7,8 +7,9 @@ package com.android.janice.nursehelper;
 public class FacilityLocation {
     protected static final double FACILITY_LAT = 42.306306306306304;
     protected static final double FACITITY_LONGITUDE = -83.71215290813885;
-    private static final double allowableError = 0.02;
+    private static final double allowableError = 0.035;
     //lat = 42.306306306306304   long = -83.71215290813885
+    //lat = 42.306306306306304   long = -83.68778965059865
 
     protected static boolean isDeviceAtFacility(double latitude, double longitude) {
         double latDiff = Math.abs(latitude-FACILITY_LAT);
