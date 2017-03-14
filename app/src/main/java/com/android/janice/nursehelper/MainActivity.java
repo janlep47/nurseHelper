@@ -23,6 +23,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class MainActivity extends AppCompatActivity implements ResidentlistFragment.Callback,
         GoogleApiClient.ConnectionCallbacks,
@@ -39,22 +42,24 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mConditionRef = mRootRef.child("condition");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
             mNurseName = getIntent().getStringExtra(ITEM_NURSE_NAME);
         } else {
             mNurseName = savedInstanceState.getString(ITEM_NURSE_NAME);
         }
-        //Log.d(LOG_TAG," mNurseName: "+mNurseName);
 
-        //ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
-        //        .findFragmentById(R.id.fragment_residentlist));
+        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_residentlist));
 
         ResidentItem.putInDummyData(this);
         MedicationItem.putInDummyData(this);
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         }
 
 
-        //TEMPORARY !!!!!  MedCheckSyncAdapter.initializeSyncAdapter(this);
+        MedCheckSyncAdapter.initializeSyncAdapter(this);
     }
 
     protected void onStart() {
@@ -96,14 +101,12 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             checkPermission();
         }
 
-        //LocationClient mLocationClient = new LocationClient(this,this,this);
-
         LocationRequest mLocationRequest = LocationRequest.create();
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, this);
         } catch (SecurityException e) {
-            Log.e(LOG_TAG," ERROR: no rights to check device location!! \n"+
+            Log.d(LOG_TAG," No rights to check device location!! \n"+
                     e.toString());
         }
 
@@ -120,10 +123,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     @Override
     public void onLocationChanged(Location location) {
-        if (FacilityLocation.isDeviceAtFacility(location.getLatitude(), location.getLongitude()))
-            // Location is good, continue on with UI:
-            updateUI();
-        else {
+        if (!FacilityLocation.isDeviceAtFacility(location.getLatitude(), location.getLongitude())) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.invalid_location_message)
                     .setTitle(R.string.dialog_invalid_location);
@@ -136,14 +136,6 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-    }
-
-
-    private void updateUI() {
-        setContentView(R.layout.activity_main);
-        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_residentlist));
-        MedCheckSyncAdapter.initializeSyncAdapter(this);
     }
 
 
