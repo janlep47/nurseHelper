@@ -104,9 +104,14 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
+        //AdminTimeInfo calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven)
+        //AdminTimeInfo info = Utility.calculateNextDueTime(context, "9 AM",)
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -124,9 +129,12 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "");  // also tried "TID"
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+5);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+5);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -143,9 +151,12 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+2);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+2);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -160,7 +171,8 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME,"");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
         medUri = context.getContentResolver().insert(uriMeds, medValues);
@@ -179,9 +191,12 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 1 PM / 7 PM / 1 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QID");
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+50);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+50);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
@@ -198,9 +213,12 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "8 AM / 8 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+25);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
+        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+25);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
 
