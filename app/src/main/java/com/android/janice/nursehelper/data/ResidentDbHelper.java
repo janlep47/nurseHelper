@@ -66,7 +66,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         "( " + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " TEXT KEY, " +
                         ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " TEXT, " +
                         ResidentContract.MedsGivenEntry.COLUMN_DOSAGE + " REAL, " +
-                        ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS + " INTEGER, " +
+                        ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS + " TEXT, " +
                         ResidentContract.MedsGivenEntry.COLUMN_GIVEN + " BOOLEAN, " +
                         ResidentContract.MedsGivenEntry.COLUMN_NURSE + " TEXT, " +
                         ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " TIMESTAMP);";
