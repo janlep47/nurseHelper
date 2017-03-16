@@ -160,7 +160,8 @@ public class ResidentContract {
         public static final String COLUMN_RR = "respiratoryRate";
 
         // edema: either "n/N" or "Stage I/II/III/IV".  If staged, give location in
-        //  significantFindings.
+        //  edemaLocn.  Additional information could also be entered in narrative
+        //  "significantFindings"
         public static final String COLUMN_EDEMA = "edema";
 
         public static final String COLUMN_EDEMA_LOCN = "edemaLocn";
