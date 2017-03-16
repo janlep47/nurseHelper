@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,8 +36,10 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
     public static final String ITEM_ROOM_NUMBER = "roomNumber";
     public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilePath";
     public static final String ITEM_NURSE_NAME = "nurseName";
+    public static final String ITEM_USER_ID = "dataBaseUserID";
 
     private String mNurseName;
+    private String mDbUserId;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mConditionRef = mRootRef.child("condition");
+
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -54,16 +59,35 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
         if (savedInstanceState == null) {
             mNurseName = getIntent().getStringExtra(ITEM_NURSE_NAME);
+            mDbUserId = getIntent().getStringExtra(ITEM_USER_ID);
         } else {
             mNurseName = savedInstanceState.getString(ITEM_NURSE_NAME);
+            mDbUserId = savedInstanceState.getString(ITEM_USER_ID);
         }
 
-        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_residentlist));
+        //ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
+        //        .findFragmentById(R.id.fragment_residentlist));
 
-        ResidentItem.putInDummyData(this);
-        MedicationItem.putInDummyData(this);
-        AssessmentItem.putInDummyData(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        Bundle arguments = new Bundle();
+        arguments.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+        arguments.putString(MainActivity.ITEM_USER_ID, mDbUserId);
+
+        FragmentManager fm = getSupportFragmentManager();
+        ResidentlistFragment mFragment = (ResidentlistFragment) fm.findFragmentById(R.id.fragment_residentlist);
+
+        if (mFragment == null) {
+            mFragment = new ResidentlistFragment();
+            mFragment.setArguments(arguments);
+            fm.beginTransaction()
+                    .add(R.id.fragment_residentlist, mFragment)
+                    .commit();
+        }
+
+        ResidentItem.putInDummyData(this, mDatabase, mDbUserId);
+        MedicationItem.putInDummyData(this, mDatabase, mDbUserId);
+        AssessmentItem.putInDummyData(this, mDatabase, mDbUserId);
 
 
 
@@ -202,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         bundle.putString(ITEM_ROOM_NUMBER,roomNumber);
         bundle.putString(ITEM_PORTRAIT_FILEPATH,portraitFilePath);
         bundle.putString(ITEM_NURSE_NAME,mNurseName);
+        bundle.putString(ITEM_USER_ID,mDbUserId);
 
         switch (selectionType) {
             case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:
@@ -224,4 +249,8 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         //        .setData(contentUri);
     }
 
+
+    public DatabaseReference getDatabaseReference() {
+        return mDatabase;
+    }
 }

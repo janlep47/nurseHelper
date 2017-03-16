@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by janicerichards on 2/4/17.
  */
@@ -17,13 +20,15 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
     MedicationsFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
 
-    String mRoomNumber, mPortraitFilePath, mNurseName;
+    String mRoomNumber, mPortraitFilePath, mNurseName, mDbUserId;
+    private DatabaseReference mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meds);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -33,10 +38,12 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
             mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
             mNurseName = getIntent().getStringExtra(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = getIntent().getStringExtra(MainActivity.ITEM_USER_ID);
 
             arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
             arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
             arguments.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+            arguments.putString(MainActivity.ITEM_USER_ID, mDbUserId);
             FragmentManager fm = getSupportFragmentManager();
             mFragment = (MedicationsFragment) fm.findFragmentById(R.id.medications_container);
 
@@ -54,6 +61,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
             mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
             mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
         }
 
     }
@@ -94,6 +102,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         savedInstanceState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
         savedInstanceState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
         savedInstanceState.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+        savedInstanceState.putString(MainActivity.ITEM_USER_ID, mDbUserId);
     }
 
     @Override
@@ -102,6 +111,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
         mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
         mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
+        mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
     }
 
     @Override
@@ -109,5 +119,7 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         //NOT USED YET
     }
 
-
+    public DatabaseReference getDatabaseReference() {
+        return mDatabase;
+    }
 }

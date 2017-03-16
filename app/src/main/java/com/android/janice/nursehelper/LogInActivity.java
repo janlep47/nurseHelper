@@ -187,6 +187,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             Bundle bundle = new Bundle();
                             bundle.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
+                            bundle.putString(MainActivity.ITEM_USER_ID, mUser.getUid());
                             intent.putExtras(bundle);
                             startActivity(intent);
                             finish();

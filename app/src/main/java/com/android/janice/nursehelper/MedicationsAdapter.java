@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -34,6 +35,10 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     //final private ItemChoiceManager mICM;
     final private String mRoomNumber;
     final private String mNurseName;
+
+    final private DatabaseReference mDatabase;
+    final private String mDbUserId;
+
 
     public static final String LOG_TAG = MedicationsAdapter.class.getSimpleName();
     /**
@@ -88,20 +93,20 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             if (button == mGiveBox) {
                 if (isChecked) {
                     // Medication given for the current med
-                    MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, true);
+                    MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, true, mDatabase, mDbUserId);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "give" record!!
-                    MedicationItem.askUndoMedGiven(mCursor, mRoomNumber, mNurseName);
+                    MedicationItem.askUndoMedGiven(mCursor, mRoomNumber, mNurseName, mDatabase, mDbUserId);
                 }
             } else if (button == mRefuseBox) {
                 if (isChecked) {
                     // Medication refused for the current med
-                    MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, false);
+                    MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, false, mDatabase, mDbUserId);
                 } else {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "refuse" record!!
-                    MedicationItem.askUndoMedRefused(mCursor, mRoomNumber, mNurseName);
+                    MedicationItem.askUndoMedRefused(mCursor, mRoomNumber, mNurseName, mDatabase, mDbUserId);
                 }
             }
 
@@ -113,7 +118,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     }
 
     public MedicationsAdapter(Context context, MedicationsAdapterOnClickHandler dh, View emptyView,
-                              String roomNumber, String nurseName) {
+                              String roomNumber, String nurseName, DatabaseReference database, String userId) {
         mContext = context;
         mClickHandler = dh;
         mEmptyView = emptyView;
@@ -121,6 +126,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         //mICM.setChoiceMode(choiceMode);
         mRoomNumber = roomNumber;
         mNurseName = nurseName;
+        mDatabase = database;
+        mDbUserId = userId;
     }
 
     /*

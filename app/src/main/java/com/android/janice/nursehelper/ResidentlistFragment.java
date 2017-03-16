@@ -29,6 +29,8 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
 /**
@@ -64,12 +66,16 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     static final int COL_NEXT_ADMIN_TIME = 1;
     static final int COL_NEXT_ADMIN_TIME_LONG = 2;
 
+    String mNurseName;
+    String mDbUserId;
+    DatabaseReference mDatabase;
 
     public interface Callback {
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
         public void onItemSelected(String roomNumber, String portraitFilePath,
                                    int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
+        public DatabaseReference getDatabaseReference();
     }
 
     public ResidentlistFragment() {
@@ -176,7 +182,21 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         }
         getLoaderManager().initLoader(RESIDENTLIST_LOADER, null, this);
         getLoaderManager().initLoader(MEDTIME_LOADER, null, this);
+
         super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
+        } else {
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                mNurseName = arguments.getString(MainActivity.ITEM_NURSE_NAME);
+                mDbUserId = arguments.getString(MainActivity.ITEM_USER_ID);
+
+            }
+        }
+        mDatabase = ((Callback) getActivity()).getDatabaseReference();
     }
 
     void onResidentlistChanged() {getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);}

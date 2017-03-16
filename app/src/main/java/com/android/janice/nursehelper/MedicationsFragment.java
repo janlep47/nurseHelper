@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
@@ -51,6 +52,8 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     String mRoomNumber;
     String mPortraitFilePath;
     String mNurseName;
+    String mDbUserId;
+    DatabaseReference mDatabase;
 
     private static final int MEDICATIONS_LOADER = 0;
 
@@ -85,6 +88,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, MedicationsAdapter.MedicationsAdapterViewHolder vh);
         public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh);
+        public DatabaseReference getDatabaseReference();
     }
 
     public MedicationsFragment() {
@@ -132,8 +136,10 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
             mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
             mNurseName = arguments.getString(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = arguments.getString(MainActivity.ITEM_USER_ID);
         }
 
+        mDatabase = ((Callback) getActivity()).getDatabaseReference();
 
         View rootView = inflater.inflate(R.layout.fragment_meds, container, false);
 
@@ -160,7 +166,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                                 vh
                         );
             }
-        }, emptyView, mRoomNumber, mNurseName);
+        }, emptyView, mRoomNumber, mNurseName, mDatabase, mDbUserId);
 
         // specify an adapter (see also next example)
         mRecyclerView.setAdapter(mMedicationsAdapter);
@@ -242,6 +248,10 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         // When tablets rotate, the currently selected list item needs to be saved.
         //mMedicationsAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
+        outState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+        outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+        outState.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
+        outState.putString(MainActivity.ITEM_USER_ID,mDbUserId);
     }
 
 

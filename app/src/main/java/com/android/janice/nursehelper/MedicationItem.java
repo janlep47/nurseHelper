@@ -13,11 +13,14 @@ import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.data.ResidentProvider;
 import com.android.janice.nursehelper.utility.AdminTimeInfo;
 import com.android.janice.nursehelper.utility.Utility;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -40,6 +43,15 @@ public class MedicationItem {
     public final static String TAG = MedicationItem.class.getSimpleName();
 
 
+    public MedicationItem() {
+    }
+
+    public MedicationItem(Cursor cursor) {
+        roomNumber = cursor.getString(COL_ROOM_NUMBER);
+        genericName = cursor.getString(COL_GENERIC_NAME);
+        tradeName = cursor.getString(COL_TRADE_NAME);
+    }
+
     public String getRoomNumber() { return roomNumber; }
 
     public String getGenericName() {
@@ -61,17 +73,9 @@ public class MedicationItem {
     }
 
 
-    public MedicationItem(Cursor cursor) {
-        roomNumber = cursor.getString(COL_ROOM_NUMBER);
-        genericName = cursor.getString(COL_GENERIC_NAME);
-        tradeName = cursor.getString(COL_TRADE_NAME);
-
-    }
 
 
-
-
-    public static void putInDummyData(Context context) {
+    public static void putInDummyData(Context context, DatabaseReference database, String userId) {
         // First see if any data in already; if so, just return
         Uri uri = ResidentContract.MedicationEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath("200").build();
@@ -113,7 +117,11 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
+        // Write to local device DB
         Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
+
+        // Now, right to Firebase DB
+        saveFirebaseMedication(medValues, database, userId);
 
 
         // Med #2
@@ -137,6 +145,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
+        saveFirebaseMedication(medValues, database, userId);
 
         // Med #3
         medValues = new ContentValues();
@@ -159,6 +168,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
+        saveFirebaseMedication(medValues, database, userId);
 
         // Med for ANOTHER PATIENT
         medValues = new ContentValues();
@@ -175,7 +185,9 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME,"");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
+
         medUri = context.getContentResolver().insert(uriMeds, medValues);
+        saveFirebaseMedication(medValues, database, userId);
 
 
         // Med #1 for later patient
@@ -199,6 +211,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
+        saveFirebaseMedication(medValues, database, userId);
 
         // Med #2 for later patient
         medValues = new ContentValues();
@@ -221,11 +234,31 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
+        saveFirebaseMedication(medValues, database, userId);
+    }
 
+
+    public static void saveFirebaseMedication(ContentValues medValues, DatabaseReference database, String userId) {
+        String medicationId = database.child("users").child(userId).child("medications").push().getKey();
+        ArrayList<String> keys = new ArrayList<String>(medValues.keySet());
+        for (int i = 0; i < keys.size(); i++) {
+            Object value = medValues.get(keys.get(i));
+            database.child("users").child(userId).child("medications").child(medicationId).child(keys.get(i)).setValue(value);
+        }
+    }
+
+    public static void saveFirebaseMedGiven(ContentValues medGivenValues, DatabaseReference database, String userId) {
+        String medicationId = database.child("users").child(userId).child("medsGiven").push().getKey();
+        ArrayList<String> keys = new ArrayList<String>(medGivenValues.keySet());
+        for (int i = 0; i < keys.size(); i++) {
+            Object value = medGivenValues.get(keys.get(i));
+            database.child("users").child(userId).child("medsGiven").child(medicationId).child(keys.get(i)).setValue(value);
+        }
     }
 
     // if "given" false, med was refused.
-    public static void medGiven(Context context, Cursor cursor, String roomNumber, String nurseName, boolean given) {
+    public static void medGiven(Context context, Cursor cursor, String roomNumber, String nurseName, boolean given,
+                                DatabaseReference database, String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
         float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         String dosageUnits = cursor.getString(MedicationsFragment.COL_DOSAGE_UNITS);
@@ -260,6 +293,7 @@ public class MedicationItem {
         //medGivenValues.put(ResidentContract.Meds)
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
+        saveFirebaseMedGiven(medGivenValues, database, userId);
 
         ContentValues meds = new ContentValues();
         meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
@@ -271,10 +305,18 @@ public class MedicationItem {
         int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
                 ResidentProvider.sMedsByResidentAndMedSelection,
                 new String[]{roomNumber, genericName});
+        // update the same thing in the central Firebase database
+        //String medicationId = database.child("users").child(userId).child("medications").
+        Query queryMed = database.child("users").child(userId).child("medications").orderByChild("roomNumber").equalTo(roomNumber);
+        queryMed = queryMed.orderByChild("medGenericName").equalTo(genericName);
+        queryMed.getRef().child("lastGivenTime").setValue(new Long(time));
+        queryMed.getRef().child("nextTimeToGive").setValue(nextAdminTime);
+        queryMed.getRef().child("nextTimeToGiveLong").setValue(new Long(nextAdminTimeLong));
     }
 
 
-    public static void askUndoMedGiven(Cursor cursor, String roomNumber, String nurseName) {
+    public static void askUndoMedGiven(Cursor cursor, String roomNumber, String nurseName,
+                                       DatabaseReference database, String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
         float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         Log.e(TAG,"  UNDO Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
@@ -282,7 +324,8 @@ public class MedicationItem {
 
 
 
-    public static void askUndoMedRefused(Cursor cursor, String roomNumber, String nurseName) {
+    public static void askUndoMedRefused(Cursor cursor, String roomNumber, String nurseName,
+                                         DatabaseReference database, String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
         float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         Log.e(TAG,"  UNDO Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));

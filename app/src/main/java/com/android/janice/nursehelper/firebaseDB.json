@@ -1,0 +1,119 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        "residents": {
+          "$resident_id": {
+            "roomNumber": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "portraitFilepath": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            }
+          }
+        },
+        "medications": {
+          "$medication_id": {
+            "roomNumber": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "medGenericName": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "medTradeName": {
+              ".validate": "newData.isString()"
+            },
+            "dosage": {
+              ".validate": "newData.isNumber() && newData.val() > 0.0"
+            },
+            "dosageUnits": {
+              ".validate": "newData.isString()"
+            },
+            "route": {
+              ".validate": "newData.isString()"
+            },
+            "frequency": {
+              ".validate": "newData.isString()"
+            },
+            "adminTimes": {
+              ".validate": "newData.isString()"
+            },
+            "lastGivenTime": {
+              ".validate": "newData.isString()"
+            },
+            "nextTimeToGive": {
+              ".validate": "newData.isString()"
+            },
+            "nextTimeToGiveLong": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        },
+        "assessments": {
+          "$assessment_id": {
+            "roomNumber": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "bp": {
+              ".validate": "newData.isString()"
+            },
+            "temp": {
+              ".validate": "newData.isString()"
+            },
+            "pulse": {
+              ".validate": "newData.isNumber()"
+            },
+            "respiratoryRate": {
+              ".validate": "newData.isNumber()"
+            },
+            "edema": {
+              ".validate": "newData.isString()"
+            },
+            "edemaLocn": {
+              ".validate": "newData.isString()"
+            },
+            "edemaPitting": {
+              ".validate": "newData.isBoolean()"
+            },
+            "pain": {
+              ".validate": "newData.isNumber()"
+            },
+            "significantFindings": {
+              ".validate": "newData.isString()"
+            },
+            "time": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        },
+        "medsGiven": {
+          "$medsGiven_id": {
+            "roomNumber": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "medGenericName": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "dosage": {
+              ".validate": "newData.isNumber() && newData.val() > 0.0"
+            },
+            "dosageUnits": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "givenOrRefused": {
+              ".validate": "newData.isBoolean()"
+            },
+            "nurseName": {
+              ".validate": "newData.isString() && newData.val().length > 0"
+            },
+            "timeGiven": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        }
+      }
+    }
+  }
+}

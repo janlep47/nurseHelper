@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -122,7 +124,7 @@ public class AssessmentItem {
     }
 
 
-    public static void putInDummyData(Context context) {
+    public static void putInDummyData(Context context, DatabaseReference database, String userId) {
         // First see if any data in already; if so, just return
         Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath("200").build();
@@ -163,7 +165,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
-
+        saveFirebaseAssessment(aValues, database, userId);
 
         // Med #2
         aValues = new ContentValues();
@@ -181,12 +183,25 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         assessmentUri = context.getContentResolver().insert(uri, aValues);
+        saveFirebaseAssessment(aValues, database, userId);
     }
 
-    // Later, format the values...
+
+
+    public static void saveFirebaseAssessment(ContentValues aValues, DatabaseReference database, String userId) {
+        String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
+        ArrayList<String> keys = new ArrayList<String>(aValues.keySet());
+        for (int i = 0; i < keys.size(); i++) {
+            Object value = aValues.get(keys.get(i));
+            database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
+        }
+    }
+
+        // Later, format the values...
     public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
                                       int pulse, int rr, String edema, String edemaLocn, boolean edemaPitting,
-                                      int pain, String findings) {
+                                      int pain, String findings,
+                                      DatabaseReference database, String userId) {
         Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(roomNumber).build();
 
@@ -208,6 +223,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
+        saveFirebaseAssessment(aValues, database, userId);
     }
 
 }

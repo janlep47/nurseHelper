@@ -8,30 +8,40 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by janicerichards on 2/4/17.
  */
 
-public class AssessmentActivity  extends AppCompatActivity {
+public class AssessmentActivity  extends AppCompatActivity implements AssessmentFragment.Callback{
 
     AssessmentFragment mFragment;
     private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
 
-    String mRoomNumber, mPortraitFilePath;
+    String mRoomNumber, mPortraitFilePath, mNurseName, mDbUserId;
+    private DatabaseReference mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
 
             mRoomNumber = getIntent().getStringExtra(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = getIntent().getStringExtra(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            mNurseName = getIntent().getStringExtra(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = getIntent().getStringExtra(MainActivity.ITEM_USER_ID);
+
             arguments.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
             arguments.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+            arguments.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+            arguments.putString(MainActivity.ITEM_USER_ID, mDbUserId);
 
             FragmentManager fm = getSupportFragmentManager();
             mFragment = (AssessmentFragment) fm.findFragmentById(R.id.assessment_container);
@@ -49,6 +59,8 @@ public class AssessmentActivity  extends AppCompatActivity {
         } else {
             mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
         }
     }
 
@@ -87,6 +99,8 @@ public class AssessmentActivity  extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
         savedInstanceState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+        savedInstanceState.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+        savedInstanceState.putString(MainActivity.ITEM_USER_ID, mDbUserId);
     }
 
     @Override
@@ -94,6 +108,8 @@ public class AssessmentActivity  extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
         mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+        mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
+        mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
     }
 
 /*
@@ -107,5 +123,9 @@ public class AssessmentActivity  extends AppCompatActivity {
         //startActivity(intent);
     }
 */
+
+    public DatabaseReference getDatabaseReference() {
+    return mDatabase;
+}
 
 }

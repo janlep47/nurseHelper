@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -22,16 +23,24 @@ import java.io.InputStreamReader;
 
 public class ResidentItem {
     private String roomNumber;
-    private Bitmap portrait;
+    private String portraitFilepath;
+
+    public ResidentItem() {
+    }
+
+    public ResidentItem(String roomNumber, String portraitFilepath) {
+        this.roomNumber = roomNumber;
+        this.portraitFilepath = portraitFilepath;
+    }
 
 
     public String getRoomNumber() { return roomNumber; }
 
-    public Bitmap getPortrait() { return portrait; }
+    public String getPortraitFilepath() { return portraitFilepath; }
 
     protected void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
 
-    protected void setPortrait(Bitmap portrait) { this.portrait = portrait; }
+    protected void setPortraitFilepath(String portraitFilepath) { this.portraitFilepath = portraitFilepath; }
 
     public static void deleteResidentFromDb(Context context, String roomNumber) {
         int rowsDeleted = context.getContentResolver().delete(
@@ -49,7 +58,7 @@ public class ResidentItem {
 */
 
 
-    public static void putInDummyData(Context context) {
+    public static void putInDummyData(Context context, DatabaseReference database, String userId) {
         // First see if any data in already; if so, just return
         Cursor cursor = context.getContentResolver().query(ResidentContract.ResidentEntry.CONTENT_URI,
                 new String[]{ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER},
@@ -79,20 +88,6 @@ public class ResidentItem {
             Log.e("RESIDENTITEM"," NO FILES READ FROM ASSETS");
             return;
         }
-        /*
-        for (int i = 0; i < files.length; i++){
-            String fileName = files[i];
-            if (!fileName.startsWith("av")) continue;
-            String roomNumber = String.valueOf(200+i);
-
-            ContentValues residentValues = new ContentValues();
-
-            residentValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, roomNumber);
-            residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, fileName);
-            Log.i("ResidentItem", "   ok room#="+roomNumber+"  filename = "+fileName);
-            Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
-        }
-        */
         for (int i = files.length - 1; i >= 0; i--) {
             String fileName = files[i];
             if (!fileName.startsWith("av")) continue;
@@ -100,10 +95,18 @@ public class ResidentItem {
 
             ContentValues residentValues = new ContentValues();
 
+            // Update the local device database
             residentValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, roomNumber);
             residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, fileName);
-            Log.i("ResidentItem", "   ok room#="+roomNumber+"  filename = "+fileName);
             Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
+
+            // Now update the central Firebase database
+            String residentId = database.child("users").child(userId).child("residents").push().getKey();
+            database.child("users").child(userId).child("residents").child(residentId).child("roomNumber").setValue(roomNumber);
+            database.child("users").child(userId).child("residents").child(residentId).child("portraitFilepath").setValue(fileName);
+
+            //database.child("users").child(userId).child("residents").push().setValue(new ResidentItem(roomNumber,fileName));
+
         }
     }
 

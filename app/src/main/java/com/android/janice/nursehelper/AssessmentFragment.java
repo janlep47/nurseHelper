@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
@@ -63,6 +64,10 @@ public class AssessmentFragment extends Fragment {
 
     String mRoomNumber;
     String mPortraitFilePath;
+    String mNurseName;
+    String mDbUserId;
+    DatabaseReference mDatabase;
+
     private boolean edemaPitting = false;
 
     public static final int DEFAULT_ACTION_BAR_HEIGHT = 60;
@@ -78,6 +83,12 @@ public class AssessmentFragment extends Fragment {
             ResidentContract.AssessmentEntry.COLUMN_TIME
 };
 
+
+    public interface Callback {
+        // for when a list item has been selected.
+        //public void onItemSelected(Uri dateUri, int selectionType, MedicationsAdapter.MedicationsAdapterViewHolder vh);
+        public DatabaseReference getDatabaseReference();
+    }
 
 
     public AssessmentFragment() {
@@ -98,13 +109,19 @@ public class AssessmentFragment extends Fragment {
         if (savedInstanceState != null) {
             mRoomNumber = savedInstanceState.getString(MainActivity.ITEM_ROOM_NUMBER);
             mPortraitFilePath = savedInstanceState.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+            mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
+            mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
         } else {
             Bundle arguments = getArguments();
             if (arguments != null) {
                 mRoomNumber = arguments.getString(MainActivity.ITEM_ROOM_NUMBER);
                 mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
+                mNurseName = arguments.getString(MainActivity.ITEM_NURSE_NAME);
+                mDbUserId = arguments.getString(MainActivity.ITEM_USER_ID);
+
             }
         }
+        mDatabase = ((Callback) getActivity()).getDatabaseReference();
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
@@ -327,7 +344,7 @@ public class AssessmentFragment extends Fragment {
                 AssessmentItem.saveAssessment(getActivity(), mRoomNumber, systolicBP, diastolicBP, temp, pulse, rr,
                         //(String) mEdema_spinner.getSelectedItem(), (String) mEdema_location_spinner.getSelectedItem(),
                         (String) mEdema_spinner.getSelectedItem(), edemaLocations, edemaPitting,
-                        pain, findings);
+                        pain, findings, mDatabase, mDbUserId);
                 getActivity().finish();
             }
         });
@@ -342,6 +359,8 @@ public class AssessmentFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
         outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
+        outState.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
+        outState.putString(MainActivity.ITEM_USER_ID,mDbUserId);
     }
 
 }
