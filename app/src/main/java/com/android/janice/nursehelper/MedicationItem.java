@@ -13,8 +13,12 @@ import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.data.ResidentProvider;
 import com.android.janice.nursehelper.utility.AdminTimeInfo;
 import com.android.janice.nursehelper.utility.Utility;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -258,8 +262,8 @@ public class MedicationItem {
 
     // if "given" false, med was refused.
     public static void medGiven(Context context, Cursor cursor, String roomNumber, String nurseName, boolean given,
-                                DatabaseReference database, String userId) {
-        String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
+                                final DatabaseReference database, final String userId) {
+        final String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
         float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
         String dosageUnits = cursor.getString(MedicationsFragment.COL_DOSAGE_UNITS);
 
@@ -269,17 +273,20 @@ public class MedicationItem {
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
-        short given_db;
-        if (given) given_db = 1;
-        else given_db = 0;
+        //short given_db;
+        //if (given) given_db = 1;
+        //else given_db = 0;
 
-        long time= System.currentTimeMillis();
+        final long time= System.currentTimeMillis();
         AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
-        String nextAdminTime = "";
-        long nextAdminTimeLong = 0;
+        final String nextAdminTime;
+        final long nextAdminTimeLong;
         if (info != null) {
             nextAdminTime = info.getDisplayableTime(context);
             nextAdminTimeLong = info.getTime();
+        } else {
+            nextAdminTime = "";
+            nextAdminTimeLong = 0;
         }
 
         ContentValues medGivenValues = new ContentValues();
@@ -287,7 +294,8 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC, genericName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE, dosage);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS, dosageUnits);
-        medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given_db);
+        //medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given_db);
+        medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NURSE, nurseName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
         //medGivenValues.put(ResidentContract.Meds)
@@ -305,13 +313,32 @@ public class MedicationItem {
         int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
                 ResidentProvider.sMedsByResidentAndMedSelection,
                 new String[]{roomNumber, genericName});
+
         // update the same thing in the central Firebase database
-        //String medicationId = database.child("users").child(userId).child("medications").
         Query queryMed = database.child("users").child(userId).child("medications").orderByChild("roomNumber").equalTo(roomNumber);
-        queryMed = queryMed.orderByChild("medGenericName").equalTo(genericName);
-        queryMed.getRef().child("lastGivenTime").setValue(new Long(time));
-        queryMed.getRef().child("nextTimeToGive").setValue(nextAdminTime);
-        queryMed.getRef().child("nextTimeToGiveLong").setValue(new Long(nextAdminTimeLong));
+        queryMed.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        if (issue.child("medGenericName").getValue().equals(genericName)) {
+                            database.child("users").child(userId).child("medications")
+                                    .child(issue.getKey()).child("lastGivenTime").setValue(new Long(time));
+                            database.child("users").child(userId).child("medications")
+                                    .child(issue.getKey()).child("nextTimeToGive").setValue(nextAdminTime);
+                            database.child("users").child(userId).child("medications")
+                                    .child(issue.getKey()).child("nextTimeToGiveLong").setValue(new Long(nextAdminTimeLong));
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
