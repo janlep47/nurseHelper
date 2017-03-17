@@ -1,6 +1,7 @@
 package com.android.janice.nursehelper;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -29,8 +30,11 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
 /**
@@ -197,6 +201,32 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             }
         }
         mDatabase = ((Callback) getActivity()).getDatabaseReference();
+        mDatabase.child("users").child(mDbUserId).child("residents").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //ResidentItem resident = dataSnapshot.getValue(ResidentItem.class);
+                // Just delete ALL records in the device 'residents' table, and add the ones from the
+                //  Firebase dataSnapshot:
+                getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        if (issue.exists()) {
+                            ResidentItem resident = issue.getValue(ResidentItem.class);
+                            ContentValues resValues = new ContentValues();
+                            resValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, resident.getRoomNumber());
+                            resValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, resident.getPortraitFilepath());
+                            getActivity().getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI,resValues);
+                        }
+                    }
+                }
+                dataUpdated();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
+            }
+        });
     }
 
     void onResidentlistChanged() {getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);}

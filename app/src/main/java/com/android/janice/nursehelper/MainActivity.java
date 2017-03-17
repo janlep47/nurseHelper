@@ -75,15 +75,16 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         arguments.putString(MainActivity.ITEM_USER_ID, mDbUserId);
 
         FragmentManager fm = getSupportFragmentManager();
-        ResidentlistFragment mFragment = (ResidentlistFragment) fm.findFragmentById(R.id.fragment_residentlist);
-
+        ResidentlistFragment mFragment = (ResidentlistFragment) fm.findFragmentById(R.id.residents_container);
         if (mFragment == null) {
             mFragment = new ResidentlistFragment();
             mFragment.setArguments(arguments);
             fm.beginTransaction()
-                    .add(R.id.fragment_residentlist, mFragment)
+                    .add(R.id.residents_container, mFragment)
                     .commit();
         }
+//        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
+//                .findFragmentById(R.id.fragment_residentlist));
 
         ResidentItem.putInDummyData(this, mDatabase, mDbUserId);
         MedicationItem.putInDummyData(this, mDatabase, mDbUserId);
