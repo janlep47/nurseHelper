@@ -280,18 +280,30 @@ public class ResidentProvider extends ContentProvider {
                 else throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
                 break;
             }
+            case MEDICATIONS: {
+                long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
+                if ( _id > 0 ) returnUri = ResidentContract.MedicationEntry.buildMedsUri(_id);
+                else throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
+                break;
+            }
             case MEDICATIONS_WITH_ROOM_NUMBER: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
                 if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (meds)" + uri);
+                else throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
                 break;
             }
             case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
                 if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (meds)" + uri);
+                else throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
+                break;
+            }
+            case ASSESSMENTS: {
+                long _id = db.insert(ResidentContract.AssessmentEntry.TABLE_NAME, null, values);
+                if ( _id > 0 ) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsUri(_id);
+                else throw new android.database.SQLException("Failed to insert row into (assessments)" + uri);
                 break;
             }
             case ASSESSMENTS_WITH_ROOM_NUMBER: {
@@ -332,9 +344,15 @@ public class ResidentProvider extends ContentProvider {
         // this makes delete all rows return the number of rows deleted
         if ( null == selection ) selection = "1";
         switch (match) {
-            case RESIDENTS:
+            case RESIDENTS:    // delete all residents
                 rowsDeleted = db.delete(
                         ResidentContract.ResidentEntry.TABLE_NAME, selection, selectionArgs);
+                Log.e(LOG_TAG," Number of resident rows deleted is "+String.valueOf(rowsDeleted));
+                break;
+            case MEDICATIONS:  // delete all medications
+                rowsDeleted = db.delete(
+                        ResidentContract.MedicationEntry.TABLE_NAME, selection, selectionArgs);
+                Log.e(LOG_TAG," Number of medication rows deleted is "+String.valueOf(rowsDeleted));
                 break;
             case MEDICATIONS_WITH_ROOM_NUMBER:
                 rowsDeleted = db.delete(
@@ -343,6 +361,10 @@ public class ResidentProvider extends ContentProvider {
             case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
                 rowsDeleted = db.delete(
                         ResidentContract.MedicationEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case ASSESSMENTS:  // delete all assessments
+                rowsDeleted = db.delete(
+                        ResidentContract.AssessmentEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case ASSESSMENTS_WITH_ROOM_NUMBER:
                 rowsDeleted = db.delete(

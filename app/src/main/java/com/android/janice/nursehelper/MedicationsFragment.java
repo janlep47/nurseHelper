@@ -1,6 +1,7 @@
 package com.android.janice.nursehelper;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -34,7 +35,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
@@ -140,6 +144,41 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         }
 
         mDatabase = ((Callback) getActivity()).getDatabaseReference();
+        mDatabase.child("users").child(mDbUserId).child("medications").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //ResidentItem resident = dataSnapshot.getValue(ResidentItem.class);
+                // Just delete ALL records in the device 'residents' table, and add the ones from the
+                //  Firebase dataSnapshot:
+                getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        if (issue.exists()) {
+                            MedicationItem medication = issue.getValue(MedicationItem.class);
+                            ContentValues medValues = new ContentValues();
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, medication.getRoomNumber());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, medication.getTradeName());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, medication.getGenericName());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, new Double(medication.getDosage()));
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, medication.getDosageUnits());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, medication.getDosageRoute());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, medication.getAdminTimes());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, medication.getFrequency());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, new Long(medication.getLastGivenTime()));
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, medication.getNextDosageTime());
+                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, new Long(medication.getNextDosageTimeLong()));
+                            getActivity().getContentResolver().insert(ResidentContract.MedicationEntry.CONTENT_URI,medValues);
+                        }
+                    }
+                }
+                dataUpdated();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
+            }
+        });
 
         View rootView = inflater.inflate(R.layout.fragment_meds, container, false);
 
@@ -364,6 +403,10 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
+
+    public void dataUpdated() {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
