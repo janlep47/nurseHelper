@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by janicerichards on 2/5/17.
@@ -117,9 +118,11 @@ public class AssessmentItem {
 
 
 
-    public String getReadableTimestamp() {
+    public String getReadableTimestamp(Context context) {
         Date date = new Date(timestamp);
-        String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
+        String dateTimeFormat = context.getString(R.string.format_admin_date_time);
+        //String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
+        String formattedDate = new SimpleDateFormat(dateTimeFormat, Locale.US).format(date);
         return formattedDate;
     }
 
@@ -158,7 +161,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 15);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "stage I");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "RLE");
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, 1);  // true
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, true);  // true
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 2);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "C/O stiffness in R ankle. \n"+
                 "Very slight headache.");
@@ -177,7 +180,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, 17);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, "0");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "");
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, 0);  // false
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, false);  // false
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 6);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Pt. says moderate pain in lower back.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
@@ -213,12 +216,12 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, String.valueOf(systolicBP)+"/"+
                 String.valueOf(diastolicBP));
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, String.valueOf(temp));
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, String.valueOf(pulse));
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, String.valueOf(rr));
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, pulse);
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, rr);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, edema);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, edemaLocn);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, edemaPitting);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, String.valueOf(pain));
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, pain);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, findings);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
