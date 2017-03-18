@@ -26,9 +26,9 @@ public class MedGivenItem {
     private String genericName;
     private float dosage;
     private String dosageUnits;
-    private short given;      // if 1, given; if 0, med was refused
+    private boolean givenOrRefused;      // if 1, given; if 0, med was refused
     private String nurseName;
-    private long timestamp;
+    private long timeGiven;
 
     public final static int COL_ROOM_NUMBER = 0;
     public final static int COL_GENERIC_NAME = 1;
@@ -54,11 +54,11 @@ public class MedGivenItem {
 
     public String getDosageUnits() { return dosageUnits; }
 
-    public short getGiven() { return given; }
+    public boolean getGivenOrRefused() { return givenOrRefused; }
 
     public String getNurseName() { return nurseName; }
 
-    public long getTimestamp() { return timestamp; }
+    public long getTimeGiven() { return timeGiven; }
 
     public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
 
@@ -74,27 +74,30 @@ public class MedGivenItem {
         this.dosageUnits = dosageUnits;
     }
 
-    public void setGiven(short given) { this.given = given; }
+    public void setGivenOrRefused(boolean given) { this.givenOrRefused = given; }
 
     public void setNurseName(String nurseName) { this.nurseName = nurseName; }
 
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public void setTimestamp(long timeGiven) { this.timeGiven = timeGiven; }
+
+
+    public MedGivenItem() {}
 
     public MedGivenItem(Cursor cursor) {
         roomNumber = cursor.getString(COL_ROOM_NUMBER);
         genericName = cursor.getString(COL_GENERIC_NAME);
         dosage = cursor.getFloat(COL_DOSAGE);
         dosageUnits = cursor.getString(COL_DOSAGE_UNITS);
-        given = cursor.getShort(COL_GIVEN);
+        givenOrRefused = (cursor.getShort(COL_GIVEN) == 0 ? false: true);
         nurseName = cursor.getString(COL_NURSE_NAME);
-        timestamp = cursor.getLong(COL_TIME_GIVEN);
+        timeGiven = cursor.getLong(COL_TIME_GIVEN);
     }
 
 
     public String getReadableTimestamp(Context context) {
         //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
-        return Utility.getReadableTimestamp(context, timestamp);
+        return Utility.getReadableTimestamp(context, timeGiven);
     }
 
 

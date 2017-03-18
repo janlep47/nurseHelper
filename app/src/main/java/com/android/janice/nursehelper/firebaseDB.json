@@ -93,7 +93,7 @@
             "roomNumber": {
               ".validate": "newData.isString() && newData.val().length > 0"
             },
-            "medGenericName": {
+            "genericName": {
               ".validate": "newData.isString() && newData.val().length > 0"
             },
             "dosage": {

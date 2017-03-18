@@ -208,7 +208,7 @@ public class ResidentContract {
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
         // generic medication name (secondary key)
-        public static final String COLUMN_NAME_GENERIC = "medGenericName";
+        public static final String COLUMN_NAME_GENERIC = "genericName";
 
         // amount of med to give (float value)
         public static final String COLUMN_DOSAGE = "dosage";

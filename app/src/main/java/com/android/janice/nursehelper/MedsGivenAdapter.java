@@ -47,7 +47,8 @@ public class MedsGivenAdapter extends ArrayAdapter<MedGivenItem> {
         MedGivenItem med = data.get(position);
         holder.txt1.setText(med.getGenericName() + "   dosage: "+String.valueOf(med.getDosage()) +
             " "+med.getDosageUnits());
-        String line2 = (med.getGiven() == 1 ? "   given  " : "   refused  ") + med.getReadableTimestamp(context) +
+        //String line2 = (med.getGiven() == 1 ? "   given  " : "   refused  ") + med.getReadableTimestamp(context) +
+        String line2 = (med.getGivenOrRefused() ? "   given  " : "   refused  ") + med.getReadableTimestamp(context) +
                 "  "+med.getNurseName();
         holder.txt2.setText(line2);
         return row;
