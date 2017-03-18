@@ -15,14 +15,14 @@ import java.util.List;
  */
 
 public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
-    Context context;
+    Context mContext;
     int layoutResourceId;
     List<AssessmentItem> data;
 
     public PastAssessmentsAdapter(Context context, int layoutResourceId, List<AssessmentItem> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
-        this.context = context;
+        this.mContext = context;
         this.data = data;
     }
 
@@ -32,7 +32,7 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
         PastAssessmentsAdapter.AssessmentHolder holder = null;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new PastAssessmentsAdapter.AssessmentHolder();
@@ -48,7 +48,7 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
         AssessmentItem assessment = data.get(position);
         //holder.txt1.setText(assessment.getRoomNumber());
         //holder.txt2.setText(assessment.getBloodPressure());
-        holder.txt1.setText(assessment.getReadableTimestamp()+
+        holder.txt1.setText(assessment.getReadableTimestamp(mContext)+
                 "\n  BP: "+assessment.getBloodPressure()+
                 "  temp: "+assessment.getTemperature()+
                 "\n  pulse: "+assessment.getPulse()+
