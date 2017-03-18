@@ -39,10 +39,26 @@ public class MedicationItem {
     private String roomNumber;
     private String genericName;
     private String tradeName;
+    private double dosage;
+    private String dosageUnits;
+    private String dosageRoute;
+    private String adminTimes;
+    private String frequency;
+    private long lastGivenTime;
+    private String nextDosageTime;
+    private long nextDosageTimeLong;
 
     public final static int COL_ROOM_NUMBER = 0;
     public final static int COL_GENERIC_NAME = 1;
     public final static int COL_TRADE_NAME = 2;
+    public final static int COL_DOSAGE = 3;
+    public final static int COL_DOSAGE_UNITS = 4;
+    public final static int COL_DOSAGE_ROUTE = 5;
+    public final static int COL_ADMIN_TIMES = 6;
+    public final static int COL_FREQ = 7;
+    public final static int COL_LAST_GIVEN = 8;
+    public final static int COL_NEXT_DOSAGE_TIME = 9;
+    public final static int COL_NEXT_DOSAGE_TIME_LONG = 10;
 
     public final static String TAG = MedicationItem.class.getSimpleName();
 
@@ -66,6 +82,24 @@ public class MedicationItem {
         return tradeName;
     }
 
+    public double getDosage() { return dosage;}
+
+    public String getDosageUnits() { return dosageUnits; }
+
+    public String getDosageRoute() { return dosageRoute; }
+
+    public String getAdminTimes() { return adminTimes; }
+
+    public String getFrequency() { return frequency; }
+
+    public long getLastGivenTime() { return lastGivenTime; }
+
+    public String getNextDosageTime() { return nextDosageTime; }
+
+    public long getNextDosageTimeLong() { return nextDosageTimeLong; }
+
+
+
     public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
 
     public void setGenericName(String genericName) {
@@ -76,6 +110,21 @@ public class MedicationItem {
         this.tradeName = tradeName;
     }
 
+    public void setDosage(float dosage) { this.dosage = dosage;}
+
+    public void setDosageUnits(String dosageUnits) { this.dosageUnits = dosageUnits; }
+
+    public void setDosageRoute(String dosageRoute) { this.dosageRoute = dosageRoute; }
+
+    public void setAdminTimes(String adminTimes) { this.adminTimes = adminTimes; }
+
+    public void setFrequency(String frequency) { this.frequency = frequency; }
+
+    public void setLastGivenTime(long lastGivenTime) { this.lastGivenTime = lastGivenTime; }
+
+    public void setNextDosageTime(String nextDosageTime) { this.nextDosageTime = nextDosageTime; }
+
+    public void setNextDosageTimeLong(long nextDosageTimeLong) { this.nextDosageTimeLong = nextDosageTimeLong; }
 
 
 

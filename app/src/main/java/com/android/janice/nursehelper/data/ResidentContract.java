@@ -84,17 +84,17 @@ public class ResidentContract {
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
         // generic medication name
-        public static final String COLUMN_NAME_GENERIC = "medGenericName";
+        public static final String COLUMN_NAME_GENERIC = "genericName";
 
         // generic medication name
-        public static final String COLUMN_NAME_TRADE = "medTradeName";
+        public static final String COLUMN_NAME_TRADE = "tradeName";
 
         // amount of med to give (float value)
         public static final String COLUMN_DOSAGE = "dosage";
 
         public static final String COLUMN_DOSAGE_UNITS = "dosageUnits";
 
-        public static final String COLUMN_DOSAGE_ROUTE = "route";
+        public static final String COLUMN_DOSAGE_ROUTE = "dosageRoute";
 
         public static final String COLUMN_FREQUENCY = "frequency";  // e.g. "BID", etc.
 
@@ -102,9 +102,9 @@ public class ResidentContract {
 
         public static final String COLUMN_LAST_GIVEN = "lastGivenTime";
 
-        public static final String COLUMN_NEXT_DOSAGE_TIME = "nextTimeToGive";
+        public static final String COLUMN_NEXT_DOSAGE_TIME = "nextDosageTime";
 
-        public static final String COLUMN_NEXT_DOSAGE_TIME_LONG = "nextTimeToGiveLong"; // easy to sort
+        public static final String COLUMN_NEXT_DOSAGE_TIME_LONG = "nextDosageTimeLong"; // easy to sort
 
 
         public static Uri buildMedsUri(long id) {
@@ -147,13 +147,13 @@ public class ResidentContract {
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
         // Time, stored as long in milliseconds (when this assessment was done)
-        public static final String COLUMN_TIME = "time";
+        public static final String COLUMN_TIME = "timestamp";
 
         // ###/###
-        public static final String COLUMN_BLOOD_PRESSURE = "bp";
+        public static final String COLUMN_BLOOD_PRESSURE = "bloodPressure";
 
         // String: ###.# <degree symbol>F / C  <route>
-        public static final String COLUMN_TEMPERATURE = "temp";
+        public static final String COLUMN_TEMPERATURE = "temperature";
 
         public static final String COLUMN_PULSE = "pulse";
 

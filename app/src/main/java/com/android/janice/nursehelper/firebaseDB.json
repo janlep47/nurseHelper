@@ -19,10 +19,10 @@
             "roomNumber": {
               ".validate": "newData.isString() && newData.val().length > 0"
             },
-            "medGenericName": {
+            "genericName": {
               ".validate": "newData.isString() && newData.val().length > 0"
             },
-            "medTradeName": {
+            "tradeName": {
               ".validate": "newData.isString()"
             },
             "dosage": {
@@ -31,7 +31,7 @@
             "dosageUnits": {
               ".validate": "newData.isString()"
             },
-            "route": {
+            "dosageRoute": {
               ".validate": "newData.isString()"
             },
             "frequency": {
@@ -43,10 +43,10 @@
             "lastGivenTime": {
               ".validate": "newData.isString()"
             },
-            "nextTimeToGive": {
+            "nextDosageTime": {
               ".validate": "newData.isString()"
             },
-            "nextTimeToGiveLong": {
+            "nextDosageTimeLong": {
               ".validate": "newData.isNumber()"
             }
           }
@@ -56,10 +56,10 @@
             "roomNumber": {
               ".validate": "newData.isString() && newData.val().length > 0"
             },
-            "bp": {
+            "bloodPressure": {
               ".validate": "newData.isString()"
             },
-            "temp": {
+            "temperature": {
               ".validate": "newData.isString()"
             },
             "pulse": {
@@ -83,7 +83,7 @@
             "significantFindings": {
               ".validate": "newData.isString()"
             },
-            "time": {
+            "timestamp": {
               ".validate": "newData.isNumber()"
             }
           }
