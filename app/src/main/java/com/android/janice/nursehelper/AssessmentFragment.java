@@ -1,5 +1,6 @@
 package com.android.janice.nursehelper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -29,7 +30,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
@@ -122,6 +126,9 @@ public class AssessmentFragment extends Fragment {
             }
         }
         mDatabase = ((Callback) getActivity()).getDatabaseReference();
+        // NOTE!! 'assessments' data which is changed on the central Firebase database is NOT VALID, so
+        //  will be ignored.  That data may ONLY come for the nurses personal device, as she logs it.
+        //  If a mistake was made, it can be noted later, but never deleted!!
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 

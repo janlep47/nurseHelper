@@ -147,8 +147,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         mDatabase.child("users").child(mDbUserId).child("medications").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //ResidentItem resident = dataSnapshot.getValue(ResidentItem.class);
-                // Just delete ALL records in the device 'residents' table, and add the ones from the
+                // Just delete ALL records in the device 'medications' table, and add the ones from the
                 //  Firebase dataSnapshot:
                 getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
                 if (dataSnapshot.exists()) {
