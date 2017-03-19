@@ -131,12 +131,9 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
             nextAdminTime = mTimeCursor.getString(ResidentlistFragment.COL_NEXT_ADMIN_TIME);
             nextAdminTimeLong = mTimeCursor.getLong(ResidentlistFragment.COL_NEXT_ADMIN_TIME_LONG);
             long currTime = System.currentTimeMillis();
-            if (currTime == 0) {
-                residentlistAdapterViewHolder.mMedTime.setBackgroundColor(
-                        ContextCompat.getColor(mContext, R.color.colorMeds));
-                residentlistAdapterViewHolder.mMedTime.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.colorMedTime));
-                nextAdminTime = "No meds due";
+            if (nextAdminTimeLong == 0) {
+                // Ignore this case:
+                //nextAdminTime = "No meds due";
             } else if (currTime > nextAdminTimeLong) {
                 residentlistAdapterViewHolder.mMedTime.setBackgroundColor(
                         ContextCompat.getColor(mContext, R.color.colorBackgroundAlert));

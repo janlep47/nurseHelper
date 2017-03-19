@@ -26,6 +26,7 @@ public class ResidentProvider extends ContentProvider {
     private ResidentDbHelper mOpenHelper;
 
     static final int RESIDENTS = 100;              // PATH  residents path (DIR)
+    static final int RESIDENTS_WITH_ROOM_NUMBER = 101; // PATH/* residents path followed by a String (ITEM)
     static final int MEDICATIONS = 200;            // PATH  medications path (DIR)
     static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
     static final int MEDICATIONS_WITH_ROOM_NUMBER_AND_MED = 202;  // PATH/*  medications path followed by a String (ITEM)
@@ -38,7 +39,12 @@ public class ResidentProvider extends ContentProvider {
 
 
     // get list of all medications by room# (or patient id)
-    private static final String sMedsByResidentSelection =
+    public static final String sResidentByRoomNumberSelection =
+            ResidentContract.ResidentEntry.TABLE_NAME+
+                    "." + ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " = ? ";
+
+    // get list of all medications by room# (or patient id)
+    public static final String sMedsByResidentSelection =
             ResidentContract.MedicationEntry.TABLE_NAME+
                     "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
@@ -69,8 +75,8 @@ public class ResidentProvider extends ContentProvider {
                     ", meds."+ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+
                     ", meds.earliestMed FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res LEFT JOIN "+
                     "( SELECT "+ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+", "+
-                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+", MIN("+
-                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG+") earliestMed FROM "+
+                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+", MIN(NULLIF("+
+                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG+",0)) earliestMed FROM "+
                     ResidentContract.MedicationEntry.TABLE_NAME+" GROUP BY "+
                     ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+" ) meds ON meds."+
                     ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+"=res."+
@@ -102,6 +108,7 @@ public class ResidentProvider extends ContentProvider {
 
         // Create a corresponding code.
         matcher.addURI(authority, ResidentContract.PATH_RESIDENTS, RESIDENTS);
+        matcher.addURI(authority, ResidentContract.PATH_RESIDENTS + "/*", RESIDENTS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS, MEDICATIONS);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*", MEDICATIONS_WITH_ROOM_NUMBER);
         matcher.addURI(authority, ResidentContract.PATH_MEDS + "/*/*", MEDICATIONS_WITH_ROOM_NUMBER_AND_MED);
@@ -131,6 +138,8 @@ public class ResidentProvider extends ContentProvider {
         switch (match) {
             case RESIDENTS:
                 return ResidentContract.ResidentEntry.CONTENT_TYPE;        // DIR
+            case RESIDENTS_WITH_ROOM_NUMBER:
+                return ResidentContract.ResidentEntry.CONTENT_ITEM_TYPE;   // ITEM
             case MEDICATIONS:
                 return ResidentContract.MedicationEntry.CONTENT_TYPE;      // DIR
             case MEDICATIONS_WITH_ROOM_NUMBER:
@@ -168,6 +177,12 @@ public class ResidentProvider extends ContentProvider {
                         selection,
                         selectionArgs,
                         null, null, sortOrder);
+                break;
+            }
+
+            case RESIDENTS_WITH_ROOM_NUMBER:
+            {
+                retCursor = getResidentByRoomNumber(uri, projection, sortOrder);
                 break;
             }
 
@@ -222,6 +237,13 @@ public class ResidentProvider extends ContentProvider {
         }
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
+    }
+
+    private Cursor getResidentByRoomNumber(Uri uri, String[] projection, String sortOrder) {
+        String roomNumber = ResidentContract.ResidentEntry.getRoomNumberFromUri(uri);
+
+        return mOpenHelper.getReadableDatabase().query(ResidentContract.ResidentEntry.TABLE_NAME,
+                projection, sResidentByRoomNumberSelection, new String[] {roomNumber}, null, null, sortOrder);
     }
 
 
