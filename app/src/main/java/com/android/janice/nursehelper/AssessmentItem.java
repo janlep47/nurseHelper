@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.utility.Utility;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
@@ -120,11 +121,11 @@ public class AssessmentItem {
 
 
     public String getReadableTimestamp(Context context) {
-        Date date = new Date(timestamp);
-        String dateTimeFormat = context.getString(R.string.format_admin_date_time);
-        //String formattedDate = new SimpleDateFormat("MM-dd-YY HH:mm:ss").format(date);
-        String formattedDate = new SimpleDateFormat(dateTimeFormat, Locale.US).format(date);
-        return formattedDate;
+        //Date date = new Date(timestamp);
+        //String dateTimeFormat = context.getString(R.string.format_admin_date_time);
+        //String formattedDate = new SimpleDateFormat(dateTimeFormat, Locale.US).format(date);
+        //return formattedDate;
+        return Utility.getReadableTimestamp(context, timestamp);
     }
 
 
