@@ -25,7 +25,8 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                 "CREATE TABLE "+ ResidentContract.ResidentEntry.TABLE_NAME +
                         "( " + ResidentContract.ResidentEntry.COLUMN_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER +" TEXT KEY, " +
-                        ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH + " TEXT);";
+                        ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH + " TEXT, "+
+                        ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH + " TEXT);";
 
         db.execSQL(SQL_CREATE_RESIDENTS_TABLE);
 

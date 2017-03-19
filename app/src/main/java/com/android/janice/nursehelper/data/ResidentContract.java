@@ -45,8 +45,11 @@ public class ResidentContract {
         // primary key:  resident's room number:
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
-        // long name
+        // filename path of resident's image (thumbnail)
         public static final String COLUMN_PORTRAIT_FILEPATH = "portraitFilepath";
+
+        // filename path of resident's care plan (.pdf)
+        public static final String COLUMN_CAREPLAN_FILEPATH = "careplanFilepath";
 
 
         public static Uri buildResidentsUri(long id) {

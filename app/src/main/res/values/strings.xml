@@ -11,6 +11,7 @@
     <string name="title_activity_meds_given">MedsGiven</string>
     <string name="title_activity_assessments">Assess</string>
     <string name="title_activity_past_assessments">Assessments</string>
+    <string name="title_activity_careplan">Care Plan</string>
 
     <string name="title_widget_residentlist">NurseHelper</string>
 

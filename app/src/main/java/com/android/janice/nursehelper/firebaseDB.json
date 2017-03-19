@@ -12,6 +12,9 @@
             "portraitFilepath": {
               ".validate": "newData.isString() && newData.val().length > 0"
             }
+            "careplanFilepath": {
+              ".validate": "newData.isString()"
+            }
           }
         },
         "medications": {

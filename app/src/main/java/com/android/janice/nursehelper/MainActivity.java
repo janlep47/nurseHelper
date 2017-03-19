@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
 
+import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +28,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import net.sf.andpdf.pdfviewer.PdfViewerActivity;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 public class MainActivity extends AppCompatActivity implements ResidentlistFragment.Callback,
         GoogleApiClient.ConnectionCallbacks,
@@ -34,10 +42,11 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         LocationListener {
 
     public static final String ITEM_ROOM_NUMBER = "roomNumber";
-    public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilePath";
+    public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilepath";
     public static final String ITEM_NURSE_NAME = "nurseName";
     public static final String ITEM_USER_ID = "dataBaseUserID";
-
+    public static final String ITEM_CAREPLAN_FILEPATH = "careplanFilepath";
+    public static final String NO_CARE_PLAN_PDF = "file:///android_asset/CarePlanNONE.pdf";
     private String mNurseName;
     private String mDbUserId;
 
@@ -220,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
 
     @Override
-    public void onItemSelected(String roomNumber, String portraitFilePath,
+    public void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
                                int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
         Intent intent;
         Bundle bundle = new Bundle();
@@ -240,14 +249,40 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
-            //case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:
-            //    startActivity(new Intent(this, MedicationsActivity.class));
-            //    break;
+            case ResidentlistAdapter.ResidentlistAdapterViewHolder.CARE_PLAN_SELECTED:
+                intent = new Intent(this, CareplanActivity.class);
+                //intent.putExtras(bundle);
+                if (careplanFilePath == null)
+                    careplanFilePath = NO_CARE_PLAN_PDF;
+                else if (careplanFilePath.length() == 0)
+                    careplanFilePath = NO_CARE_PLAN_PDF;
+                intent.putExtra(PdfViewerActivity.EXTRA_PDFFILENAME, getAssetsPdfPath(careplanFilePath));
+                startActivity(intent);
+                break;
             default:
                 break;
         }
-        //Intent intent = new Intent(this, DetailActivity.class)
-        //        .setData(contentUri);
+    }
+
+    public String getAssetsPdfPath(String assetsFile) {
+        String filePath = getFilesDir() + File.separator + assetsFile;
+        File destinationFile = new File(filePath);
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(destinationFile);
+            InputStream inputStream = getAssets().open(assetsFile);
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error.");
+        }
+
+        return destinationFile.getPath();
     }
 
 

@@ -61,11 +61,13 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     private static final String[] RESIDENTLIST_COLUMNS = {
             ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER,
-            ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH};
+            ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH,
+            ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH};
 
     // These indices are tied to above.
     static final int COL_ROOM_NUMBER = 0;
     static final int COL_PORTRAIT = 1;
+    static final int COL_CAREPLAN = 2;
 
     // This index is tied to the timeCursor (index 0 is room number, in the same (asc) sorted
     //   order as room number in "cursor"
@@ -79,7 +81,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     public interface Callback {
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
-        public void onItemSelected(String roomNumber, String portraitFilePath,
+        public void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
                                    int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
         public DatabaseReference getDatabaseReference();
     }
@@ -144,11 +146,12 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             @Override
             //public void onClick(Long date, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
             //    String locationSetting = Utility.getPreferredLocation(getActivity());
-            public void onClick(String roomNumber, String portraitFilePath,
+            public void onClick(String roomNumber, String portraitFilePath, String careplanFilePath,
                                 int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
                 ((Callback) getActivity())
                         .onItemSelected(roomNumber,
                                 portraitFilePath,
+                                careplanFilePath,
                                 selectionType,
                                 vh
                         );
@@ -409,6 +412,48 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             updateEmptyView();
         }
     }
+
+
+    // !!!!!!!!!!!!!!!!!!      IMPORTANT  ###########################
+    //  DO SOMETHING LIKE THIS LATER ....
+    /*
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        mForecastAdapter.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+    */
+    //             In ResidentlistAdapter.java have:
+    //
+    //     final private ItemChoiceManager mICM;
+    // ...
+    //  in onClick(View v) { ....            mICM.onClick(this);  (last line) }
+    // ...
+    //  in constructor {         mICM = new ItemChoiceManager(this);
+    //                           mICM.setChoiceMode(choiceMode);   (last 2 lines) }
+    // ...
+    /*   also this :
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mICM.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        mICM.onSaveInstanceState(outState);
+    }
+
+    public int getSelectedItemPosition() {
+        return mICM.getSelectedItemPosition();
+    }
+
+
+     */
+
+
+
+
+
 
 
 

@@ -116,6 +116,19 @@
                 android:value="com.android.janice.nursehelper.AssessmentActivity" />
         </activity>
 
+
+        <activity
+            android:name=".CareplanActivity"
+            android:label="@string/title_activity_careplan"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.janice.nursehelper.MainActivity" />
+        </activity>
+
+
         <!-- The manifest entry for our SettingsActivity. Each Activity requires a manifest entry -->
         <activity android:name=".SettingsActivity"/>
 
