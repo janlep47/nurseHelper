@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.google.firebase.database.DatabaseReference;
@@ -168,7 +169,9 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
-        saveFirebaseAssessment(aValues, database, userId);
+        //saveFirebaseAssessment(aValues, database, userId);
+        new UpdateAssessmentTask(context, database, userId).execute(aValues);
+
 
         // Med #2
         aValues = new ContentValues();
@@ -186,11 +189,13 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         assessmentUri = context.getContentResolver().insert(uri, aValues);
-        saveFirebaseAssessment(aValues, database, userId);
+        //saveFirebaseAssessment(aValues, database, userId);
+        new UpdateAssessmentTask(context, database, userId).execute(aValues);
+
     }
 
 
-
+/*
     public static void saveFirebaseAssessment(ContentValues aValues, DatabaseReference database, String userId) {
         String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
         ArrayList<String> keys = new ArrayList<String>(aValues.keySet());
@@ -199,6 +204,7 @@ public class AssessmentItem {
             database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
         }
     }
+    */
 
         // Later, format the values...
     public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
@@ -226,7 +232,50 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
-        saveFirebaseAssessment(aValues, database, userId);
+        //saveFirebaseAssessment(aValues, database, userId);
+        UpdateAssessmentTask updateAssessmentTask = new UpdateAssessmentTask(context,database,userId);
+        updateAssessmentTask.execute(aValues);
+
+    }
+
+
+    private static class UpdateAssessmentTask extends AsyncTask<ContentValues, Void, Void> {
+        protected Context context;
+        protected DatabaseReference database;
+        protected String userId;
+
+        public UpdateAssessmentTask(Context context, DatabaseReference database, String userId) {
+            this.context = context;
+            this.database = database;
+            this.userId = userId;
+        }
+
+        @Override
+        protected Void doInBackground(ContentValues... params) {
+            ContentValues assessmentValues = params[0];
+            String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
+            ArrayList<String> keys = new ArrayList<String>(assessmentValues.keySet());
+            for (int i = 0; i < keys.size(); i++) {
+                Object value = assessmentValues.get(keys.get(i));
+                database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            // If added successfully, end this activity, and go back to the calling activity:
+            //if (result.intValue() == 0) mActivity.finish();
+            //else {
+            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
+            //    mAddProblem = true;
+            //}
+            //mLoadingPanel.setVisibility(View.GONE);
+            //super.onPostExecute(result);
+        }
     }
 
 }

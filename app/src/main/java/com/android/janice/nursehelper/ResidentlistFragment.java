@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.data.ResidentProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -204,6 +206,10 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         mDatabase.child("users").child(mDbUserId).child("residents").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                UpdateResidentsFromFirebaseTask updateResidentsTask =
+                        new UpdateResidentsFromFirebaseTask(getActivity(), dataSnapshot);
+                updateResidentsTask.execute();
+                /*
                 //ResidentItem resident = dataSnapshot.getValue(ResidentItem.class);
                 // Just delete ALL records in the device 'residents' table, and add the ones from the
                 //  Firebase dataSnapshot:
@@ -220,6 +226,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                     }
                 }
                 dataUpdated();
+                */
             }
 
             @Override
@@ -402,4 +409,116 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             updateEmptyView();
         }
     }
+
+
+
+
+
+
+    private class UpdateResidentsFromFirebaseTask extends AsyncTask<Void, Void, Void> {
+        protected Context context;
+        protected DataSnapshot dataSnapshot;
+
+        public UpdateResidentsFromFirebaseTask(Context context, DataSnapshot dataSnapshot) {
+            this.context = context;
+            this.dataSnapshot = dataSnapshot;
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Just delete ALL records in the device 'residents' table, and add the ones from the
+            //  Firebase dataSnapshot:
+
+            // TEMP!! for now do nothing, b/c of PROBLEM of firebase sending TOO MANY FALSE data changes ...
+            //  ... in addition to real ones  .... so don't want to suck down on download amts and get
+            //   CHARGED by Firebase!!
+            /*
+            getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
+            if (dataSnapshot.exists()) {
+                for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                    if (issue.exists()) {
+                        ResidentItem resident = issue.getValue(ResidentItem.class);
+                        ContentValues resValues = new ContentValues();
+                        resValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, resident.getRoomNumber());
+                        resValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, resident.getPortraitFilepath());
+                        getActivity().getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI,resValues);
+                    }
+                }
+            }
+            */
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            dataUpdated();
+            super.onPostExecute(result);
+
+            // If added successfully, end this activity, and go back to the calling activity:
+            //if (result.intValue() == 0) mActivity.finish();
+            //else {
+            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
+            //    mAddProblem = true;
+            //}
+            //mLoadingPanel.setVisibility(View.GONE);
+            //super.onPostExecute(result);
+        }
+    }
+
+
+
+
+/*
+    ALTERNATE doInBackground()  instead of deleting ALL records (SINCE firebase is sending FALSE changes,
+     and we want to prevent to many deletes and reloads (takes time, battery life, and causes resident list
+     screen to flicker annoyingly on start-up), we'll just compare the snapshot to the current device content
+     'residents' table and make any changes to that as needed (from the firebase snapshot).
+
+    @Override
+    protected Void doInBackground(Void... params) {
+        // DO NOT delete, b/c this is called every time the app starts! (it shouldn't!) ... and it causes a pause
+        //  and an annoying re-draw of the resident-list screen:
+        if (dataSnapshot.exists()) {
+            for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                if (issue.exists()) {
+                    ResidentItem resident = issue.getValue(ResidentItem.class);
+                    // INSTEAD of inserting all the snapshot records, see if this one is defined in the 'residents' table
+                    String roomNumber = resident.getRoomNumber();
+                    String portraitFilepath = resident.getPortraitFilepath();
+                    Uri testUri = ResidentContract.ResidentEntry.CONTENT_URI;
+                    testUri = testUri.buildUpon().appendPath(roomNumber).build();
+                    Cursor testCursor = context.getContentResolver().query(testUri,
+                            new String[]{ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER},
+                            null, null, null);
+
+                    if (testCursor != null) {
+                        if (testCursor.moveToFirst()) {
+                            // This (room# == 'residents' key) resident ALREADY EXISTS;
+                            //  if the portraitFilepath is the SAME, just skip it
+                            if (portraitFilepath.equals(testCursor.getString(COL_PORTRAIT))) {
+                                testCursor.close();
+                                continue;  // This resident ALREADY EXISTS, skip to next one to add
+                            } else {
+                                // Need to update this record with the new portraitFilepath
+                                ContentValues resValues = new ContentValues();
+                                resValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, portraitFilepath);
+
+                                Uri uriResident = ResidentContract.ResidentEntry.CONTENT_URI;
+                                uriResident = uriResident.buildUpon().appendPath(roomNumber).build();
+                                int rowsUpdated = context.getContentResolver().update(uriResident, resValues,
+                                        ResidentProvider.sResidentByRoomNumberSelection ,
+                                        new String[]{roomNumber});
+                            }
+                        }
+                        testCursor.close();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+*/
+
 }

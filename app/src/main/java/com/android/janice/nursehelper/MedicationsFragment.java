@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -147,6 +148,10 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         mDatabase.child("users").child(mDbUserId).child("medications").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                UpdateMedicationsFromFirebaseTask updateMedsTask =
+                        new UpdateMedicationsFromFirebaseTask(getActivity(), dataSnapshot);
+                updateMedsTask.execute();
+                /*
                 // Just delete ALL records in the device 'medications' table, and add the ones from the
                 //  Firebase dataSnapshot:
                 getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
@@ -171,6 +176,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                     }
                 }
                 dataUpdated();
+                */
             }
 
             @Override
@@ -414,5 +420,72 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
             updateEmptyView();
         }
     }
+
+
+
+
+
+
+    private class UpdateMedicationsFromFirebaseTask extends AsyncTask<Void, Void, Void> {
+        protected Context context;
+        protected DataSnapshot dataSnapshot;
+
+        public UpdateMedicationsFromFirebaseTask(Context context, DataSnapshot dataSnapshot) {
+            this.context = context;
+            this.dataSnapshot = dataSnapshot;
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Just delete ALL records in the device 'medications' table, and add the ones from the
+            //  Firebase dataSnapshot:
+
+            // TEMP!! for now do nothing, b/c of PROBLEM of firebase sending TOO MANY FALSE data changes ...
+            //  ... in addition to real ones  .... so don't want to suck down on download amts and get
+            //   CHARGED by Firebase!!
+            /*
+            getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
+            if (dataSnapshot.exists()) {
+                for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                    if (issue.exists()) {
+                        MedicationItem medication = issue.getValue(MedicationItem.class);
+                        ContentValues medValues = new ContentValues();
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, medication.getRoomNumber());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, medication.getTradeName());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, medication.getGenericName());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, new Double(medication.getDosage()));
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, medication.getDosageUnits());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, medication.getDosageRoute());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, medication.getAdminTimes());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, medication.getFrequency());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, new Long(medication.getLastGivenTime()));
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, medication.getNextDosageTime());
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, new Long(medication.getNextDosageTimeLong()));
+                        getActivity().getContentResolver().insert(ResidentContract.MedicationEntry.CONTENT_URI,medValues);
+                    }
+                }
+            }
+            */
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            dataUpdated();
+            super.onPostExecute(result);
+
+            // If added successfully, end this activity, and go back to the calling activity:
+            //if (result.intValue() == 0) mActivity.finish();
+            //else {
+            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
+            //    mAddProblem = true;
+            //}
+            //mLoadingPanel.setVisibility(View.GONE);
+            //super.onPostExecute(result);
+        }
+    }
+
 
 }
