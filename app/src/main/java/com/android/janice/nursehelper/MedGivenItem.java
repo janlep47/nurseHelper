@@ -19,14 +19,11 @@ import java.util.Date;
  */
 
 public class MedGivenItem {
-    //private String roomNumber;
-    //private Bitmap portrait;
-
     private String roomNumber;
     private String genericName;
     private float dosage;
     private String dosageUnits;
-    private boolean givenOrRefused;      // if 1, given; if 0, med was refused
+    private boolean givenOrRefused;
     private String nurseName;
     private long timeGiven;
 
@@ -95,8 +92,6 @@ public class MedGivenItem {
 
 
     public String getReadableTimestamp(Context context) {
-        //String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-        //String formattedDate = new SimpleDateFormat("MM-DD-YY HH:mm:ss").format(timestamp);
         return Utility.getReadableTimestamp(context, timeGiven);
     }
 

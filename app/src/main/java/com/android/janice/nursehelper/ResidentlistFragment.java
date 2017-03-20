@@ -54,7 +54,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     private String mInitialSelectedRoomNumber = "";
 
-    private static final String SELECTED_KEY = "selected_position";
+    //private static final String SELECTED_KEY = "selected_position";
 
     private static final int RESIDENTLIST_LOADER = 0;
     private static final int MEDTIME_LOADER = 1;
@@ -83,6 +83,8 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
         public void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
                                    int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
+        public String getNurseName();
+        public String getDbUserId();
         public DatabaseReference getDatabaseReference();
     }
 
@@ -155,15 +157,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                                 selectionType,
                                 vh
                         );
-                /*
-                ((Callback) getActivity())
-                        .onItemSelected(ResidentContract.ResidentEntry.buildResidentInfoWithRoomNumber(
-                                //locationSetting, date),
-                                roomNumber),
-                                selectionType,
-                                vh
-                        );
-                        */
             }
         }, emptyView, mChoiceMode);
 
@@ -194,17 +187,8 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            mNurseName = savedInstanceState.getString(MainActivity.ITEM_NURSE_NAME);
-            mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
-        } else {
-            Bundle arguments = getArguments();
-            if (arguments != null) {
-                mNurseName = arguments.getString(MainActivity.ITEM_NURSE_NAME);
-                mDbUserId = arguments.getString(MainActivity.ITEM_USER_ID);
-
-            }
-        }
+        mNurseName = ((Callback) getActivity()).getNurseName();
+        mDbUserId = ((Callback) getActivity()).getDbUserId();
         mDatabase = ((Callback) getActivity()).getDatabaseReference();
         mDatabase.child("users").child(mDbUserId).child("residents").addValueEventListener(new ValueEventListener() {
             @Override
@@ -212,24 +196,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                 UpdateResidentsFromFirebaseTask updateResidentsTask =
                         new UpdateResidentsFromFirebaseTask(getActivity(), dataSnapshot);
                 updateResidentsTask.execute();
-                /*
-                //ResidentItem resident = dataSnapshot.getValue(ResidentItem.class);
-                // Just delete ALL records in the device 'residents' table, and add the ones from the
-                //  Firebase dataSnapshot:
-                getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        if (issue.exists()) {
-                            ResidentItem resident = issue.getValue(ResidentItem.class);
-                            ContentValues resValues = new ContentValues();
-                            resValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, resident.getRoomNumber());
-                            resValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, resident.getPortraitFilepath());
-                            getActivity().getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI,resValues);
-                        }
-                    }
-                }
-                dataUpdated();
-                */
             }
 
             @Override
@@ -240,14 +206,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     }
 
     void onResidentlistChanged() {getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);}
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // When tablets rotate, the currently selected list item needs to be saved.
-        mResidentlistAdapter.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState);
-    }
 
 
     @Override
@@ -293,21 +251,15 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                     if (mRecyclerView.getChildCount() > 0) {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
                         int position = mResidentlistAdapter.getSelectedItemPosition();
-                        //if (position == RecyclerView.NO_POSITION &&
-                        //        -1 != mInitialSelectedDate) {
                         if (position == RecyclerView.NO_POSITION && !mInitialSelectedRoomNumber.equals("")) {
                             Cursor data = mResidentlistAdapter.getCursor();
 
-
                             Cursor medData = mResidentlistAdapter.getTimeCursor();
 
-
                             int count = data.getCount();
-                            //int dateColumn = data.getColumnIndex(ResidentsContract.ResidentEntry.COLUMN_DATE);
                             int roomNumberColumn = data.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);
                             for (int i = 0; i < count; i++) {
                                 data.moveToPosition(i);
-                                //if ( data.getLong(dateColumn) == mInitialSelectedDate ) {
                                 if ((data.getString(roomNumberColumn)).equals(mInitialSelectedRoomNumber)) {
                                     position = i;
                                     break;
@@ -328,24 +280,10 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
 
                         AppCompatActivity activity = (AppCompatActivity) getActivity();
-                        //Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
 
                         // We need to start the enter transition after the data has loaded
                         //if ( mTransitionAnimation ) {
                         activity.supportStartPostponedEnterTransition();
-/*
-                        if (null != toolbarView) {
-                            activity.setSupportActionBar(toolbarView);
-                            //getActivity().getSupportActionBar().setTitle(mSymbol);
-                            toolbarView.setTitle(R.string.title_activity_list);
-
-                            //activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                            activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
-                            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        }
-                        */
-                        //}
-
                         return true;
                     }
                     return false;
@@ -414,49 +352,11 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     }
 
 
-    // !!!!!!!!!!!!!!!!!!      IMPORTANT  ###########################
-    //  DO SOMETHING LIKE THIS LATER ....
-    /*
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // When tablets rotate, the currently selected list item needs to be saved.
-        mForecastAdapter.onSaveInstanceState(outState);
+        mResidentlistAdapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
-    */
-    //             In ResidentlistAdapter.java have:
-    //
-    //     final private ItemChoiceManager mICM;
-    // ...
-    //  in onClick(View v) { ....            mICM.onClick(this);  (last line) }
-    // ...
-    //  in constructor {         mICM = new ItemChoiceManager(this);
-    //                           mICM.setChoiceMode(choiceMode);   (last 2 lines) }
-    // ...
-    /*   also this :
-
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mICM.onRestoreInstanceState(savedInstanceState);
-    }
-
-    public void onSaveInstanceState(Bundle outState) {
-        mICM.onSaveInstanceState(outState);
-    }
-
-    public int getSelectedItemPosition() {
-        return mICM.getSelectedItemPosition();
-    }
-
-
-     */
-
-
-
-
-
-
-
-
 
 
 

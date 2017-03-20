@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -43,6 +45,22 @@ import com.squareup.picasso.Picasso;
 
 public class AssessmentFragment extends Fragment {
     public static final String LOG_TAG = AssessmentFragment.class.getSimpleName();
+    private static final String ITEM_SYSTOLIC_BP = "systolicBP";
+    private static final String ITEM_DIASTOLIC_BP = "diastolicBP";
+    private static final String ITEM_TEMP = "temp";
+    private static final String ITEM_TEMP_DECIMAL = "tempDecimal";
+    private static final String ITEM_PULSE = "pulse";
+    private static final String ITEM_RR = "rr";
+    private static final String ITEM_PAIN = "pain";
+    private static final String ITEM_TEMP_STRING = "tempString";
+    private static final String ITEM_FINDINGS = "findings";
+    private static final String ITEM_EDEMA_SPINNER_POSN = "edemaPosn";
+    private static final String ITEM_EDEMA_PITTING = "edemaPitting";
+    private static final String ITEM_EDEMA_LLE_CHECKED = "lleChecked";
+    private static final String ITEM_EDEMA_RLE_CHECKED = "rleChecked";
+    private static final String ITEM_EDEMA_LUE_CHECKED = "lueChecked";
+    private static final String ITEM_EDEMA_RUE_CHECKED = "rueChecked";
+
     private NumberPicker mSystolicBP_picker;
     private NumberPicker mDiastolicBP_picker;
     private NumberPicker mTemp_int_picker;
@@ -72,10 +90,12 @@ public class AssessmentFragment extends Fragment {
     String mDbUserId;
     DatabaseReference mDatabase;
 
-    private boolean edemaPitting = false;
+    private int mSystolicBP, mDiastolicBP, mTemp, mTempDecimal, mPulse, mRR,  mPain;
+    private int edemaSpinnerPosn;
+    private String mTempString, mFindings;
+    private boolean edemaPitting, mEdema_LLE_checked, mEdema_RLE_checked, mEdema_LUE_checked, mEdema_RUE_checked;
 
-    public static final int DEFAULT_ACTION_BAR_HEIGHT = 60;
-
+    /*
     private static final String[] ASSESSMENT_COLUMNS = {
             ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
             ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE,
@@ -89,7 +109,7 @@ public class AssessmentFragment extends Fragment {
             ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS,
             ResidentContract.AssessmentEntry.COLUMN_TIME
 };
-
+    */
 
     public interface Callback {
         // for when a list item has been selected.
@@ -139,7 +159,7 @@ public class AssessmentFragment extends Fragment {
         //if ( mTransitionAnimation ) {
         activity.supportStartPostponedEnterTransition();
         ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setSubtitle("room: "+mRoomNumber);
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
 
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
@@ -148,7 +168,7 @@ public class AssessmentFragment extends Fragment {
         imageView.setScaleType(ImageView.ScaleType.CENTER);
 
         // Calculate ActionBar height
-        int actionBarHeight = DEFAULT_ACTION_BAR_HEIGHT;
+        int actionBarHeight = getActivity().getResources().getInteger(R.integer.appbar_default_height);
         TypedValue tv = new TypedValue();
         if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
         {
@@ -156,7 +176,7 @@ public class AssessmentFragment extends Fragment {
         }
 
         Picasso.with(getActivity())
-                .load("file:///android_asset/"+mPortraitFilePath)
+                .load(mPortraitFilePath)
                 .placeholder(R.drawable.blank_portrait)
                 //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
                 .noFade().resize(actionBarHeight, actionBarHeight)
@@ -167,7 +187,7 @@ public class AssessmentFragment extends Fragment {
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
                 | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
+        layoutParams.rightMargin = getActivity().getResources().getInteger(R.integer.appbar_portrait_margin);
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
 
@@ -179,6 +199,41 @@ public class AssessmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_assessment, container, false);
+
+        if (savedInstanceState != null) {
+            mSystolicBP = savedInstanceState.getInt(ITEM_SYSTOLIC_BP);
+            mDiastolicBP = savedInstanceState.getInt(ITEM_DIASTOLIC_BP);
+            mTemp = savedInstanceState.getInt(ITEM_TEMP);
+            mTempDecimal = savedInstanceState.getInt(ITEM_TEMP_DECIMAL);
+            mPulse = savedInstanceState.getInt(ITEM_PULSE);
+            mRR = savedInstanceState.getInt(ITEM_RR);
+            mPain = savedInstanceState.getInt(ITEM_PAIN);
+            mTempString = savedInstanceState.getString(ITEM_TEMP_STRING);
+            mFindings = savedInstanceState.getString(ITEM_FINDINGS);
+            edemaSpinnerPosn = savedInstanceState.getInt(ITEM_EDEMA_SPINNER_POSN);
+            edemaPitting = savedInstanceState.getBoolean(ITEM_EDEMA_PITTING);
+            mEdema_LLE_checked = savedInstanceState.getBoolean(ITEM_EDEMA_LLE_CHECKED);
+            mEdema_RLE_checked = savedInstanceState.getBoolean(ITEM_EDEMA_RLE_CHECKED);
+            mEdema_LUE_checked = savedInstanceState.getBoolean(ITEM_EDEMA_LUE_CHECKED);
+            mEdema_RUE_checked = savedInstanceState.getBoolean(ITEM_EDEMA_RUE_CHECKED);
+        } else {
+            // not coming from a restored state, set all values to defaults to start
+            mSystolicBP = getActivity().getResources().getInteger(R.integer.bp_systolic_default);
+            mDiastolicBP = getActivity().getResources().getInteger(R.integer.bp_diastolic_default);
+            mTemp = getActivity().getResources().getInteger(R.integer.temp_default);
+            mTempDecimal = getActivity().getResources().getInteger(R.integer.temp_decimal_default);
+            mTempString = getActivity().getResources().getString(R.string.temperature_default);
+            mPulse = getActivity().getResources().getInteger(R.integer.pulse_default);
+            mRR = getActivity().getResources().getInteger(R.integer.rr_default);
+            edemaSpinnerPosn = 0;
+            mEdema_LLE_checked = false;
+            mEdema_RLE_checked = false;
+            mEdema_LUE_checked = false;
+            mEdema_RUE_checked = false;
+            mPain = 0;
+            mFindings = "";
+            edemaPitting = false;
+        }
 
         mSystolicBP_textView = (TextView) rootView.findViewById(R.id.bp_systolic_textview);
         mDiastolicBP_textView = (TextView) rootView.findViewById(R.id.bp_diastolic_textview);
@@ -206,82 +261,122 @@ public class AssessmentFragment extends Fragment {
         mPain_picker = (NumberPicker) rootView.findViewById(R.id.pain_picker);
         mDone_button = (Button) rootView.findViewById(R.id.done_button);
 
-        mSystolicBP_picker.setMinValue(60);
-        mSystolicBP_picker.setMaxValue(250);
-        mSystolicBP_picker.setValue(120);
-        mSystolicBP_textView.setText(String.valueOf(mSystolicBP_picker.getValue()));
+
+        mFindings_editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mFindings = mFindings_editText.getText().toString();
+            }
+        });
+
+        mSystolicBP_picker.setMinValue(getActivity().getResources().getInteger(R.integer.bp_systolic_min));
+        mSystolicBP_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.bp_systolic_max));
+        //mSystolicBP_picker.setValue(getActivity().getResources().getInteger(R.integer.bp_systolic_default));
+        //mSystolicBP_textView.setText(String.valueOf(mSystolicBP_picker.getValue()));
+        mSystolicBP_picker.setValue(mSystolicBP);
+        mSystolicBP_textView.setText(String.valueOf(mSystolicBP));
         mSystolicBP_picker.setWrapSelectorWheel(false);
 
-        mDiastolicBP_picker.setMinValue(40);
-        mDiastolicBP_picker.setMaxValue(160);
-        mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP_picker.getValue()));
-        mDiastolicBP_picker.setValue(80);
+        mDiastolicBP_picker.setMinValue(getActivity().getResources().getInteger(R.integer.bp_diastolic_min));
+        mDiastolicBP_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.bp_diastolic_max));
+        //mDiastolicBP_picker.setValue(getActivity().getResources().getInteger(R.integer.bp_diastolic_default));
+        //mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP_picker.getValue()));
+        mDiastolicBP_picker.setValue(mDiastolicBP);
+        mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP));
         mDiastolicBP_picker.setWrapSelectorWheel(false);
 
         mSystolicBP_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
-                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                    mSystolicBP_textView.setText(String.valueOf(mSystolicBP_picker.getValue()));
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mSystolicBP = mSystolicBP_picker.getValue();
+                    mSystolicBP_textView.setText(String.valueOf(mSystolicBP));
+                }
             }
         });
 
         mDiastolicBP_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
-                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                    mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP_picker.getValue()));
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mDiastolicBP = mDiastolicBP_picker.getValue();
+                    mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP));
+                }
             }
         });
 
-        mTemp_int_picker.setMinValue(95);
-        mTemp_int_picker.setMaxValue(106);
-        mTemp_int_picker.setValue(98);
+        mTemp_int_picker.setMinValue(getActivity().getResources().getInteger(R.integer.temp_min));
+        mTemp_int_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.temp_max));
+        //mTemp_int_picker.setValue(getActivity().getResources().getInteger(R.integer.temp_default));
+        mTemp_int_picker.setValue(mTemp);
         mTemp_int_picker.setWrapSelectorWheel(false);
-        mTemp_decimal_picker.setMinValue(0);
-        mTemp_decimal_picker.setMaxValue(9);
-        mTemp_decimal_picker.setValue(7);
+
+        mTemp_decimal_picker.setMinValue(getActivity().getResources().getInteger(R.integer.temp_decimal_min));
+        mTemp_decimal_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.temp_decimal_max));
+        //mTemp_decimal_picker.setValue(getActivity().getResources().getInteger(R.integer.temp_decimal_default));
+        mTemp_decimal_picker.setValue(mTempDecimal);
         mTemp_decimal_picker.setWrapSelectorWheel(false);
 
-        mTemperature_textView.setText("98.7");
+        //mTemperature_textView.setText(getActivity().getResources().getString(R.string.temperature_default));
+        mTemperature_textView.setText(mTempString);
 
         NumberPicker.OnScrollListener tempScrollListener = new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
-                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                    mTemperature_textView.setText(String.valueOf(mTemp_int_picker.getValue())+"."+
-                        String.valueOf(mTemp_decimal_picker.getValue()));
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mTemp = mTemp_int_picker.getValue();
+                    mTempDecimal = mTemp_decimal_picker.getValue();
+                    mTempString = String.valueOf(mTemp) + "." +
+                            String.valueOf(mTempDecimal);
+                    mTemperature_textView.setText(mTempString);
+                }
             }
         };
 
         mTemp_int_picker.setOnScrollListener(tempScrollListener);
         mTemp_decimal_picker.setOnScrollListener(tempScrollListener);
 
-        mPulse_picker.setMinValue(20);
-        mPulse_picker.setMaxValue(200);
-        mPulse_picker.setValue(60);
-        mPulse_textView.setText(String.valueOf(mPulse_picker.getValue()));
+        mPulse_picker.setMinValue(getActivity().getResources().getInteger(R.integer.pulse_min));
+        mPulse_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.pulse_max));
+        //mPulse_picker.setValue(getActivity().getResources().getInteger(R.integer.pulse_default));
+        //mPulse_textView.setText(String.valueOf(mPulse_picker.getValue()));
+        mPulse_picker.setValue(mPulse);
+        mPulse_textView.setText(String.valueOf(mPulse));
         mPulse_picker.setWrapSelectorWheel(false);
 
         mPulse_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
-                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                    mPulse_textView.setText(String.valueOf(mPulse_picker.getValue()));
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mPulse = mPulse_picker.getValue();
+                    mPulse_textView.setText(String.valueOf(mPulse));
+                }
             }
         });
 
-        mRR_picker.setMinValue(6);
-        mRR_picker.setMaxValue(70);
-        mRR_picker.setValue(14);
-        mRR_textView.setText(String.valueOf(mRR_picker.getValue()));
+        mRR_picker.setMinValue(getActivity().getResources().getInteger(R.integer.rr_min));
+        mRR_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.rr_max));
+        //mRR_picker.setValue(getActivity().getResources().getInteger(R.integer.rr_default));
+        //mRR_textView.setText(String.valueOf(mRR_picker.getValue()));
+        mRR_picker.setValue(mRR);
+        mRR_textView.setText(String.valueOf(mRR));
         mRR_picker.setWrapSelectorWheel(false);
 
         mRR_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
-                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                    mRR_textView.setText(String.valueOf(mRR_picker.getValue()));
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mRR = mRR_picker.getValue();
+                    mRR_textView.setText(String.valueOf(mRR));
+                }
             }
         });
 
@@ -305,6 +400,13 @@ public class AssessmentFragment extends Fragment {
             }
         });
 
+        if (edemaSpinnerPosn != 0)
+            mEdema_spinner.setSelection(edemaSpinnerPosn);
+        if (mEdema_LLE_checked) mEdema_LLE.setChecked(true);
+        if (mEdema_RLE_checked) mEdema_RLE.setChecked(true);
+        if (mEdema_LUE_checked) mEdema_LUE.setChecked(true);
+        if (mEdema_RUE_checked) mEdema_RUE.setChecked(true);
+
         /*
         // Do the same for the edemaLocationSpinner:
         adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -313,17 +415,21 @@ public class AssessmentFragment extends Fragment {
         mEdema_location_spinner.setAdapter(adapter);
         */
 
-        mPain_picker.setMinValue(0);
-        mPain_picker.setMaxValue(10);
-        mPain_picker.setValue(0);
-        mPain_textView.setText(String.valueOf(mPain_picker.getValue()));
+        mPain_picker.setMinValue(getActivity().getResources().getInteger(R.integer.pain_min));
+        mPain_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.pain_max));
+        //mPain_picker.setValue(getActivity().getResources().getInteger(R.integer.pain_default));
+        //mPain_textView.setText(String.valueOf(mPain_picker.getValue()));
+        mPain_picker.setValue(mPain);
+        mPain_textView.setText(String.valueOf(mPain));
         mPain_picker.setWrapSelectorWheel(false);
 
         mPain_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
-                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE)
-                    mPain_textView.setText(String.valueOf(mPain_picker.getValue()));
+                if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mPain = mPain_picker.getValue();
+                    mPain_textView.setText(String.valueOf(mPain));
+                }
             }
         });
 
@@ -334,27 +440,23 @@ public class AssessmentFragment extends Fragment {
         mDone_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int systolicBP, diastolicBP, pulse, rr, pain;
-                float temp;
-                systolicBP = Integer.parseInt((String) mSystolicBP_textView.getText());
-                diastolicBP = Integer.parseInt((String) mDiastolicBP_textView.getText());
-                temp = Float.parseFloat((String) mTemperature_textView.getText());
-                pulse = Integer.parseInt((String) mPulse_textView.getText());
-                rr = Integer.parseInt((String) mRR_textView.getText());
-                pain = Integer.parseInt((String) mPain_textView.getText());
-                String findings = mFindings_editText.getText().toString();
+                float temp = Float.parseFloat(mTempString);
+                mFindings = mFindings_editText.getText().toString();
                 String edemaLocations = "";
                 if (mEdema_spinner.getSelectedItemPosition() != 0) {
-                    if (mEdema_LLE.isChecked()) edemaLocations += " LLE";
-                    if (mEdema_LUE.isChecked()) edemaLocations += " LUE";
-                    if (mEdema_RLE.isChecked()) edemaLocations += " RLE";
-                    if (mEdema_RUE.isChecked()) edemaLocations += " RUE";
+                    if (mEdema_LLE.isChecked()) edemaLocations += " "+
+                            getActivity().getResources().getString(R.string.edema_LLE);
+                    if (mEdema_LUE.isChecked()) edemaLocations += " "+
+                            getActivity().getResources().getString(R.string.edema_LUE);
+                    if (mEdema_RLE.isChecked()) edemaLocations += " "+
+                            getActivity().getResources().getString(R.string.edema_RLE);
+                    if (mEdema_RUE.isChecked()) edemaLocations += " "+
+                            getActivity().getResources().getString(R.string.edema_RUE);
                 }
-                boolean edemaPitting = false;
-                AssessmentItem.saveAssessment(getActivity(), mRoomNumber, systolicBP, diastolicBP, temp, pulse, rr,
-                        //(String) mEdema_spinner.getSelectedItem(), (String) mEdema_location_spinner.getSelectedItem(),
+                AssessmentItem.saveAssessment(getActivity(), mRoomNumber, mSystolicBP, mDiastolicBP, temp,
+                        mPulse, mRR,
                         (String) mEdema_spinner.getSelectedItem(), edemaLocations, edemaPitting,
-                        pain, findings, mDatabase, mDbUserId);
+                        mPain, mFindings, mDatabase, mDbUserId);
                 getActivity().finish();
             }
         });
@@ -371,6 +473,22 @@ public class AssessmentFragment extends Fragment {
         outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
         outState.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
         outState.putString(MainActivity.ITEM_USER_ID,mDbUserId);
+
+        outState.putInt(ITEM_SYSTOLIC_BP,mSystolicBP);
+        outState.putInt(ITEM_DIASTOLIC_BP,mDiastolicBP);
+        outState.putInt(ITEM_TEMP,mTemp);
+        outState.putInt(ITEM_TEMP_DECIMAL,mTempDecimal);
+        outState.putInt(ITEM_PULSE,mPulse);
+        outState.putInt(ITEM_RR,mRR);
+        outState.putInt(ITEM_PAIN,mPain);
+        outState.putString(ITEM_TEMP_STRING,mTempString);
+        outState.putString(ITEM_FINDINGS,mFindings);
+        outState.putInt(ITEM_EDEMA_SPINNER_POSN, edemaSpinnerPosn);
+        outState.putBoolean(ITEM_EDEMA_PITTING, edemaPitting);
+        outState.putBoolean(ITEM_EDEMA_LLE_CHECKED, mEdema_LLE_checked);
+        outState.putBoolean(ITEM_EDEMA_RLE_CHECKED, mEdema_RLE_checked);
+        outState.putBoolean(ITEM_EDEMA_LUE_CHECKED, mEdema_LUE_checked);
+        outState.putBoolean(ITEM_EDEMA_RUE_CHECKED, mEdema_RUE_checked);
     }
 
 }

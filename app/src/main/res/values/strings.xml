@@ -2,9 +2,12 @@
     <string name="app_name">NurseHelper</string>
 
     <string name="action_about">about</string>
+    <string name="action_about_title">About:</string>
     <string name="action_settings">Settings</string>
     <string name="action_show_past_meds">Show meds given</string>
     <string name="action_show_past_assessments">Show previous assessments</string>
+
+    <string name="action_bar_room_number_title">room:</string>
 
     <string name="title_activity_list">NurseHelper</string>
     <string name="title_activity_medications">Medications</string>
@@ -19,6 +22,10 @@
     <string name="med_due_time_label">next due time:</string>
     <string name="med_give_label">Give:</string>
     <string name="med_refuse_label">Refuse:</string>
+    <string name="med_not_given_yet">* This medication has not been given yet *</string>
+    <string name="med_given">given</string>
+    <string name="med_refused">refused</string>
+    <string name="med_dosage_label">dosage:</string>
 
     <string name="prn_string">PRN</string>
     <!-- ? once or not at all
@@ -50,14 +57,30 @@
     <string name="edema_label">edema: </string>
     <string name="edema_location_label">location: </string>
     <string name="edema_LLE_label">LLE:</string>
-    <string name="edema_RLE_label">LLE:</string>
-    <string name="edema_LUE_label">LLE:</string>
-    <string name="edema_RUE_label">LLE:</string>
+    <string name="edema_RLE_label">RLE:</string>
+    <string name="edema_LUE_label">LUE:</string>
+    <string name="edema_RUE_label">RUE:</string>
     <string name="edema_pitting_label">pitting:</string>
     <string name="edema_non_pitting_label">non-pitting:</string>
     <string name="pain_label">pain: </string>
     <string name="significant_findings_label">significant findings: </string>
     <string name="done_button_label">DONE</string>
+
+    <string name="bp_label">BP:</string>
+    <string name="temp_label">temp:</string>
+    <string name="RR_label">RR:</string>
+    <string name="locn_label">locn:</string>
+    <string name="edema_pitting">pitting</string>
+    <string name="edema_non_pitting">non-pitting</string>
+    <string name="findings_label">findings:</string>
+
+    <string name="edema_LLE">LLE</string>
+    <string name="edema_RLE">RLE</string>
+    <string name="edema_LUE">LUE</string>
+    <string name="edema_RUE">RUE</string>
+
+    <string name="temperature_default">98.7</string>
+    <string name="edema_default">0</string>
 
     <string-array name="edema_array">
         <item>0</item>
@@ -74,7 +97,6 @@
         <item>LUE</item>
         <item>RUE</item>
     </string-array>
-
 
 
     <!-- Label for the medications-check time interval preference -->

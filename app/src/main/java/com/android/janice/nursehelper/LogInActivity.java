@@ -118,7 +118,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void signIn() {
-        //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -133,8 +132,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-            //result.startResolutionForResult(this, // your activity
-            //        RC_SIGN_IN);
         }
     }
 
@@ -143,13 +140,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             mNurseName = acct.getDisplayName();
             firebaseAuthWithGoogle(acct);
-            //updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
-            //updateUI(false);
         }
     }
 
@@ -211,7 +205,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onStop() {
-        Log.e(LOG_TAG, " here in ON-STOP");
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
@@ -219,7 +212,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             FirebaseAuth.getInstance().signOut();
             mGoogleApiClient.disconnect();
-            Log.e(LOG_TAG, " googleapiclient disconnected");
+            if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
+                Log.d(LOG_TAG, " googleapiclient disconnected");
+            }
         }
     }
 

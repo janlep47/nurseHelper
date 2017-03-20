@@ -11,7 +11,6 @@ public class CareplanActivity extends net.sf.andpdf.pdfviewer.PdfViewerActivity 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
     }
 

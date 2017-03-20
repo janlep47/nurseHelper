@@ -155,7 +155,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
         String filePath = mCursor.getString(ResidentlistFragment.COL_PORTRAIT);
 
         Picasso.with(mContext)
-                .load("file:///android_asset/"+filePath)
+                .load(filePath)
                 .placeholder(R.drawable.blank_portrait)
                 .noFade().resize(THUMBNAIL_SIZE, THUMBNAIL_SIZE)
                 .error(R.drawable.blank_portrait)

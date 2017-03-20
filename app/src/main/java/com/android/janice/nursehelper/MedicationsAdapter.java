@@ -169,8 +169,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         if (!Utility.timeIsNull(lastGivenTime))
             formattedDate = Utility.getReadableTimestamp(mContext, lastGivenTime);
         else
-            formattedDate = "* This medication has not been given yet *";
-        
+            formattedDate = mContext.getResources().getString(R.string.med_not_given_yet);
         medicationsAdapterViewHolder.mGenericNameView.setText("   ("+genericName+")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
         medicationsAdapterViewHolder.mDosageView.setText(String.valueOf(dosage));

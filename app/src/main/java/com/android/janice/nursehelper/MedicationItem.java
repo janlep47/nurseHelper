@@ -164,8 +164,6 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
         //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
-        //AdminTimeInfo calculateNextDueTime(Context context, String adminTimes, String freq, long timeLastGiven)
-        //AdminTimeInfo info = Utility.calculateNextDueTime(context, "9 AM",)
         //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
         //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
@@ -175,7 +173,6 @@ public class MedicationItem {
         Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
 
         // Now, right to Firebase DB
-        //saveFirebaseMedication(medValues, database, userId);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
 
@@ -200,7 +197,6 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
-        //saveFirebaseMedication(medValues, database, userId);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
         // Med #3
@@ -224,7 +220,6 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
-        //saveFirebaseMedication(medValues, database, userId);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
         // Med for ANOTHER PATIENT
@@ -238,13 +233,11 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME,"");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
-        //saveFirebaseMedication(medValues, database, userId);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
 
@@ -261,15 +254,11 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 1 PM / 7 PM / 1 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QID");
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+50);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
-        //saveFirebaseMedication(medValues, database, userId);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
         // Med #2 for later patient
@@ -285,37 +274,13 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "8 AM / 8 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+25);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
-        //saveFirebaseMedication(medValues, database, userId);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
     }
-
-    /*
-    public static void saveFirebaseMedication(ContentValues medValues, DatabaseReference database, String userId) {
-        String medicationId = database.child("users").child(userId).child("medications").push().getKey();
-        ArrayList<String> keys = new ArrayList<String>(medValues.keySet());
-        for (int i = 0; i < keys.size(); i++) {
-            Object value = medValues.get(keys.get(i));
-            database.child("users").child(userId).child("medications").child(medicationId).child(keys.get(i)).setValue(value);
-        }
-    }
-
-    public static void saveFirebaseMedGiven(ContentValues medGivenValues, DatabaseReference database, String userId) {
-        String medicationId = database.child("users").child(userId).child("medsGiven").push().getKey();
-        ArrayList<String> keys = new ArrayList<String>(medGivenValues.keySet());
-        for (int i = 0; i < keys.size(); i++) {
-            Object value = medGivenValues.get(keys.get(i));
-            database.child("users").child(userId).child("medsGiven").child(medicationId).child(keys.get(i)).setValue(value);
-        }
-    }
-    */
 
     // if "given" false, med was refused.
     public static void medGiven(Context context, Cursor cursor, String roomNumber, String nurseName, boolean given,
@@ -329,10 +294,6 @@ public class MedicationItem {
 
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
-
-        //short given_db;
-        //if (given) given_db = 1;
-        //else given_db = 0;
 
         final long time= System.currentTimeMillis();
         AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
@@ -351,14 +312,12 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC, genericName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE, dosage);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_DOSAGE_UNITS, dosageUnits);
-        //medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given_db);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_GIVEN, given);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NURSE, nurseName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
-        //medGivenValues.put(ResidentContract.Meds)
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
-        //saveFirebaseMedGiven(medGivenValues, database, userId);
+        // Add the new "MedicationGiven" record to the Firebase database also:
         UpdateMedsGivenTask updateMedsGivenTask = new UpdateMedsGivenTask(context,database,userId);
         updateMedsGivenTask.execute(medGivenValues);
 
@@ -378,32 +337,6 @@ public class MedicationItem {
         UpdateMedicationTakenTask updateMedicationTask = new UpdateMedicationTakenTask(context,database,userId);
         updateMedicationTask.setQueryValues(roomNumber, genericName, time, nextAdminTime, nextAdminTimeLong);
         updateMedicationTask.execute();
-        /*
-        Query queryMed = database.child("users").child(userId).child("medications").orderByChild("roomNumber").equalTo(roomNumber);
-        queryMed.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        if (issue.child("genericName").getValue().equals(genericName)) {
-                            database.child("users").child(userId).child("medications")
-                                    .child(issue.getKey()).child("lastGivenTime").setValue(new Long(time));
-                            database.child("users").child(userId).child("medications")
-                                    .child(issue.getKey()).child("nextDosageTime").setValue(nextAdminTime);
-                            database.child("users").child(userId).child("medications")
-                                    .child(issue.getKey()).child("nextDosageTimeLong").setValue(new Long(nextAdminTimeLong));
-                            return;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        */
     }
 
 
@@ -445,13 +378,24 @@ public class MedicationItem {
 
         @Override
         protected Void doInBackground(ContentValues... params) {
+            // Add the new "Medication" record to the Firebase database.  This is used here ONLY
+            //   for adding fake testing data.  Actual medication data will ONLY be entered at the
+            //   Firebase console, and downloaded to this app.
+            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
+            /*
             ContentValues medicationValues = params[0];
-            String medicationId = database.child("users").child(userId).child("medications").push().getKey();
+            //String medicationId = database.child("users").child(userId).child("medications").push().getKey();
+            String medicationId = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.MedicationEntry.TABLE_NAME).push().getKey();
             ArrayList<String> keys = new ArrayList<String>(medicationValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = medicationValues.get(keys.get(i));
-                database.child("users").child(userId).child("medications").child(medicationId).child(keys.get(i)).setValue(value);
+                //database.child("users").child(userId).child("medications").child(medicationId).child(keys.get(i)).setValue(value);
+                database.child(ResidentContract.PATH_USERS).child(userId)
+                        .child(ResidentContract.MedicationEntry.TABLE_NAME).child(medicationId)
+                        .child(keys.get(i)).setValue(value);
             }
+            */
             return null;
         }
 
@@ -459,15 +403,6 @@ public class MedicationItem {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 
@@ -493,13 +428,22 @@ public class MedicationItem {
 
         @Override
         protected Void doInBackground(ContentValues... params) {
+            // Add the new "Med-given" record to the Firebase database
+            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
+            /*
             ContentValues medGivenValues = params[0];
-            String medicationId = database.child("users").child(userId).child("medsGiven").push().getKey();
+            //String medicationId = database.child("users").child(userId).child("medsGiven").push().getKey();
+            String medicationId = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.MedsGivenEntry.TABLE_NAME).push().getKey();
             ArrayList<String> keys = new ArrayList<String>(medGivenValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = medGivenValues.get(keys.get(i));
-                database.child("users").child(userId).child("medsGiven").child(medicationId).child(keys.get(i)).setValue(value);
+                //database.child("users").child(userId).child("medsGiven").child(medicationId).child(keys.get(i)).setValue(value);
+                database.child(ResidentContract.PATH_USERS).child(userId)
+                        .child(ResidentContract.MedsGivenEntry.TABLE_NAME).child(medicationId)
+                        .child(keys.get(i)).setValue(value);
             }
+            */
             return null;
         }
 
@@ -507,15 +451,6 @@ public class MedicationItem {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 
@@ -544,20 +479,42 @@ public class MedicationItem {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Query queryMed = database.child("users").child(userId).child("medications").orderByChild("roomNumber").equalTo(roomNumber);
+            // Modify the current medication record in the Firebase database, to show most recent
+            //  time-administered value(s).
+            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
+            /*
+            //Query queryMed = database.child("users").child(userId).child("medications").orderByChild("roomNumber").equalTo(roomNumber);
+            Query queryMed = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.MedicationEntry.TABLE_NAME)
+                    .orderByChild(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER).equalTo(roomNumber);
             queryMed.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                            if (issue.child("genericName").getValue().equals(genericName)) {
-                                database.child("users").child(userId).child("medications")
-                                        .child(issue.getKey()).child("lastGivenTime").setValue(new Long(time));
-                                database.child("users").child(userId).child("medications")
-                                        .child(issue.getKey()).child("nextDosageTime").setValue(nextAdminTime);
-                                database.child("users").child(userId).child("medications")
-                                        .child(issue.getKey()).child("nextDosageTimeLong").setValue(new Long(nextAdminTimeLong));
-                                return;
+                            //if (issue.child("genericName").getValue().equals(genericName)) {
+                            //    database.child("users").child(userId).child("medications")
+                            //            .child(issue.getKey()).child("lastGivenTime").setValue(new Long(time));
+                            //    database.child("users").child(userId).child("medications")
+                            //            .child(issue.getKey()).child("nextDosageTime").setValue(nextAdminTime);
+                            //    database.child("users").child(userId).child("medications")
+                            //            .child(issue.getKey()).child("nextDosageTimeLong").setValue(new Long(nextAdminTimeLong));
+                            //    return;
+                            //}
+                            if (issue.child(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC).getValue()
+                                    .equals(genericName)) {
+                                database.child(ResidentContract.PATH_USERS).child(userId)
+                                        .child(ResidentContract.MedicationEntry.TABLE_NAME)
+                                        .child(issue.getKey()).child(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN)
+                                        .setValue(new Long(time));
+                                database.child(ResidentContract.PATH_USERS).child(userId)
+                                        .child(ResidentContract.MedicationEntry.TABLE_NAME)
+                                        .child(issue.getKey()).child(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME)
+                                        .setValue(nextAdminTime);
+                                database.child(ResidentContract.PATH_USERS).child(userId)
+                                        .child(ResidentContract.MedicationEntry.TABLE_NAME)
+                                        .child(issue.getKey()).child(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG)
+                                        .setValue(new Long(nextAdminTimeLong));
                             }
                         }
                     }
@@ -569,6 +526,7 @@ public class MedicationItem {
                 }
             });
             queryMed = null;
+            */
             return null;
         }
 
@@ -576,15 +534,6 @@ public class MedicationItem {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 

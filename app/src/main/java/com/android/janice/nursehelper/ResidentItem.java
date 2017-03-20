@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by janicerichards on 2/3/17.
@@ -48,15 +49,6 @@ public class ResidentItem {
 
     protected void setPortraitFilepath(String portraitFilepath) { this.portraitFilepath = portraitFilepath; }
 
-    /*
-    public static void deleteResidentFromDb(Context context, String roomNumber) {
-        int rowsDeleted = context.getContentResolver().delete(
-                ResidentContract.ResidentEntry.CONTENT_URI,
-                ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " = ?",
-                new String[]{roomNumber});
-    }
-    */
-
 
     public static void putInDummyData(Context context, DatabaseReference database, String userId) {
         // First see if any data in already; if so, just return
@@ -72,22 +64,40 @@ public class ResidentItem {
             }
         }
 
-        String[] files = null;
+        String[] afiles = null;
         AssetManager assetManager = context.getAssets();
         //assetManager.
         try {
-            files = assetManager.list("");
+            afiles = assetManager.list("");
         } catch (IOException e) {
             Log.e("RESIDENTITEM","  IOException "+e.toString());
         }
-        if (files == null) {
+        if (afiles == null) {
             Log.e("RESIDENTITEM"," ERROR files are NULL");
             return;
         }
-        if (files.length < 1) {
+        if (afiles.length < 1) {
             Log.e("RESIDENTITEM"," NO FILES READ FROM ASSETS");
             return;
         }
+        String[] files = new String[10];
+        int n = 0;
+        HashMap<String,String> careplanFiles = new HashMap<String,String>();
+        for (int i = 0; i < afiles.length; i++) {
+            if (afiles[i].startsWith("CarePlan1")) {
+                careplanFiles.put("1", afiles[i]);
+            } else if (afiles[i].startsWith("CarePlan8")) {
+                careplanFiles.put("2", afiles[i]);
+            } else if (afiles[i].startsWith("CarePlanNONE")) {
+
+            } else {
+                files[n] = afiles[i];
+                n++;
+                if (n >= 10) break;
+            }
+        }
+
+        String prefix = "file:///android_asset/";  // Using fake images for now ...
         for (int i = files.length - 1; i >= 0; i--) {
             String fileName = files[i];
             if (!fileName.startsWith("av")) continue;
@@ -114,20 +124,17 @@ public class ResidentItem {
 
             // Update the local device database
             residentValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, roomNumber);
-            residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, fileName);
+            residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, prefix+fileName);
+            if (roomNumber.equals("200"))
+                residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH,careplanFiles.get("1"));
+            else if (roomNumber.equals("208"))
+                residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH,careplanFiles.get("2"));
+
             Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
 
             // Now update the central Firebase database
             UpdateResidentTask updateResidentTask = new UpdateResidentTask(context,database,userId);
             updateResidentTask.execute(residentValues);
-
-            /*
-            // Now update the central Firebase database
-            String residentId = database.child("users").child(userId).child("residents").push().getKey();
-            database.child("users").child(userId).child("residents").child(residentId).child("roomNumber").setValue(roomNumber);
-            database.child("users").child(userId).child("residents").child(residentId).child("portraitFilepath").setValue(fileName);
-            */
-
         }
     }
 
@@ -146,13 +153,24 @@ public class ResidentItem {
 
         @Override
         protected Void doInBackground(ContentValues... params) {
+            // Add the new resident record to the Firebase database.  This is used here ONLY
+            //   for adding fake testing data.  Actual resident data will ONLY be entered at the
+            //   Firebase console, and downloaded to this app.
+            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
+            /*
             ContentValues residentValues = params[0];
-            String residentId = database.child("users").child(userId).child("residents").push().getKey();
+            //String residentId = database.child("users").child(userId).child("residents").push().getKey();
+            String residentId = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.ResidentEntry.TABLE_NAME).push().getKey();
             ArrayList<String> keys = new ArrayList<String>(residentValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = residentValues.get(keys.get(i));
-                database.child("users").child(userId).child("residents").child(residentId).child(keys.get(i)).setValue(value);
+                //database.child("users").child(userId).child("residents").child(residentId).child(keys.get(i)).setValue(value);
+                database.child(ResidentContract.PATH_USERS).child(userId)
+                        .child(ResidentContract.ResidentEntry.TABLE_NAME).child(residentId)
+                        .child(keys.get(i)).setValue(value);
             }
+            */
             return null;
         }
 
@@ -160,15 +178,6 @@ public class ResidentItem {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 

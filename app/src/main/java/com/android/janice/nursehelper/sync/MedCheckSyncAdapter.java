@@ -63,7 +63,6 @@ public class MedCheckSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public MedCheckSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        Log.i(LOG_TAG," Here in MedCheckSyncAdapter constructor");
         mContext = context;
         int interval = NurseHelperPreferences.getPreferredAlertTimeInterval(mContext);
         SYNC_INTERVAL = interval*60;  // 'interval' is in minutes

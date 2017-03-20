@@ -196,18 +196,6 @@ public class AssessmentItem {
     }
 
 
-/*
-    public static void saveFirebaseAssessment(ContentValues aValues, DatabaseReference database, String userId) {
-        String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
-        ArrayList<String> keys = new ArrayList<String>(aValues.keySet());
-        for (int i = 0; i < keys.size(); i++) {
-            Object value = aValues.get(keys.get(i));
-            database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
-        }
-    }
-    */
-
-        // Later, format the values...
     public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
                                       int pulse, int rr, String edema, String edemaLocn, boolean edemaPitting,
                                       int pain, String findings,
@@ -253,13 +241,22 @@ public class AssessmentItem {
 
         @Override
         protected Void doInBackground(ContentValues... params) {
+            // Add the new "Assessment" record to the Firebase database.
+            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
+            /*
             ContentValues assessmentValues = params[0];
-            String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
+            //String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
+            String assessmentId = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.AssessmentEntry.TABLE_NAME).push().getKey();
             ArrayList<String> keys = new ArrayList<String>(assessmentValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = assessmentValues.get(keys.get(i));
-                database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
+                //database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
+                database.child(ResidentContract.PATH_USERS).child(userId)
+                        .child(ResidentContract.AssessmentEntry.TABLE_NAME).child(assessmentId)
+                        .child(keys.get(i)).setValue(value);
             }
+            */
             return null;
         }
 

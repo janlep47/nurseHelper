@@ -24,6 +24,8 @@ public class ResidentContract {
     public static final String PATH_ASSESSMENTS = "assessments";
     public static final String PATH_MEDS_GIVEN = "medsGiven";
 
+    public static final String PATH_USERS = "users";
+
 
     /* Inner class that defines the table contents of the Residents table */
     public static final class ResidentEntry implements BaseColumns {

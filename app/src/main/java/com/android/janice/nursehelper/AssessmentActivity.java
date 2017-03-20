@@ -112,18 +112,6 @@ public class AssessmentActivity  extends AppCompatActivity implements Assessment
         mDbUserId = savedInstanceState.getString(MainActivity.ITEM_USER_ID);
     }
 
-/*
-    @Override
-    public void onItemSelected(String roomNumber, AssessmentAdapter.AssessmentAdapterViewHolder vh) {
-        //Intent intent;
-        //Bundle bundle = new Bundle();
-        //bundle.putString("roomNumber",roomNumber);
-        //intent = new Intent(this, DisplayMedicationActivity.class);
-        //intent.putExtras(bundle);
-        //startActivity(intent);
-    }
-*/
-
     public DatabaseReference getDatabaseReference() {
     return mDatabase;
 }

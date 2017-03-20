@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="pref_time_interval_default">30</integer>
+    <integer name="appbar_portrait_margin">40</integer>
+    <integer name="appbar_default_height">60</integer>
+
+    <integer name="bp_systolic_min">60</integer>
+    <integer name="bp_systolic_max">250</integer>
+    <integer name="bp_systolic_default">120</integer>
+    <integer name="bp_diastolic_min">20</integer>
+    <integer name="bp_diastolic_max">160</integer>
+    <integer name="bp_diastolic_default">80</integer>
+
+    <integer name="temp_min">95</integer>
+    <integer name="temp_max">106</integer>
+    <integer name="temp_default">98</integer>
+    <integer name="temp_decimal_min">0</integer>
+    <integer name="temp_decimal_max">9</integer>
+    <integer name="temp_decimal_default">7</integer>
+
+    <integer name="pulse_min">20</integer>
+    <integer name="pulse_max">200</integer>
+    <integer name="pulse_default">60</integer>
+
+    <integer name="rr_min">4</integer>
+    <integer name="rr_max">70</integer>
+    <integer name="rr_default">14</integer>
+
+    <integer name="pain_min">0</integer>
+    <integer name="pain_max">10</integer>
+    <integer name="pain_default">0</integer>
+
 </resources>

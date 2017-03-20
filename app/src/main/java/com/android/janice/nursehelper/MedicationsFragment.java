@@ -225,7 +225,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle("room: "+mRoomNumber);
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
                 | ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -233,7 +233,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         imageView.setScaleType(ImageView.ScaleType.CENTER);
 
         // Calculate ActionBar height
-        int actionBarHeight = AssessmentFragment.DEFAULT_ACTION_BAR_HEIGHT;
+        int actionBarHeight = getActivity().getResources().getInteger(R.integer.appbar_default_height);
         TypedValue tv = new TypedValue();
         if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
         {
@@ -241,7 +241,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         }
 
         Picasso.with(getActivity())
-                .load("file:///android_asset/"+mPortraitFilePath)
+                .load(mPortraitFilePath)
                 .placeholder(R.drawable.blank_portrait)
                 //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
                 .noFade().resize(actionBarHeight, actionBarHeight)
@@ -252,7 +252,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
                 | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
+        layoutParams.rightMargin = getActivity().getResources().getInteger(R.integer.appbar_portrait_margin);
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
 

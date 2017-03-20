@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    public static final int REQUEST_CODE = 123;
     public static final String ITEM_ROOM_NUMBER = "roomNumber";
     public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilepath";
     public static final String ITEM_NURSE_NAME = "nurseName";
     public static final String ITEM_USER_ID = "dataBaseUserID";
-    public static final String ITEM_CAREPLAN_FILEPATH = "careplanFilepath";
-    public static final String NO_CARE_PLAN_PDF = "file:///android_asset/CarePlanNONE.pdf";
+    public static final String NO_CARE_PLAN_PDF = "CarePlanNONE.pdf";
     private String mNurseName;
     private String mDbUserId;
 
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mConditionRef = mRootRef.child("condition");
 
     private DatabaseReference mDatabase;
 
@@ -74,32 +73,14 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             mDbUserId = savedInstanceState.getString(ITEM_USER_ID);
         }
 
-        //ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
-        //        .findFragmentById(R.id.fragment_residentlist));
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Bundle arguments = new Bundle();
-        arguments.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
-        arguments.putString(MainActivity.ITEM_USER_ID, mDbUserId);
-
-        FragmentManager fm = getSupportFragmentManager();
-        ResidentlistFragment mFragment = (ResidentlistFragment) fm.findFragmentById(R.id.residents_container);
-        if (mFragment == null) {
-            mFragment = new ResidentlistFragment();
-            mFragment.setArguments(arguments);
-            fm.beginTransaction()
-                    .add(R.id.residents_container, mFragment)
-                    .commit();
-        }
-//        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
-//                .findFragmentById(R.id.fragment_residentlist));
+        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_residentlist));
 
         ResidentItem.putInDummyData(this, mDatabase, mDbUserId);
         MedicationItem.putInDummyData(this, mDatabase, mDbUserId);
         AssessmentItem.putInDummyData(this, mDatabase, mDbUserId);
-
-
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -109,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
                     .addApi(LocationServices.API)
                     .build();
         }
-
 
         MedCheckSyncAdapter.initializeSyncAdapter(this);
     }
@@ -150,8 +130,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    123);
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_CODE);
         }
     }
 
@@ -196,7 +175,13 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         return true;
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        super.onSaveInstanceState(outState);
+        outState.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+        outState.putString(MainActivity.ITEM_USER_ID, mDbUserId);
+    }
 
 
     @Override
@@ -219,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
         if (id == R.id.about)     {
             AboutDialogFragment dialog = new AboutDialogFragment();
-            dialog.show(getSupportFragmentManager(),"About:");
+            dialog.show(getSupportFragmentManager(),getResources().getString(R.string.action_about_title));
             return true;
         }
 
@@ -279,12 +264,15 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             outputStream.close();
             inputStream.close();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error.");
+            Log.e(LOG_TAG, "Error: "+e.toString());
         }
 
         return destinationFile.getPath();
     }
 
+    public String getNurseName() { return mNurseName; }
+
+    public String getDbUserId() { return mDbUserId; }
 
     public DatabaseReference getDatabaseReference() {
         return mDatabase;

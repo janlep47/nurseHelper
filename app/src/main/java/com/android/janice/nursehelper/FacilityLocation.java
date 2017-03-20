@@ -12,9 +12,12 @@ public class FacilityLocation {
     //lat = 42.306306306306304   long = -83.68778965059865
 
     protected static boolean isDeviceAtFacility(double latitude, double longitude) {
+        /*
         double latDiff = Math.abs(latitude-FACILITY_LAT);
         double longDiff = Math.abs(longitude-FACITITY_LONGITUDE);
         if (latDiff <= allowableError && longDiff <= allowableError) return true;
         return false;
+        */
+        return true;  // FOR NOW ... THIS IS THE DEMO VERSION - not FINAL PRODUCTION VERSION
     }
 }

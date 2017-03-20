@@ -11,7 +11,6 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/4/17.
  */
 
-//public class MedsGivenActivity  extends AppCompatActivity  implements MedsGivenFragment.Callback {
 public class MedsGivenActivity  extends AppCompatActivity {
 
     MedsGivenFragment mFragment;
@@ -39,10 +38,6 @@ public class MedsGivenActivity  extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.meds_given_container, mFragment)
                     .commit();
-
-            //mFragment = ((MedicationsFragment)getSupportFragmentManager()
-            //        .findFragmentById(R.id.fragment_medications));
-            //mFragment.setArguments(arguments);
 
             // animation mode
             supportPostponeEnterTransition();

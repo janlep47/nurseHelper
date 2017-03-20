@@ -63,7 +63,48 @@ public class PastAssessmentsFragment  extends ListFragment {
         }
 
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_past_assessments, container, false);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        mActivity = activity;
         mLoadingPanel = (View) root.findViewById(R.id.loadingPanel);
+
+        // We need to start the enter transition after the data has loaded
+        //if ( mTransitionAnimation ) {
+        mActivity.supportStartPostponedEnterTransition();
+        ActionBar actionBar = mActivity.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
+
+
+
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                | ActionBar.DISPLAY_SHOW_CUSTOM);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+
+        // Calculate ActionBar height
+        int actionBarHeight = mActivity.getResources().getInteger(R.integer.appbar_default_height);
+        TypedValue tv = new TypedValue();
+        if (mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        Picasso.with(mActivity)
+                .load(mPortraitFilePath)
+                .placeholder(R.drawable.blank_portrait)
+                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
+                .noFade().resize(actionBarHeight, actionBarHeight)
+                .error(R.drawable.blank_portrait)
+                .into(imageView);
+
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = mActivity.getResources().getInteger(R.integer.appbar_portrait_margin);
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
 
 /*
         AppCompatActivity activity = (AppCompatActivity) getActivity();
