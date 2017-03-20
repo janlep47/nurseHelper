@@ -26,8 +26,10 @@
     android:singleLine="true"
     android:title="@string/pref_location_label" /-->
 
+    <!--android:defaultValue="@integer/pref_time_interval_default"-->
+
 <ListPreference
-    android:defaultValue="@integer/pref_time_interval_default"
+    android:defaultValue="30"
     android:entries="@array/pref_time_intervals_options"
     android:entryValues="@array/pref_time_intervals_values"
     android:key="@string/pref_time_intervals_key"

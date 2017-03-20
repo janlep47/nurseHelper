@@ -41,8 +41,15 @@ public final class NurseHelperPreferences {
 
     public static int getPreferredAlertTimeInterval(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getInt(context.getString(R.string.pref_time_intervals_key),
-                (R.integer.pref_time_interval_default));
+        int iVal = context.getResources().getInteger(R.integer.pref_time_interval_default);
+        String val = prefs.getString(context.getString(R.string.pref_time_intervals_key),
+                String.valueOf(iVal));
+        try {
+            iVal = Integer.parseInt(val);
+        } catch (NumberFormatException e) {
+            Log.e(" NurseHelperPreferences","  ERROR: couldn't convert alert time to integer!");
+        }
+        return iVal;
     }
 
 

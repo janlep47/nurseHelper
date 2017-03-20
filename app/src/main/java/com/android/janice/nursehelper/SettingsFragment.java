@@ -24,6 +24,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.Log;
 
 import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
@@ -32,13 +33,12 @@ import com.android.janice.nursehelper.utility.Utility;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
 
 /**
- * The SettingsFragment serves as the display for all of the user's settings. In Sunshine, the
- * user will be able to change their preference for units of measurement from metric to imperial,
- * set their preferred weather location, and indicate whether or not they'd like to see
- * notifications.
+ * The SettingsFragment serves as the display for all of the user's settings. In NurseHelper, the
+ * user will be able to change their preference for the time window within which the user should be alerted
+ * of the next-med-admin time for each patient, and indicate whether or not they'd like to see
+ * medication next-admin times from the Residentlist screen.  If the 'give-alerts' flag is set to false,
+ * the time-window preference is ignored.
  *
- * Please note: If you are using our dummy weather services, the location returned will always be
- * Mountain View, California.
  */
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {
