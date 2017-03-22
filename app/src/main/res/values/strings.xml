@@ -9,6 +9,7 @@
 
     <string name="action_bar_room_number_title">room:</string>
 
+    <string name="title_activity_nurse_login">NurseHelper Login</string>
     <string name="title_activity_list">NurseHelper</string>
     <string name="title_activity_medications">Medications</string>
     <string name="title_activity_meds_given">MedsGiven</string>
