@@ -134,6 +134,10 @@
 
     <string name="empty_medications">No Medication Information Available</string>
     <string name="empty_medications_no_network">No medication information available. The network is not available to fetch medication data.</string>
+
+    <string name="empty_medsgivenlist">No Medication Administered Information Available</string>
+
+    <string name="empty_assessmentslist">No Assessment Information Available</string>
     <string name="empty_assessment_no_network">No assessment information available. The network is not available to fetch assessment data.</string>
 
     <string name="widget_room_number_title">room#</string>
@@ -168,5 +172,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="add_item">Add New Item</string>
     <string name="action_logout">Logout</string>
+
+    <string name="page_number">Page number:</string>
 
 </resources>

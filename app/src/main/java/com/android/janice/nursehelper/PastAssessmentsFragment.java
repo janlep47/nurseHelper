@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.squareup.picasso.Picasso;
@@ -32,7 +33,6 @@ public class PastAssessmentsFragment  extends ListFragment {
     View mLoadingPanel;
     Context mContext;
     List<AssessmentItem> mAssessmentList = new ArrayList<>();
-    //TextView mProblemText;
 
     String mRoomNumber, mPortraitFilePath;
 
@@ -106,62 +106,12 @@ public class PastAssessmentsFragment  extends ListFragment {
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
 
-/*
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        mActivity = activity;
-
-        Toolbar toolbarView = (Toolbar) root.findViewById(R.id.toolbar);
-        mLoadingPanel = (View) root.findViewById(R.id.loadingPanel);
-
-        activity.supportStartPostponedEnterTransition();
-
-        // We need to start the enter transition after the data has loaded
-        //if ( mTransitionAnimation ) {
-        activity.supportStartPostponedEnterTransition();
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle("room: "+mRoomNumber);
-
-
-
-        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
-                | ActionBar.DISPLAY_SHOW_CUSTOM);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-
-        // Calculate ActionBar height
-        int actionBarHeight = AssessmentFragment.DEFAULT_ACTION_BAR_HEIGHT;
-        TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-        }
-
-        Picasso.with(getActivity())
-                .load("file:///android_asset/"+mPortraitFilePath)
-                .placeholder(R.drawable.blank_portrait)
-                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
-                .noFade().resize(actionBarHeight, actionBarHeight)
-                .error(R.drawable.blank_portrait)
-                .into(imageView);
-
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
-                | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-*/
-
-
-
         ListView mListView = (ListView) root.findViewById(android.R.id.list);
-        //mProblemText = (TextView) root.findViewById(R.id.add_stock_problem);
+        TextView emptyView = (TextView) root.findViewById(R.id.list_past_assessments_empty);
 
         mContext = getContext();
-        mAdapter = new PastAssessmentsAdapter(mContext,android.R.layout.simple_list_item_2, mAssessmentList);
+        mAdapter = new PastAssessmentsAdapter(mContext,android.R.layout.simple_list_item_2, mAssessmentList,
+                emptyView);
         mListView.setAdapter(mAdapter);
 
 

@@ -35,11 +35,9 @@ public class MedsGivenFragment  extends ListFragment {
     View mLoadingPanel;
     Context mContext;
     List<MedGivenItem> mMedList = new ArrayList<>();
-    //TextView mProblemText;
 
     String mRoomNumber, mPortraitFilePath;
 
-    //boolean mAddProblem = false;
 
     private static final String LOG_TAG = MedsGivenFragment.class.getSimpleName();
     AppCompatActivity mActivity;
@@ -115,10 +113,10 @@ public class MedsGivenFragment  extends ListFragment {
 
 
         ListView mListView = (ListView) root.findViewById(android.R.id.list);
-        //mProblemText = (TextView) root.findViewById(R.id.add_stock_problem);
+        TextView emptyView = (TextView) root.findViewById(R.id.list_meds_given_empty);
 
         mContext = getContext();
-        mAdapter = new MedsGivenAdapter(mContext,android.R.layout.simple_list_item_2, mMedList);
+        mAdapter = new MedsGivenAdapter(mContext,android.R.layout.simple_list_item_2, mMedList, emptyView);
         mListView.setAdapter(mAdapter);
 
 

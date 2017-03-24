@@ -2,6 +2,7 @@ package com.android.janice.nursehelper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,15 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
     Context mContext;
     int layoutResourceId;
     List<AssessmentItem> data;
+    TextView mEmptyView;
 
-    public PastAssessmentsAdapter(Context context, int layoutResourceId, List<AssessmentItem> data) {
+    public PastAssessmentsAdapter(Context context, int layoutResourceId, List<AssessmentItem> data,
+                                  TextView emptyView) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.mContext = context;
         this.data = data;
+        this.mEmptyView = emptyView;
     }
 
     @Override
@@ -90,6 +94,12 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
     @Override
     public AssessmentItem getItem(int position) {
         return data.get(position);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        mEmptyView.setVisibility(getCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

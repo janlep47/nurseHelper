@@ -18,12 +18,14 @@ public class MedsGivenAdapter extends ArrayAdapter<MedGivenItem> {
     Context context;
     int layoutResourceId;
     List<MedGivenItem> data;
+    TextView mEmptyView;
 
-    public MedsGivenAdapter(Context context, int layoutResourceId, List<MedGivenItem> data) {
+    public MedsGivenAdapter(Context context, int layoutResourceId, List<MedGivenItem> data, TextView emptyView) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
+        this.mEmptyView = emptyView;
     }
 
     @Override
@@ -65,6 +67,13 @@ public class MedsGivenAdapter extends ArrayAdapter<MedGivenItem> {
     @Override
     public MedGivenItem getItem(int position) {
         return data.get(position);
+    }
+
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        mEmptyView.setVisibility(getCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
