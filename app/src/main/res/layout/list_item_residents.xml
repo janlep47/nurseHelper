@@ -53,6 +53,7 @@
 
             <TextView
                 android:id="@+id/list_item_medications_textview"
+                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -62,6 +63,7 @@
 
             <TextView
                 android:id="@+id/list_item_assessment_textview"
+                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
@@ -71,6 +73,7 @@
 
             <TextView
                 android:id="@+id/list_item_careplan_textview"
+                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"

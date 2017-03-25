@@ -62,17 +62,6 @@
                 android:textSize="@dimen/widget_subtext_size"/>
         </LinearLayout>
 
-        <!--TextView
-            android:id="@+id/widget_last_assessment"
-            android:layout_width="@dimen/widget_time_width"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="right"
-            android:fontFamily="sans-serif-light"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/colorAssessment"
-            android:textSize="@dimen/widget_subtext_size"/-->
-
     </LinearLayout>
 
 </FrameLayout>
