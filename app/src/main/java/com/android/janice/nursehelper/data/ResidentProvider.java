@@ -5,11 +5,14 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.android.janice.nursehelper.MainActivity;
 import com.android.janice.nursehelper.utility.Utility;
 
 import java.util.ArrayList;
@@ -70,6 +73,11 @@ public class ResidentProvider extends ContentProvider {
                     ResidentContract.MedsGivenEntry.TABLE_NAME+
                     "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ? ";
 
+    public static final String sAssessmentsByResidentSelection =
+            ResidentContract.AssessmentEntry.TABLE_NAME+
+                    "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ? ";
+
+    // Raw query:
     private static final String sResidentsWithNextScheduledMedTime =
             "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
                     ", meds."+ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+
@@ -83,6 +91,7 @@ public class ResidentProvider extends ContentProvider {
                     ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
                     ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
 
+    // Raw query:
     private static final String sResidentsWithMostRecentAssessmentTime =
             "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
                     ", vs.latestCheck FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res LEFT JOIN "+
@@ -94,6 +103,24 @@ public class ResidentProvider extends ContentProvider {
                     ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
                     ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
 
+
+    private static final String sAssessmentByResidentWithOldestAssessmentTime =
+        ResidentContract.AssessmentEntry.TABLE_NAME+
+                "."+ResidentContract.AssessmentEntry.COLUMN_TIME+" = (SELECT MIN("+
+                ResidentContract.AssessmentEntry.TABLE_NAME+
+                "."+ResidentContract.AssessmentEntry.COLUMN_TIME+") FROM "+
+                ResidentContract.AssessmentEntry.TABLE_NAME+" WHERE "+
+                ResidentContract.AssessmentEntry.TABLE_NAME+
+                "."+ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+" = ?);";
+
+    private static final String sMedsGivenByResidentWithOldestAssessmentTime =
+        ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MIN("+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+") FROM "+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ?);";
 
 
     static UriMatcher buildUriMatcher() {
@@ -159,6 +186,47 @@ public class ResidentProvider extends ContentProvider {
         }
     }
 
+    @Override
+    public Bundle call(String method, String arg, Bundle extras) {
+        if (method.equals("countAssessments")) {
+            String roomNumber = arg;
+            long numberAssessments = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
+                    ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentsByResidentSelection,
+                    new String[]{roomNumber});
+            Bundle results = new Bundle();
+            results.putLong(MainActivity.ITEM_COUNT, numberAssessments);
+            return results;
+        } else if (method.equals("deleteOldestAssessments")) {
+            String roomNumber = arg;
+            int numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
+            int rowsDeleted = 0;
+            while (rowsDeleted < numberRecordsToDelete) {
+                rowsDeleted += mOpenHelper.getWritableDatabase().delete(
+                        ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentByResidentWithOldestAssessmentTime,
+                        new String[]{roomNumber});
+            }
+            return null;
+        } else if (method.equals("countMedsGiven")) {
+            String roomNumber = arg;
+            long numberMedsGiven = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
+                    ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentSelection,
+                    new String[]{roomNumber});
+            Bundle results = new Bundle();
+            results.putLong(MainActivity.ITEM_COUNT, numberMedsGiven);
+            return results;
+        } else if (method.equals("deleteOldestMedsGiven")) {
+            String roomNumber = arg;
+            int numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
+            int rowsDeleted = 0;
+            while (rowsDeleted < numberRecordsToDelete) {
+                rowsDeleted += mOpenHelper.getWritableDatabase().delete(
+                        ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentWithOldestAssessmentTime,
+                        new String[]{roomNumber});
+            }
+            return null;
+        }
+        return null;
+    }
 
 
     @Override

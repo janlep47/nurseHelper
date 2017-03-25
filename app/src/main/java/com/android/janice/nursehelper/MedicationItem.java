@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.text.format.Time;
 
@@ -337,6 +338,10 @@ public class MedicationItem {
         UpdateMedicationTakenTask updateMedicationTask = new UpdateMedicationTakenTask(context,database,userId);
         updateMedicationTask.setQueryValues(roomNumber, genericName, time, nextAdminTime, nextAdminTimeLong);
         updateMedicationTask.execute();
+
+        TrimMedsGivenDataTask trimMedsGivenDataTask = new TrimMedsGivenDataTask(context,roomNumber);
+        trimMedsGivenDataTask.execute();
+
     }
 
 
@@ -539,4 +544,32 @@ public class MedicationItem {
 
 
 
+
+    private static class TrimMedsGivenDataTask extends AsyncTask<Void, Void, Void> {
+        protected Context context;
+        protected String roomNumber;
+
+        public TrimMedsGivenDataTask(Context context, String roomNumber) {
+            this.context = context;
+            this.roomNumber = roomNumber;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bundle bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
+                    "countMedsGiven", roomNumber, null);
+            long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
+
+            int maxNumberRecords = context.getResources().getInteger(R.integer.max_number_medsgiven_records);
+
+            if (numberRecs > maxNumberRecords) {
+                int numberToDelete = context.getResources().getInteger(R.integer.number_medsgiven_records_to_delete);
+                Bundle input = new Bundle();
+                input.putInt(MainActivity.ITEM_DELETE_AMT, numberToDelete);
+                bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
+                        "deleteOldestMedsGiven", roomNumber, input);
+            }
+            return null;
+        }
+    }
 }

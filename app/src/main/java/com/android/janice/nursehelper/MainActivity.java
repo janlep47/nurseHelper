@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
     public static final String ITEM_NURSE_NAME = "nurseName";
     public static final String ITEM_USER_ID = "dataBaseUserID";
     public static final String NO_CARE_PLAN_PDF = "CarePlanNONE.pdf";
+
+    public static final String ITEM_COUNT = "count";
+    public static final String ITEM_DELETE_AMT = "deleteAmt";
+
     private String mNurseName;
     private String mDbUserId;
 

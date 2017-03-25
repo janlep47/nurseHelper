@@ -4,10 +4,15 @@ package com.android.janice.nursehelper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.data.ResidentProvider;
 import com.android.janice.nursehelper.utility.Utility;
 import com.google.firebase.database.DatabaseReference;
 
@@ -225,6 +230,9 @@ public class AssessmentItem {
         UpdateAssessmentTask updateAssessmentTask = new UpdateAssessmentTask(context,database,userId);
         updateAssessmentTask.execute(aValues);
 
+        TrimAssessmentDataTask trimAssessmentDataTask = new TrimAssessmentDataTask(context,roomNumber);
+        trimAssessmentDataTask.execute();
+
     }
 
 
@@ -276,4 +284,35 @@ public class AssessmentItem {
         }
     }
 
+
+
+
+
+    private static class TrimAssessmentDataTask extends AsyncTask<Void, Void, Void> {
+        protected Context context;
+        protected String roomNumber;
+
+        public TrimAssessmentDataTask(Context context, String roomNumber) {
+            this.context = context;
+            this.roomNumber = roomNumber;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bundle bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
+                    "countAssessments", roomNumber, null);
+            long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
+
+            int maxNumberRecords = context.getResources().getInteger(R.integer.max_number_assessment_records);
+
+            if (numberRecs > maxNumberRecords) {
+                int numberToDelete = context.getResources().getInteger(R.integer.number_assessment_records_to_delete);
+                Bundle input = new Bundle();
+                input.putInt(MainActivity.ITEM_DELETE_AMT, numberToDelete);
+                bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
+                        "deleteOldestAssessments", roomNumber, input);
+            }
+            return null;
+        }
+    }
 }

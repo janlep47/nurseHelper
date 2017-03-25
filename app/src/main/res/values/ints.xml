@@ -30,4 +30,9 @@
     <integer name="pain_max">10</integer>
     <integer name="pain_default">0</integer>
 
+    <integer name="max_number_assessment_records">40</integer>
+    <integer name="number_assessment_records_to_delete">10</integer>
+    <integer name="max_number_medsgiven_records">40</integer>
+    <integer name="number_medsgiven_records_to_delete">10</integer>
+
 </resources>
