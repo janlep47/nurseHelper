@@ -17,6 +17,10 @@
     <style name="AppTheme.Main" parent="@style/AppTheme"/>
 
     <style name="AppTheme.Details" parent="@style/AppTheme"/>
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:textSize">18dp</item>
+    </style>
+
 
 
 </resources>

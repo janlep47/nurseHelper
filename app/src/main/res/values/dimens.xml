@@ -9,7 +9,8 @@
     <dimen name="residentlist_text_size">32sp</dimen>
     <dimen name="residentlist_subtext_size">24sp</dimen>
     <dimen name="residentlist_medtime_size">20sp</dimen>
-    <dimen name="assessment_subtext_size">14sp</dimen>
+
+    <dimen name="assessment_subtext_size">18sp</dimen>
 
     <dimen name="widget_text_size">16dp</dimen>
     <!--dimen name="widget_subtext_size">12sp</dimen-->
