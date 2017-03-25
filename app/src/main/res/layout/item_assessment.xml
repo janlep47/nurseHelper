@@ -25,110 +25,117 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
         android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
         android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
         android:orientation="vertical">
-    <!-- above, was horizontal -->
 
     <!-- ROW 1  Blood Pressure: -->
-    <!-- android:layout_width="0dp" -->
-    <!-- android:layout_weight="2" -->
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/blood_pressure_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-               android:id="@+id/bp_systolic_textview"
-               android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/blood_pressure_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                <TextView
+                    android:id="@+id/bp_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/bp_diastolic_textview"
-                android:layout_width="wrap_content"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-        </LinearLayout>
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
+                <!--android:imeOptions="flagNoExtractUi|flagNoAccessoryAction|flagNoEnterAction|flagNoFullscreen"-->
 
-            <NumberPicker
-                android:id="@+id/bp_systolic_numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                <NumberPicker
+                    android:id="@+id/bp_systolic_numberpicker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"  />
 
-            <NumberPicker
-                android:id="@+id/bp_diastolic_numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                <NumberPicker
+                    android:id="@+id/bp_diastolic_numberpicker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
 
         <!-- ROW 2  Temperature: -->
-        <!-- android:layout_width="0dp" -->
-        <!-- android:layout_weight="2" -->
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/temperature_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/temperature_textview"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/temperature_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+
+                <TextView
+                    android:id="@+id/temperature_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <NumberPicker
+                    android:id="@+id/temp_int_numberpicker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"  />
+
+                <NumberPicker
+                    android:id="@+id/temp_decimal_numberpicker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"  />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
-
-            <NumberPicker
-                android:id="@+id/temp_int_numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-
-            <NumberPicker
-                android:id="@+id/temp_decimal_numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-
-        </LinearLayout>
 
 
         <!-- ROW 3  Pulse: -->
@@ -139,33 +146,43 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
             android:layout_width="match_parent"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/pulse_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+
+                <TextView
+                    android:id="@+id/pulse_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:text="@string/pulse_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/pulse_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                <NumberPicker
+                    android:id="@+id/pulse_numberpicker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"  />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
-
-            <NumberPicker
-                android:id="@+id/pulse_numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -179,38 +196,49 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
             android:layout_width="match_parent"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rr_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/rr_textview"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/rr_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+
+                <TextView
+                    android:id="@+id/rr_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <NumberPicker
+                    android:id="@+id/rr_numberpicker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"  />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
-
-            <NumberPicker
-                android:id="@+id/rr_numberpicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-        </LinearLayout>
 
 
 
-
-        <!-- ROW 5  Edema: -->
+        <!-- ROW 5  Pain: -->
         <!-- android:layout_width="0dp" -->
         <!-- android:layout_weight="2" -->
         <LinearLayout
@@ -218,21 +246,89 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
             android:layout_width="match_parent"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/pain_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+
+                <TextView
+                    android:id="@+id/pain_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <NumberPicker
+                    android:id="@+id/pain_picker"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.Picker"  />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+
+        <!-- ROW 6  Edema: -->
+        <!-- android:layout_width="0dp" -->
+        <!-- android:layout_weight="2" -->
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edema_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+
+                <TextView
+                    android:id="@+id/edema_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size"/>
+
+            </LinearLayout>
+
+
+            <Spinner
+                android:id="@+id/edema_spinner"
+                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/edema_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/assessment_subtext_size"/>
 
-            <TextView
-                android:id="@+id/edema_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-
-            <TextView
+            <!--TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/edema_location_label"
@@ -244,28 +340,16 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:textSize="@dimen/assessment_subtext_size"/-->
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/edema_info"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:visibility="invisible"
             android:orientation="vertical">
-
-            <Spinner
-                android:id="@+id/edema_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-
-            <!--Spinner
-                android:id="@+id/edema_locn_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -281,6 +365,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
                 <CheckBox
                     android:id="@+id/edema_LLE"
+                    android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -295,6 +380,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
                 <CheckBox
                     android:id="@+id/edema_RLE"
+                    android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -309,6 +395,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
                 <CheckBox
                     android:id="@+id/edema_LUE"
+                    android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -323,6 +410,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
                 <CheckBox
                     android:id="@+id/edema_RUE"
+                    android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -330,25 +418,20 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
             </LinearLayout>
 
-            <!--LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"-->
-
-
-
 
                 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <RadioButton android:id="@+id/edema_pitting"
+                        android:focusable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/edema_pitting_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textSize="@dimen/assessment_subtext_size"/>
                     <RadioButton android:id="@+id/edema_non_pitting"
+                        android:focusable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/edema_non_pitting_label"
@@ -356,76 +439,6 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                         android:textSize="@dimen/assessment_subtext_size"/>
                 </RadioGroup>
 
-                <!--TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edema_pitting_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
-
-                <RadioButton
-                    android:id="@+id/edema_pitting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="@dimen/residentlist_subtext_size"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edema_non_pitting_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
-
-                <RadioButton
-                    android:id="@+id/edema_non_pitting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="@dimen/residentlist_subtext_size"/-->
-
-            <!--/LinearLayout-->
-
-        </LinearLayout>
-
-
-
-
-
-        <!-- ROW 6  Pain: -->
-        <!-- android:layout_width="0dp" -->
-        <!-- android:layout_weight="2" -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pain_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-
-            <TextView
-                android:id="@+id/pain_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal">
-
-            <NumberPicker
-                android:id="@+id/pain_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
         </LinearLayout>
 
 
@@ -450,6 +463,8 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
         <EditText
                 android:id="@+id/findings_edittext"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -462,6 +477,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
 
         <Button
             android:id="@+id/done_button"
+            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/done_button_label"
