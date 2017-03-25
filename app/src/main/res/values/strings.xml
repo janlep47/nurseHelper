@@ -80,7 +80,8 @@
     <string name="edema_LUE">LUE</string>
     <string name="edema_RUE">RUE</string>
 
-    <string name="temperature_default">98.7</string>
+    <string name="temperature_default_imperial">98.7\u00B0 F</string>
+    <string name="temperature_default_metric">37.1\u00B0 C</string>
     <string name="edema_default">0</string>
 
     <string-array name="edema_array">
@@ -101,12 +102,20 @@
 
 
     <!-- Label for the medications-check time interval preference -->
-    <string name="pref_units_label">Temperature Units</string>
     <string name="pref_time_interval_15min_label">every 15 minutes</string>
     <string name="pref_time_interval_30min_label">every 30 minutes</string>
     <string name="pref_time_interval_45min_label">every 45 minutes</string>
     <string name="pref_time_interval_1hr_label">every hour</string>
     <string name="pref_time_interval_default">30</string>
+
+    <string name="pref_units_key" translatable="false">units</string>
+    <string name="pref_units_label">Temperature Units</string>
+    <string name="pref_units_label_metric">Metric</string>
+    <string name="pref_units_label_imperial">Imperial</string>
+    <string name="pref_units_metric" translatable="false">metric</string>
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+
+    <string name="format_temperature"><xliff:g id="temp">%1.1f</xliff:g>\u00B0</string>
 
     <string name="pref_time_intervals_key" translatable="false">med_check_time_interval</string>
     <string name="pref_time_intervals_label">Check when meds due:</string>

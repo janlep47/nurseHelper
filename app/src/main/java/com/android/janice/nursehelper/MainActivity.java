@@ -2,6 +2,7 @@ package com.android.janice.nursehelper;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
 
+import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
     public static final String ITEM_NURSE_NAME = "nurseName";
     public static final String ITEM_USER_ID = "dataBaseUserID";
     public static final String NO_CARE_PLAN_PDF = "CarePlanNONE.pdf";
+
+    public static final String ITEM_TEMP_UNITS = "tempUnits";
 
     public static final String ITEM_COUNT = "count";
     public static final String ITEM_DELETE_AMT = "deleteAmt";

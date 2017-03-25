@@ -28,18 +28,25 @@
 
     <!--android:defaultValue="@integer/pref_time_interval_default"-->
 
-<ListPreference
-    android:defaultValue="30"
-    android:entries="@array/pref_time_intervals_options"
-    android:entryValues="@array/pref_time_intervals_values"
-    android:key="@string/pref_time_intervals_key"
-    android:title="@string/pref_time_intervals_label" />
+    <ListPreference
+        android:title="@string/pref_units_label"
+        android:key="@string/pref_units_key"
+        android:defaultValue="@string/pref_units_imperial"
+        android:entryValues="@array/pref_units_values"
+        android:entries="@array/pref_units_options" />
 
-<CheckBoxPreference
-    android:defaultValue="@bool/show_med_alerts_by_default"
-    android:key="@string/pref_enable_med_alerts_key"
-    android:summaryOff="@string/pref_enable_med_alerts_false"
-    android:summaryOn="@string/pref_enable_med_alerts_true"
-    android:title="@string/pref_enable_med_alerts_label" />
+    <ListPreference
+        android:defaultValue="30"
+        android:entries="@array/pref_time_intervals_options"
+        android:entryValues="@array/pref_time_intervals_values"
+        android:key="@string/pref_time_intervals_key"
+        android:title="@string/pref_time_intervals_label" />
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/show_med_alerts_by_default"
+        android:key="@string/pref_enable_med_alerts_key"
+        android:summaryOff="@string/pref_enable_med_alerts_false"
+        android:summaryOn="@string/pref_enable_med_alerts_true"
+        android:title="@string/pref_enable_med_alerts_label" />
 
 </PreferenceScreen>

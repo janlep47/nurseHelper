@@ -97,7 +97,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Activity activity = getActivity();
 
-        if (key.equals(getString(R.string.pref_time_intervals_key))) {
+        if (key.equals(getString(R.string.pref_units_key))) {
+
+        } else if (key.equals(getString(R.string.pref_time_intervals_key))) {
             // we've changed the Med-alert Time interval
             int newTimeInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(activity);
             MedCheckSyncAdapter.changeAlertInterval(activity, newTimeInterval);

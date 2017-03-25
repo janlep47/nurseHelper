@@ -36,6 +36,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -97,6 +98,7 @@ public class AssessmentFragment extends Fragment {
     String mPortraitFilePath;
     String mNurseName;
     String mDbUserId;
+    boolean mMetricUnits;
     DatabaseReference mDatabase;
 
     private int mSystolicBP, mDiastolicBP, mTemp, mTempDecimal, mPulse, mRR,  mPain;
@@ -156,7 +158,6 @@ public class AssessmentFragment extends Fragment {
                 mPortraitFilePath = arguments.getString(MainActivity.ITEM_PORTRAIT_FILEPATH);
                 mNurseName = arguments.getString(MainActivity.ITEM_NURSE_NAME);
                 mDbUserId = arguments.getString(MainActivity.ITEM_USER_ID);
-
             }
         }
         mDatabase = ((Callback) getActivity()).getDatabaseReference();
@@ -211,6 +212,8 @@ public class AssessmentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_assessment, container, false);
 
+        mMetricUnits = NurseHelperPreferences.isMetric(getActivity());
+
         if (savedInstanceState != null) {
             mSystolicBP = savedInstanceState.getInt(ITEM_SYSTOLIC_BP);
             mDiastolicBP = savedInstanceState.getInt(ITEM_DIASTOLIC_BP);
@@ -234,9 +237,15 @@ public class AssessmentFragment extends Fragment {
             // not coming from a restored state, set all values to defaults to start
             mSystolicBP = getActivity().getResources().getInteger(R.integer.bp_systolic_default);
             mDiastolicBP = getActivity().getResources().getInteger(R.integer.bp_diastolic_default);
-            mTemp = getActivity().getResources().getInteger(R.integer.temp_default);
-            mTempDecimal = getActivity().getResources().getInteger(R.integer.temp_decimal_default);
-            mTempString = getActivity().getResources().getString(R.string.temperature_default);
+            if (!mMetricUnits) {
+                mTemp = getActivity().getResources().getInteger(R.integer.temp_default_imperial);
+                mTempDecimal = getActivity().getResources().getInteger(R.integer.temp_decimal_default_imperial);
+                mTempString = getActivity().getResources().getString(R.string.temperature_default_imperial);
+            } else {
+                mTemp = getActivity().getResources().getInteger(R.integer.temp_default_metric);
+                mTempDecimal = getActivity().getResources().getInteger(R.integer.temp_decimal_default_metric);
+                mTempString = getActivity().getResources().getString(R.string.temperature_default_metric);
+            }
             mPulse = getActivity().getResources().getInteger(R.integer.pulse_default);
             mRR = getActivity().getResources().getInteger(R.integer.rr_default);
             edemaSpinnerPosn = 0;
@@ -332,8 +341,13 @@ public class AssessmentFragment extends Fragment {
             }
         });
 
-        mTemp_int_picker.setMinValue(getActivity().getResources().getInteger(R.integer.temp_min));
-        mTemp_int_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.temp_max));
+        if (!mMetricUnits) {
+            mTemp_int_picker.setMinValue(getActivity().getResources().getInteger(R.integer.temp_min_imperial));
+            mTemp_int_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.temp_max_imperial));
+        } else {
+            mTemp_int_picker.setMinValue(getActivity().getResources().getInteger(R.integer.temp_min_metric));
+            mTemp_int_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.temp_max_metric));
+        }
         //mTemp_int_picker.setValue(getActivity().getResources().getInteger(R.integer.temp_default));
         mTemp_int_picker.setValue(mTemp);
         mTemp_int_picker.setWrapSelectorWheel(false);
@@ -354,7 +368,8 @@ public class AssessmentFragment extends Fragment {
                     mTemp = mTemp_int_picker.getValue();
                     mTempDecimal = mTemp_decimal_picker.getValue();
                     mTempString = String.valueOf(mTemp) + "." +
-                            String.valueOf(mTempDecimal);
+                            String.valueOf(mTempDecimal)+
+                            (mMetricUnits ? "\u00B0 C" : "\u00B0 F");
                     mTemperature_textView.setText(mTempString);
                 }
             }
@@ -473,12 +488,9 @@ public class AssessmentFragment extends Fragment {
         if (savedInstanceState != null) rootView.scrollTo(mXposn, mYposn);
         rootView.invalidate();
 
-        //mEdemaLocation_textView;
-
         mDone_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float temp = Float.parseFloat(mTempString);
                 mFindings = mFindings_editText.getText().toString();
                 String edemaLocations = "";
                 if (mEdema_spinner.getSelectedItemPosition() != 0) {
@@ -491,7 +503,7 @@ public class AssessmentFragment extends Fragment {
                     if (mEdema_RUE.isChecked()) edemaLocations += " "+
                             getActivity().getResources().getString(R.string.edema_RUE);
                 }
-                AssessmentItem.saveAssessment(getActivity(), mRoomNumber, mSystolicBP, mDiastolicBP, temp,
+                AssessmentItem.saveAssessment(getActivity(), mRoomNumber, mSystolicBP, mDiastolicBP, mTempString,
                         mPulse, mRR,
                         (String) mEdema_spinner.getSelectedItem(), edemaLocations, edemaPitting,
                         mPain, mFindings, mDatabase, mDbUserId);
@@ -524,6 +536,7 @@ public class AssessmentFragment extends Fragment {
         outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
         outState.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
         outState.putString(MainActivity.ITEM_USER_ID,mDbUserId);
+        outState.putBoolean(MainActivity.ITEM_TEMP_UNITS,mMetricUnits);
 
         outState.putInt(ITEM_SYSTOLIC_BP,mSystolicBP);
         outState.putInt(ITEM_DIASTOLIC_BP,mDiastolicBP);

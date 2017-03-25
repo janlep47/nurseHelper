@@ -201,7 +201,8 @@ public class AssessmentItem {
     }
 
 
-    public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP, float temp,
+    public static void saveAssessment(Context context, String roomNumber, int systolicBP, int diastolicBP,
+                                      String tempString,
                                       int pulse, int rr, String edema, String edemaLocn, boolean edemaPitting,
                                       int pain, String findings,
                                       DatabaseReference database, String userId) {
@@ -215,7 +216,11 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER, roomNumber);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, String.valueOf(systolicBP)+"/"+
                 String.valueOf(diastolicBP));
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, String.valueOf(temp));
+
+        //String tempString = String.format(context.getString(R.string.format_temperature), temp) +
+        //        (metricUnits ? " C" : " F");
+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE, tempString);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PULSE, pulse);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_RR, rr);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA, edema);

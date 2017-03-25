@@ -11,12 +11,16 @@
     <integer name="bp_diastolic_max">160</integer>
     <integer name="bp_diastolic_default">80</integer>
 
-    <integer name="temp_min">95</integer>
-    <integer name="temp_max">106</integer>
-    <integer name="temp_default">98</integer>
+    <integer name="temp_min_imperial">95</integer>
+    <integer name="temp_max_imperial">106</integer>
+    <integer name="temp_default_imperial">98</integer>
+    <integer name="temp_min_metric">35</integer>
+    <integer name="temp_max_metric">41</integer>
+    <integer name="temp_default_metric">37</integer>
     <integer name="temp_decimal_min">0</integer>
     <integer name="temp_decimal_max">9</integer>
-    <integer name="temp_decimal_default">7</integer>
+    <integer name="temp_decimal_default_imperial">7</integer>
+    <integer name="temp_decimal_default_metric">1</integer>
 
     <integer name="pulse_min">20</integer>
     <integer name="pulse_max">200</integer>

@@ -32,6 +32,29 @@ public final class NurseHelperPreferences {
 
 
     /**
+     * Returns true if the user has selected metric temperature display.
+     *
+     * @param context Context used to get the SharedPreferences
+     * @return true if metric display should be used, false if imperial display should be used
+     */
+    public static boolean isMetric(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String keyForUnits = context.getString(R.string.pref_units_key);
+        String defaultUnits = context.getString(R.string.pref_units_metric);
+        String preferredUnits = sp.getString(keyForUnits, defaultUnits);
+        String metric = context.getString(R.string.pref_units_metric);
+
+        boolean userPrefersMetric = false;
+        if (metric.equals(preferredUnits)) {
+            userPrefersMetric = true;
+        }
+
+        return userPrefersMetric;
+    }
+
+
+    /**
      * Returns the time-interval in minutes the user prefers before checking for MedAlerts in NurseHelper.
      * This preference can be changed by the user within the SettingsFragment.
      *
