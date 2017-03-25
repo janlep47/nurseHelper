@@ -296,16 +296,21 @@ public class MedicationItem {
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
-        final long time= System.currentTimeMillis();
-        AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
-        final String nextAdminTime;
-        final long nextAdminTimeLong;
-        if (info != null) {
-            nextAdminTime = info.getDisplayableTime(context);
-            nextAdminTimeLong = info.getTime();
-        } else {
-            nextAdminTime = "";
-            nextAdminTimeLong = 0;
+        long time= System.currentTimeMillis();
+        // If this medication was REFUSED, don't actually make any changes to the 'medications' table
+        //  (that is, no change to 'last-given', 'next-dosage-time', or 'next-dosage-time-long'.
+        //  So, no need to calculate these:
+        String nextAdminTime = "";
+        long nextAdminTimeLong = 0;
+        if (given) {
+            AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
+            if (info != null) {
+                nextAdminTime = info.getDisplayableTime(context);
+                nextAdminTimeLong = info.getTime();
+            } else {
+                nextAdminTime = "";
+                nextAdminTimeLong = 0;
+            }
         }
 
         ContentValues medGivenValues = new ContentValues();
@@ -322,22 +327,25 @@ public class MedicationItem {
         UpdateMedsGivenTask updateMedsGivenTask = new UpdateMedsGivenTask(context,database,userId);
         updateMedsGivenTask.execute(medGivenValues);
 
+        // If this medication was REFUSED, don't actually make any changes to the 'medications' table
+        //  (that is, no change to 'last-given', 'next-dosage-time', or 'next-dosage-time-long'
+        if (given) {
+            ContentValues meds = new ContentValues();
+            meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
+            meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
+            meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, nextAdminTimeLong);
 
-        ContentValues meds = new ContentValues();
-        meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
-        meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, nextAdminTimeLong);
+            uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
+            uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
+            int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
+                    ResidentProvider.sMedsByResidentAndMedSelection,
+                    new String[]{roomNumber, genericName});
 
-        uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
-        uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
-        int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
-                ResidentProvider.sMedsByResidentAndMedSelection,
-                new String[]{roomNumber, genericName});
-
-        // update the same thing in the central Firebase database
-        UpdateMedicationTakenTask updateMedicationTask = new UpdateMedicationTakenTask(context,database,userId);
-        updateMedicationTask.setQueryValues(roomNumber, genericName, time, nextAdminTime, nextAdminTimeLong);
-        updateMedicationTask.execute();
+            // update the same thing in the central Firebase database
+            UpdateMedicationTakenTask updateMedicationTask = new UpdateMedicationTakenTask(context, database, userId);
+            updateMedicationTask.setQueryValues(roomNumber, genericName, time, nextAdminTime, nextAdminTimeLong);
+            updateMedicationTask.execute();
+        }
 
         TrimMedsGivenDataTask trimMedsGivenDataTask = new TrimMedsGivenDataTask(context,roomNumber);
         trimMedsGivenDataTask.execute();
@@ -345,20 +353,31 @@ public class MedicationItem {
     }
 
 
-    public static void askUndoMedGiven(Cursor cursor, String roomNumber, String nurseName,
-                                       DatabaseReference database, String userId) {
+    public static void undoMedGiven(Context context, Cursor cursor, String roomNumber, String nurseName,
+                                       final DatabaseReference database, final String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
-        float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
-        Log.e(TAG,"  UNDO Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+        String adminTimes = cursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
+        String freq = cursor.getString(MedicationsFragment.COL_FREQUENCY);
+        // We have already verified that the nurse had ealier selected 'give' by mistake:
+        //   we now need to delete that MedGiven record, and change the 'last-given'
+        //   time on that Medication record, for that patient, to the PREVIOUS last-given time
+        //   (using the latest MedGiven record time, after deleting the most recent false one).
+        UndoMedGivenTask undoMedGivenTask = new UndoMedGivenTask(context, database, userId, roomNumber, genericName,
+                adminTimes, freq);
+        undoMedGivenTask.execute();
     }
 
 
 
-    public static void askUndoMedRefused(Cursor cursor, String roomNumber, String nurseName,
+
+    public static void undoMedRefused(Context context, Cursor cursor, String roomNumber, String nurseName,
                                          DatabaseReference database, String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
-        float dosage = cursor.getFloat(MedicationsFragment.COL_DOSAGE);
-        Log.e(TAG,"  UNDO Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
+        // We have already verified that the nurse had ealier selected 'give' by mistake:
+        //   we now need to delete that MedGiven record.  No changes had been made to the Medication
+        //   record, so there's nothing that needs to be done there.
+        UndoMedRefusedTask undoMedRefusedTask = new UndoMedRefusedTask(context, database, userId, roomNumber, genericName);
+        undoMedRefusedTask.execute();
     }
 
 
@@ -556,6 +575,57 @@ public class MedicationItem {
 
         @Override
         protected Void doInBackground(Void... params) {
+            Bundle bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+                    "countMedsGiven", roomNumber, null);
+            long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
+
+            int maxNumberRecords = context.getResources().getInteger(R.integer.max_number_medsgiven_records);
+
+            if (numberRecs > maxNumberRecords) {
+                int numberToDelete = context.getResources().getInteger(R.integer.number_medsgiven_records_to_delete);
+                Bundle input = new Bundle();
+                input.putInt(MainActivity.ITEM_DELETE_AMT, numberToDelete);
+                bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+                        "deleteOldestMedsGiven", roomNumber, input);
+            }
+            return null;
+        }
+    }
+
+
+    private static class UndoMedGivenTask extends AsyncTask<Void, Void, Void> {
+        protected Context context;
+        protected DatabaseReference database;
+        protected String userId;
+        protected String roomNumber, genericName;
+        protected String adminTimes, freq;
+
+        public UndoMedGivenTask(Context context, DatabaseReference database, String userId,
+                                String roomNumber, String genericName,
+                                String adminTimes, String freq) {
+            this.context = context;
+            this.database = database;
+            this.userId = userId;
+            this.roomNumber = roomNumber;
+            this.genericName = genericName;
+            this.adminTimes = adminTimes;
+            this.freq = freq;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bundle input = new Bundle();
+            input.putString(MainActivity.ITEM_GENERIC_NAME, genericName);
+            // Delete the single most recent med-given record, with the given room# and generic med:
+            Bundle bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+                    "deleteNewestMedsGiven", roomNumber, input);
+
+            input.putString(MainActivity.ITEM_ADMIN_TIMES, adminTimes);
+            input.putString(MainActivity.ITEM_FREQ, freq);
+            bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+                    "undoMostRecentTimestamp", roomNumber, input);
+
+            /*
             Bundle bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
                     "countMedsGiven", roomNumber, null);
             long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
@@ -569,7 +639,52 @@ public class MedicationItem {
                 bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
                         "deleteOldestMedsGiven", roomNumber, input);
             }
+            */
             return null;
         }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+
     }
+
+
+    private static class UndoMedRefusedTask extends AsyncTask<Void, Void, Void> {
+        protected Context context;
+        protected DatabaseReference database;
+        protected String userId;
+        protected String roomNumber, genericName;
+
+        public UndoMedRefusedTask(Context context, DatabaseReference database, String userId,
+                                String roomNumber, String genericName) {
+            this.context = context;
+            this.database = database;
+            this.userId = userId;
+            this.roomNumber = roomNumber;
+            this.genericName = genericName;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bundle input = new Bundle();
+            input.putString(MainActivity.ITEM_GENERIC_NAME, genericName);
+            // Delete the single most recent med-given record, with the given room# and generic med:
+            //  ('refused' will be true, but this isn't necessary to check for)
+            Bundle bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+                    "deleteNewestMedsGiven", roomNumber, input);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+
+    }
+
+
 }

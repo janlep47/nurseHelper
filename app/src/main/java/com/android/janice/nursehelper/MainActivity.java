@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     public static final String ITEM_COUNT = "count";
     public static final String ITEM_DELETE_AMT = "deleteAmt";
+    public static final String ITEM_GENERIC_NAME = "genericName";
+    public static final String ITEM_ADMIN_TIMES = "adminTimes";
+    public static final String ITEM_FREQ = "freq";
 
     private String mNurseName;
     private String mDbUserId;

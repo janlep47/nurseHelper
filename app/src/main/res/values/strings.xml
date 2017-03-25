@@ -163,6 +163,23 @@
     To see MAR, care-plan, or to enter assessment data, click on the appropriate patient.
     </string>
 
+    <string name="undo_med_given_dialog_title">Undo Med-given?!</string>
+    <string name="undo_med_given_dialog_message">Do you mean to uncheck \'give\'?\
+    It this med was not actually given, select \'ok\'!\
+    Otherwise, select \'cancel\'</string>
+    <string name="undo_med_refused_dialog_title">Undo Med-refused?!</string>
+    <string name="undo_med_refused_dialog_message">Do you mean to uncheck \'refuse\'?\
+    It this med was not actually refused, select \'ok\'!\
+    Otherwise, select \'cancel\'</string>
+    <string name="invalid_med_given_dialog_title">Invalid \'give\' choice:</string>
+    <string name="invalid_med_given_dialog_message">If you mean to \'give\' this med,\
+        you must first unselect \'refuse\'; otherwise leave \'refuse\' checked if \
+        checking \'give\' was a mistake!</string>
+    <string name="invalid_med_refused_dialog_title">Invalid \'refuse\' choice:</string>
+    <string name="invalid_med_refused_dialog_message">If you mean to \'refuse\' this med,\
+        you must first unselect \'give\'; otherwise leave \'give\' checked if \
+        checking \'refuse\' was a mistake!</string>
+
     <string name="invalid_location_message">This device is not located in a registered area.\
     NurseHelper may only be run at a supported facility.</string>
     <string name="dialog_invalid_location">Invalid Device Location</string>

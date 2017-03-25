@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.android.janice.nursehelper.MainActivity;
+import com.android.janice.nursehelper.utility.AdminTimeInfo;
 import com.android.janice.nursehelper.utility.Utility;
 
 import java.util.ArrayList;
@@ -113,7 +114,7 @@ public class ResidentProvider extends ContentProvider {
                 ResidentContract.AssessmentEntry.TABLE_NAME+
                 "."+ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+" = ?);";
 
-    private static final String sMedsGivenByResidentWithOldestAssessmentTime =
+    private static final String sMedsGivenByResidentWithOldestTimestamp =
         ResidentContract.MedsGivenEntry.TABLE_NAME+
                 "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MIN("+
                 ResidentContract.MedsGivenEntry.TABLE_NAME+
@@ -121,6 +122,31 @@ public class ResidentProvider extends ContentProvider {
                 ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
                 ResidentContract.MedsGivenEntry.TABLE_NAME+
                 "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ?);";
+
+    private static final String sMedsGivenByResidentAndMedWithNewestTimestamp =
+        ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MAX("+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+") FROM "+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ? AND "+
+                ResidentContract.MedsGivenEntry.TABLE_NAME+
+                "."+ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC+" = ?);";
+
+
+    // Raw query:
+    private static final String sMostRecentResidentAndMedGivenTimestamp =
+            "SELECT "+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" FROM "+
+                    ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
+                    ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MAX("+
+                    ResidentContract.MedsGivenEntry.TABLE_NAME+
+                    "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+") FROM "+
+                    ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
+                    ResidentContract.MedsGivenEntry.TABLE_NAME+
+                    "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ? AND "+
+                    ResidentContract.MedsGivenEntry.TABLE_NAME+
+                    "."+ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC+" = ?);";
 
 
     static UriMatcher buildUriMatcher() {
@@ -188,6 +214,7 @@ public class ResidentProvider extends ContentProvider {
 
     @Override
     public Bundle call(String method, String arg, Bundle extras) {
+        // This is called to see how many records in the 'assessments' table on the user's device:
         if (method.equals("countAssessments")) {
             String roomNumber = arg;
             long numberAssessments = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
@@ -196,7 +223,9 @@ public class ResidentProvider extends ContentProvider {
             Bundle results = new Bundle();
             results.putLong(MainActivity.ITEM_COUNT, numberAssessments);
             return results;
+            // This is called to trim an overly large 'assessments' table, on the user's device:
         } else if (method.equals("deleteOldestAssessments")) {
+            Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
             String roomNumber = arg;
             int numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
             int rowsDeleted = 0;
@@ -205,7 +234,9 @@ public class ResidentProvider extends ContentProvider {
                         ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentByResidentWithOldestAssessmentTime,
                         new String[]{roomNumber});
             }
+            getContext().getContentResolver().notifyChange(uri, null);
             return null;
+            // This is called to see how many records in the 'medsGiven' table on the user's device:
         } else if (method.equals("countMedsGiven")) {
             String roomNumber = arg;
             long numberMedsGiven = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
@@ -214,16 +245,75 @@ public class ResidentProvider extends ContentProvider {
             Bundle results = new Bundle();
             results.putLong(MainActivity.ITEM_COUNT, numberMedsGiven);
             return results;
+            // This is called to trim an overly large 'medsGiven' table, on the user's device:
         } else if (method.equals("deleteOldestMedsGiven")) {
+            Uri uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
             String roomNumber = arg;
             int numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
             int rowsDeleted = 0;
             while (rowsDeleted < numberRecordsToDelete) {
                 rowsDeleted += mOpenHelper.getWritableDatabase().delete(
-                        ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentWithOldestAssessmentTime,
+                        ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentWithOldestTimestamp,
                         new String[]{roomNumber});
             }
+            getContext().getContentResolver().notifyChange(uri, null);
             return null;
+            // This next one is called when nurse hit 'given' by mistake, and wants to undo it:
+            //  the corresponding 'medsGiven' record will be deleted
+        } else if (method.equals("deleteNewestMedsGiven")) {
+            Uri uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
+            String roomNumber = arg;
+            String genericName = extras.getString(MainActivity.ITEM_GENERIC_NAME);
+            int rowsDeleted = mOpenHelper.getWritableDatabase().delete(
+                    ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentAndMedWithNewestTimestamp,
+                    new String[]{roomNumber, genericName});
+            getContext().getContentResolver().notifyChange(uri, null);
+            return null;
+            // This is also called, after doing the previous method, to undo the 'medications' table
+            //   'last-given' timestamp, for that resident/med;  also need to reupdate the
+            //   'next-admin-time' field to match reset 'last-given' field
+        } else if (method.equals("undoMostRecentTimestamp")) {
+            // Now that the most recent 'med-given' record has been deleted (for the given room# and
+            //   generic med), find the most recent time stamp for that resident/med int the medsGiven
+            //   table, and reset the Medications table 'last-time-given' value to that time!
+            //
+            // First, get the previous 'med-given' timestamp for that resident/med:
+            String roomNumber = arg;
+            String genericName = extras.getString(MainActivity.ITEM_GENERIC_NAME);
+            String adminTimes = extras.getString(MainActivity.ITEM_ADMIN_TIMES);
+            String freq = extras.getString(MainActivity.ITEM_FREQ);
+            Cursor cursor = mOpenHelper.getReadableDatabase().rawQuery(sMostRecentResidentAndMedGivenTimestamp,
+                    new String[]{roomNumber, genericName});
+            long latestTimestamp = 0;
+            if (cursor != null) {
+                Log.e(LOG_TAG, " cursor NOT null ...");
+                if (cursor.moveToFirst()) {
+                    latestTimestamp = cursor.getLong(0);
+                    Log.e(LOG_TAG, " ...  latestTimestamp is "+String.valueOf(latestTimestamp));
+                }
+            }
+            // Now set the last-time-given column for the 'medications' table, for this resident/med to this
+            //  latest timestamp:
+            Uri uri = ResidentContract.MedicationEntry.CONTENT_URI;
+            AdminTimeInfo info = Utility.calculateNextDueTime(getContext(), adminTimes, freq, latestTimestamp);
+            final String nextAdminTime;
+            final long nextAdminTimeLong;
+            if (info != null) {
+                nextAdminTime = info.getDisplayableTime(getContext());
+                nextAdminTimeLong = info.getTime();
+            } else {
+                nextAdminTime = "";
+                nextAdminTimeLong = 0;
+            }
+
+            ContentValues meds = new ContentValues();
+            meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, latestTimestamp);
+            meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
+            meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, nextAdminTimeLong);
+
+            int rowsUpdated = mOpenHelper.getWritableDatabase().update(ResidentContract.MedicationEntry.TABLE_NAME,
+                    meds, sMedsByResidentAndMedSelection, new String[]{roomNumber, genericName});
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         return null;
     }

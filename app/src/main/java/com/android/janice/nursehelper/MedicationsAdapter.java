@@ -1,8 +1,16 @@
 package com.android.janice.nursehelper;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,22 +99,81 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             if (button == mGiveBox) {
-                if (isChecked) {
+                if (isChecked && !mRefuseBox.isChecked()) {
                     // Medication given for the current med
                     MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, true, mDatabase, mDbUserId);
-                } else {
-                    // nurse made a MISTAKE (?) and unchecked the box ...
-                    //  probably pressed by mistake, ask if she wants to undo the "give" record!!
-                    MedicationItem.askUndoMedGiven(mCursor, mRoomNumber, mNurseName, mDatabase, mDbUserId);
+                } else if (!isChecked && !mRefuseBox.isChecked()){
+                    Dialog dialog = new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.undo_med_given_dialog_title)
+                            .setMessage(R.string.undo_med_given_dialog_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    MedicationItem.undoMedGiven(mContext, mCursor, mRoomNumber, mNurseName,
+                                            mDatabase, mDbUserId);
+                                    }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // User did not mean to uncheck the 'give' box, so just show it as
+                                    //   checked again:
+                                    mGiveBox.setChecked(true);
+                                }
+                            })
+                            .create();
+                    dialog.show();
+                } else if (isChecked && mRefuseBox.isChecked()) {
+                    Dialog dialog = new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.invalid_med_given_dialog_title)
+                            .setMessage(R.string.invalid_med_given_dialog_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    mGiveBox.setChecked(false);
+                                }
+                            })
+                            .create();
+                    dialog.show();
                 }
             } else if (button == mRefuseBox) {
-                if (isChecked) {
+                if (isChecked && !mGiveBox.isChecked()) {
                     // Medication refused for the current med
                     MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, false, mDatabase, mDbUserId);
-                } else {
+                } else if (!isChecked && !mGiveBox.isChecked()) {
                     // nurse made a MISTAKE (?) and unchecked the box ...
                     //  probably pressed by mistake, ask if she wants to undo the "refuse" record!!
-                    MedicationItem.askUndoMedRefused(mCursor, mRoomNumber, mNurseName, mDatabase, mDbUserId);
+                    Dialog dialog = new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.undo_med_refused_dialog_title)
+                            .setMessage(R.string.undo_med_refused_dialog_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    MedicationItem.undoMedRefused(mContext, mCursor, mRoomNumber, mNurseName, mDatabase, mDbUserId);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // User did not mean to uncheck the 'refuse' box, so just show it as
+                                    //   checked again:
+                                    mRefuseBox.setChecked(true);
+                                }
+                            })
+                            .create();
+                    dialog.show();
+                } else if (isChecked && mGiveBox.isChecked()) {
+                    Dialog dialog = new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.invalid_med_refused_dialog_title)
+                            .setMessage(R.string.invalid_med_refused_dialog_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    mRefuseBox.setChecked(false);
+                                }
+                            })
+                            .create();
+                    dialog.show();
                 }
             }
 
@@ -197,4 +264,51 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         return mCursor;
     }
 
+
+
+
+    public static class UndoMedGivenDialogFragment extends DialogFragment {
+        private Context context;
+        private Cursor cursor;
+        private String roomNumber;
+        private String nurseName;
+        private DatabaseReference databaseRef;
+        private String dbUserId;
+
+        public UndoMedGivenDialogFragment() {super();}
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.undo_med_given_dialog_title)
+                    .setMessage(R.string.undo_med_given_dialog_message)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            undoMedGiven();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .create();
+        }
+
+        protected void setValues(Context context, Cursor cursor, String roomNumber,
+                                 String nurseName, DatabaseReference databaseRef, String dbUserId) {
+            this.context = context;
+            this.cursor = cursor;
+            this.roomNumber = roomNumber;
+            this.nurseName = nurseName;
+            this.databaseRef = databaseRef;
+            this.dbUserId = dbUserId;
+        }
+
+        public void undoMedGiven() {
+            // nurse made a MISTAKE (?) and unchecked the box ...
+            //  probably pressed by mistake, ask if she wants to undo the "give" record!!
+            //MedicationItem.askUndoMedGiven(context, cursor, roomNumber, nurseName, databaseRef, dbUserId);
+        }
+
+
+    }
 }
