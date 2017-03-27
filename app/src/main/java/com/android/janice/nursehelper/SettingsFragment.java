@@ -17,6 +17,7 @@ package com.android.janice.nursehelper;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -28,7 +29,7 @@ import android.util.Log;
 
 import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
-import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
+//import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
 import com.android.janice.nursehelper.utility.Utility;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
 
@@ -97,25 +98,29 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Activity activity = getActivity();
 
+        /*    Don't really need to alert anyone of changes, b/c AssessmentActivity checks units
+                before creating the view; MainActivity checks for changes to time-interval and
+                enable-med-alerts flag in onResume(), which is called after returning from SettingsActivity
         if (key.equals(getString(R.string.pref_units_key))) {
 
         } else if (key.equals(getString(R.string.pref_time_intervals_key))) {
             // we've changed the Med-alert Time interval
             int newTimeInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(activity);
-            MedCheckSyncAdapter.changeAlertInterval(activity, newTimeInterval);
-            MedCheckSyncAdapter.syncImmediately(activity);
+            //MedCheckSyncAdapter.changeAlertInterval(activity, newTimeInterval);
+            //MedCheckSyncAdapter.syncImmediately(activity);
         } else if (key.equals(getString(R.string.pref_enable_med_alerts_key))) {
             // turn med-alerts on/off
             boolean enableAlerts = NurseHelperPreferences.areMedAlertsEnabled(activity);
             if (enableAlerts) {
                 int alertInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(activity);
-                MedCheckSyncAdapter.setAlertsOn();
-                MedCheckSyncAdapter.changeAlertInterval(activity, alertInterval);
-                MedCheckSyncAdapter.syncImmediately(activity);
+                //MedCheckSyncAdapter.setAlertsOn();
+                //MedCheckSyncAdapter.changeAlertInterval(activity, alertInterval);
+                //MedCheckSyncAdapter.syncImmediately(activity);
             } else {
-                MedCheckSyncAdapter.setAlertsOff(activity);
+                //MedCheckSyncAdapter.setAlertsOff(activity);
             }
         }
+        */
         Preference preference = findPreference(key);
         if (null != preference) {
             if (!(preference instanceof CheckBoxPreference)) {

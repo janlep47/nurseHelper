@@ -36,7 +36,7 @@
         android:entries="@array/pref_units_options" />
 
     <ListPreference
-        android:defaultValue="30"
+        android:defaultValue="@string/pref_time_interval_default"
         android:entries="@array/pref_time_intervals_options"
         android:entryValues="@array/pref_time_intervals_values"
         android:key="@string/pref_time_intervals_key"

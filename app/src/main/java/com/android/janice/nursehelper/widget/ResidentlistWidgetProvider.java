@@ -18,7 +18,8 @@ import com.android.janice.nursehelper.MedicationsActivity;
 import com.android.janice.nursehelper.AssessmentActivity;
 import com.android.janice.nursehelper.MainActivity;
 import com.android.janice.nursehelper.R;
-import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
+import com.android.janice.nursehelper.alarm.NurseHelperSchedulingService;
+//import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
 //import com.android.janice.nursehelper.sync.ResidentSyncAdapter;
 
 /**
@@ -69,7 +70,7 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        if (MedCheckSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+        if (NurseHelperSchedulingService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));

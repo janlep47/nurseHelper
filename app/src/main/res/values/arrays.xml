@@ -14,14 +14,12 @@
     <string-array name="pref_time_intervals_options">
         <item>@string/pref_time_interval_15min_label</item>
         <item>@string/pref_time_interval_30min_label</item>
-        <item>@string/pref_time_interval_45min_label</item>
         <item>@string/pref_time_interval_1hr_label</item>
     </string-array>
 
     <string-array name="pref_time_intervals_values">
         <item>15</item>
         <item>30</item>
-        <item>45</item>
         <item>60</item>
     </string-array>
 

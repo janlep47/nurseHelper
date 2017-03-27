@@ -1,5 +1,6 @@
 package com.android.janice.nursehelper;
 
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,9 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
 
+import com.android.janice.nursehelper.alarm.NurseHelperAlarmReceiver;
+import com.android.janice.nursehelper.alarm.NurseHelperBootReceiver;
 import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
-import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
+//import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
+//import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -41,7 +45,7 @@ import java.io.InputStream;
 public class MainActivity extends AppCompatActivity implements ResidentlistFragment.Callback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener{
 
     public static final int REQUEST_CODE = 123;
     public static final String ITEM_ROOM_NUMBER = "roomNumber";
@@ -65,9 +69,10 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-
     private DatabaseReference mDatabase;
+    private NurseHelperAlarmReceiver alarm = new NurseHelperAlarmReceiver();
+
+    private int mAlertTimeInterval;
 
 
     @Override
@@ -102,7 +107,40 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
                     .build();
         }
 
-        MedCheckSyncAdapter.initializeSyncAdapter(this);
+        //NurseHelperSyncUtils.initialize(this, mGoogleApiClient);
+        //MedCheckSyncAdapter.initializeSyncAdapter(this);
+    }
+
+
+    protected void onResume() {
+        super.onResume();
+
+        boolean medAlertsSet = NurseHelperPreferences.areMedAlertsEnabled(this);
+        Intent intent = new Intent(MainActivity.this, NurseHelperAlarmReceiver.class);
+        intent.setAction(NurseHelperAlarmReceiver.ACTION_ALARM_RECEIVER);
+        boolean alarmOn = (PendingIntent.getBroadcast(MainActivity.this,1001,intent,
+                PendingIntent.FLAG_NO_CREATE) != null);
+
+        // If med-alerts are set ON:
+        if (medAlertsSet) {
+            int alertInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(this);
+            // If alarm isn't on, set it:
+            if (!alarmOn) {
+                alarm.setTimeInterval(alertInterval);
+                alarm.setAlarm(this);
+                // if alarm already on, but the alert-time-inverval has been changed in the meantime,
+                //   stop it, and restart it with the correct time-interval:
+            } else if (alertInterval != mAlertTimeInterval) {
+                alarm.cancelAlarm(this);
+                alarm.setTimeInterval(alertInterval);
+                alarm.setAlarm(this);
+            }
+            mAlertTimeInterval = alertInterval;
+            // Otherwise, if alerts have been set OFF and the alarm is currently running, cancel it:
+        } else if (alarmOn) {
+            alarm.cancelAlarm(this);
+        }
+
     }
 
     protected void onStart() {
