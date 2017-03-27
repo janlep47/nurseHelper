@@ -158,13 +158,28 @@ public class Utility {
         ArrayList<AdminTimeInfo> timesToAdmin = new ArrayList<AdminTimeInfo>();
         AdminTimeInfo adminTimeInfo = null;
 
+        Calendar adminCalendar = Calendar.getInstance();
+        adminCalendar.setTimeInMillis(timeLastGiven);
+        //java.util.Date date = new java.util.Date(timestamp);
+        //Calendar calendar = Calendar.getInstance();
+        //calendar.setTime(date);
+
         int year, month, day, hour, min, sec;
+        /*
         year = today.get(Calendar.YEAR) - 1900;
         month = today.get(Calendar.MONTH);
         day = today.get(Calendar.DAY_OF_YEAR);
         hour = today.get(Calendar.HOUR);
         min = today.get(Calendar.MINUTE);
         sec = today.get(Calendar.SECOND);
+        */
+        year = adminCalendar.get(Calendar.YEAR) - 1900;
+        month = adminCalendar.get(Calendar.MONTH);
+        day = adminCalendar.get(Calendar.DAY_OF_YEAR);
+        hour = adminCalendar.get(Calendar.HOUR);
+        min = adminCalendar.get(Calendar.MINUTE);
+        sec = adminCalendar.get(Calendar.SECOND);
+
         if (sec > 30) min += 1;
 
         while (true) {
@@ -194,7 +209,6 @@ public class Utility {
             if (matcherAmOrPm.find()) {
                 amOrPmString = matcherAmOrPm.group();
                 if (amOrPmString.equals(":")) {
-                    amOrPmString = "";
                     if (matcherAmOrPm.find()) {
                         amOrPmString = matcherAmOrPm.group();
                         if (isPM(amOrPmString)) pm = true;
@@ -216,9 +230,7 @@ public class Utility {
                         " hours = '" + hoursString + "'  minutes = '" + minsString + "'");
             }
 
-            //int minsFromNow = scheduledHour*60 + scheduledMin;
-            //timesToAdmin.add(new Integer(minsFromNow));
-            adminTimeInfo = new AdminTimeInfo(scheduledHour, scheduledMin, pm);
+            adminTimeInfo = new AdminTimeInfo(year, month, day, scheduledHour, scheduledMin, pm);
             timesToAdmin.add(adminTimeInfo);
         }
 
@@ -242,18 +254,20 @@ public class Utility {
                 return null;
             }
         }
-        return getNearestTimeFromNow(today, timesToAdmin);
+        //return getNearestTimeFromNow(today, timesToAdmin);
+        return getNearestTimeFromLastAdmin(context, adminCalendar, timesToAdmin);
     }
 
 
-    private static AdminTimeInfo getNearestTimeFromNow(Calendar today, ArrayList<AdminTimeInfo>timesToAdmin) {
-        int year, month, day, hour, min, sec;
-        year = today.get(Calendar.YEAR) - 1900;
-        month = today.get(Calendar.MONTH);
+    private static AdminTimeInfo getNearestTimeFromLastAdmin(Context context, Calendar today, ArrayList<AdminTimeInfo>timesToAdmin) {
+        int day, hour, min, sec;
         day = today.get(Calendar.DAY_OF_YEAR);
         hour = today.get(Calendar.HOUR);
         min = today.get(Calendar.MINUTE);
         sec = today.get(Calendar.SECOND);
+
+        int militaryHour = today.get(Calendar.HOUR_OF_DAY);
+
         if (sec > 30) min += 1;
 
         int diff = 30000;
@@ -261,6 +275,8 @@ public class Utility {
         AdminTimeInfo minimumAdminTimeInfo = null;
 
         Calendar newTime = Calendar.getInstance();
+        newTime.setTimeInMillis(today.getTimeInMillis());
+
         if (timesToAdmin.size() == 0) return null;
         int scheduledHour = 0;
         int scheduledMin = 0;
@@ -276,8 +292,10 @@ public class Utility {
             newTime.set(Calendar.MINUTE, scheduledMin);
             newTime.set(Calendar.SECOND, 0);
             newTime.set(Calendar.AM_PM,(pm ? Calendar.PM : Calendar.AM));
+
             if (today.before(newTime)) {
-                int minDiff = (scheduledHour * 60 + scheduledMin) - (hour * 60 + min);
+                int scheduledMilitaryHour = newTime.get(Calendar.HOUR_OF_DAY);
+                int minDiff = (scheduledMilitaryHour * 60 + scheduledMin) - (militaryHour * 60 + min);
                 if (minDiff < diff) {
                     diff = minDiff;
                     bestTime = timeInfo;
@@ -290,7 +308,7 @@ public class Utility {
                 }
             }
         }
-        // If we're at the end of the day, and no scheduled times for today, start with tomorrow's time
+        // If we're at the end of the day, and no scheduled times for today, start with tomorrow's minimum-next-time
         if (bestTime == null) {
             if (minimumAdminTimeInfo == null) {
                 Log.e("UTILITY", "ERROR: no sheduled times found!!!");
@@ -304,8 +322,8 @@ public class Utility {
     }
 
     private static boolean isPM(String amOrPmString) {
-        if (amOrPmString.trim().toUpperCase().equals("PM") ||
-            amOrPmString.trim().toUpperCase().equals("P")) {
+        if (amOrPmString.trim().toUpperCase().startsWith("PM") ||
+            amOrPmString.trim().toUpperCase().startsWith("P")) {
             return true;
         }
         return false;

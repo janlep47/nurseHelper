@@ -293,6 +293,8 @@ public class MedicationItem {
         String adminTimes = cursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
         String freq = cursor.getString(MedicationsFragment.COL_FREQUENCY);
 
+        long timeLastGiven = cursor.getLong(MedicationsFragment.COL_LAST_GIVEN);
+
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
@@ -303,7 +305,8 @@ public class MedicationItem {
         String nextAdminTime = "";
         long nextAdminTimeLong = 0;
         if (given) {
-            AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
+        //AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
+        AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, timeLastGiven);
             if (info != null) {
                 nextAdminTime = info.getDisplayableTime(context);
                 nextAdminTimeLong = info.getTime();
