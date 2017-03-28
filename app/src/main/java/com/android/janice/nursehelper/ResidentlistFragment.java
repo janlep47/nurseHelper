@@ -37,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
 /**
@@ -200,7 +202,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
+                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
             }
         });
     }
@@ -317,21 +319,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_residentlist_empty);
             if ( null != tv ) {
 
-
-                /*
-                // if cursor is empty, why? do we have an invalid location
-                int message = R.string.empty_Residentlist;
-                @ResidentSyncAdapter.Status int status = Utility.getStatus(getActivity());
-                switch (status) {
-                    case ResidentSyncAdapter.STATUS_SERVER_DOWN:
-                        message = R.string.empty_Residentlist_server_down;
-                        break;
-                    default:
-                        if (!Utility.isNetworkAvailable(getActivity())) {
-                            message = R.string.empty_Residentlist_no_network;
-                        }
-                }
-                */
                 int message = R.string.empty_residentlist_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
             }
@@ -375,10 +362,10 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
             // Just delete ALL records in the device 'residents' table, and add the ones from the
             //  Firebase dataSnapshot:
 
-            // TEMP!! for now do nothing, b/c of PROBLEM of firebase sending TOO MANY FALSE data changes ...
-            //  ... in addition to real ones  .... so don't want to suck down on download amts and get
-            //   CHARGED by Firebase!!
-            /*
+            // NOTE there is a PROBLEM with firebase sending TOO MANY FALSE data changes ...
+            //  ... in addition to real ones  .... could be expensive and causes annoying screen
+            //  flicker with all the extra "changes" causing deletions and re-writes.
+
             getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
             if (dataSnapshot.exists()) {
                 for (DataSnapshot issue : dataSnapshot.getChildren()) {
@@ -391,7 +378,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                     }
                 }
             }
-            */
+
             return null;
         }
 
@@ -400,15 +387,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         protected void onPostExecute(Void result) {
             dataUpdated();
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 

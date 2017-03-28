@@ -156,8 +156,7 @@ public class ResidentItem {
             // Add the new resident record to the Firebase database.  This is used here ONLY
             //   for adding fake testing data.  Actual resident data will ONLY be entered at the
             //   Firebase console, and downloaded to this app.
-            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
-            /*
+
             ContentValues residentValues = params[0];
             //String residentId = database.child("users").child(userId).child("residents").push().getKey();
             String residentId = database.child(ResidentContract.PATH_USERS).child(userId)
@@ -170,7 +169,7 @@ public class ResidentItem {
                         .child(ResidentContract.ResidentEntry.TABLE_NAME).child(residentId)
                         .child(keys.get(i)).setValue(value);
             }
-            */
+
             return null;
         }
 

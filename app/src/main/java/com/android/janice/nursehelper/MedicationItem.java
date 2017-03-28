@@ -408,8 +408,7 @@ public class MedicationItem {
             // Add the new "Medication" record to the Firebase database.  This is used here ONLY
             //   for adding fake testing data.  Actual medication data will ONLY be entered at the
             //   Firebase console, and downloaded to this app.
-            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
-            /*
+
             ContentValues medicationValues = params[0];
             //String medicationId = database.child("users").child(userId).child("medications").push().getKey();
             String medicationId = database.child(ResidentContract.PATH_USERS).child(userId)
@@ -422,7 +421,7 @@ public class MedicationItem {
                         .child(ResidentContract.MedicationEntry.TABLE_NAME).child(medicationId)
                         .child(keys.get(i)).setValue(value);
             }
-            */
+
             return null;
         }
 
@@ -456,8 +455,7 @@ public class MedicationItem {
         @Override
         protected Void doInBackground(ContentValues... params) {
             // Add the new "Med-given" record to the Firebase database
-            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
-            /*
+
             ContentValues medGivenValues = params[0];
             //String medicationId = database.child("users").child(userId).child("medsGiven").push().getKey();
             String medicationId = database.child(ResidentContract.PATH_USERS).child(userId)
@@ -470,7 +468,7 @@ public class MedicationItem {
                         .child(ResidentContract.MedsGivenEntry.TABLE_NAME).child(medicationId)
                         .child(keys.get(i)).setValue(value);
             }
-            */
+
             return null;
         }
 
@@ -508,8 +506,7 @@ public class MedicationItem {
         protected Void doInBackground(Void... params) {
             // Modify the current medication record in the Firebase database, to show most recent
             //  time-administered value(s).
-            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
-            /*
+
             //Query queryMed = database.child("users").child(userId).child("medications").orderByChild("roomNumber").equalTo(roomNumber);
             Query queryMed = database.child(ResidentContract.PATH_USERS).child(userId)
                     .child(ResidentContract.MedicationEntry.TABLE_NAME)
@@ -553,7 +550,7 @@ public class MedicationItem {
                 }
             });
             queryMed = null;
-            */
+
             return null;
         }
 
@@ -627,22 +624,6 @@ public class MedicationItem {
             input.putString(MainActivity.ITEM_FREQ, freq);
             bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "undoMostRecentTimestamp", roomNumber, input);
-
-            /*
-            Bundle bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
-                    "countMedsGiven", roomNumber, null);
-            long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
-
-            int maxNumberRecords = context.getResources().getInteger(R.integer.max_number_medsgiven_records);
-
-            if (numberRecs > maxNumberRecords) {
-                int numberToDelete = context.getResources().getInteger(R.integer.number_medsgiven_records_to_delete);
-                Bundle input = new Bundle();
-                input.putInt(MainActivity.ITEM_DELETE_AMT, numberToDelete);
-                bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
-                        "deleteOldestMedsGiven", roomNumber, input);
-            }
-            */
             return null;
         }
 

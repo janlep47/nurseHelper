@@ -45,9 +45,6 @@ public class NurseHelperSchedulingService extends IntentService {
     static final int COL_NEXT_GIVE_TIME_LONG = 2;
 
     Cursor previousCursor;
-    //roomNumber = 200
-    //nextDosageTime = 03-25-17 9:17 AM
-    //earliestMed = 1490447831803
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -57,9 +54,6 @@ public class NurseHelperSchedulingService extends IntentService {
         // See if any changes to med-due times since last check; if so, notify widget and app (if running)
         if (previousCursor != null) {
             if (previousCursor.moveToFirst() && nextMedsCursor.moveToFirst()) {
-                //for (int i = 0; i < nextMedsCursor.getCount(); i++) {
-                //    Log.e(TAG, " " + nextMedsCursor.getColumnName(i));
-                //}
                 if (anyChanges(nextMedsCursor)) {
                     updateWidgets();
                     getContentResolver().notifyChange(ResidentContract.ResidentEntry.CONTENT_URI, null);
@@ -90,13 +84,6 @@ public class NurseHelperSchedulingService extends IntentService {
 
 
     private void updateWidgets() {
-        /*
-        Context context = getContext();
-        // Setting the package ensures that only components in our app will receive the broadcast
-        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
-                .setPackage(context.getPackageName());
-        context.sendBroadcast(dataUpdatedIntent);
-        */
         // Setting the package ensures that only components in our app will receive the broadcast
         Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
                 .setPackage(getPackageName());

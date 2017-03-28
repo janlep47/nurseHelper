@@ -118,18 +118,11 @@ public class AssessmentItem {
         pain = cursor.getInt(COL_PAIN);
         significantFindings = cursor.getString(COL_SIGNIFICANT_FINDINGS);
         timestamp = cursor.getLong(COL_TIMESTAMP);
-        // formate the sql Time type into util Date type:  (later)
-        //long time = cursor.getLong(COL_DATE_TIME);
-        //dateTime = Date.
     }
 
 
 
     public String getReadableTimestamp(Context context) {
-        //Date date = new Date(timestamp);
-        //String dateTimeFormat = context.getString(R.string.format_admin_date_time);
-        //String formattedDate = new SimpleDateFormat(dateTimeFormat, Locale.US).format(date);
-        //return formattedDate;
         return Utility.getReadableTimestamp(context, timestamp);
     }
 
@@ -255,8 +248,7 @@ public class AssessmentItem {
         @Override
         protected Void doInBackground(ContentValues... params) {
             // Add the new "Assessment" record to the Firebase database.
-            // !!!!!!!!!!!!!  commented out TEMPORARILLY ... to not get a $$CHARGE from firebase ...
-            /*
+
             ContentValues assessmentValues = params[0];
             //String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
             String assessmentId = database.child(ResidentContract.PATH_USERS).child(userId)
@@ -269,7 +261,7 @@ public class AssessmentItem {
                         .child(ResidentContract.AssessmentEntry.TABLE_NAME).child(assessmentId)
                         .child(keys.get(i)).setValue(value);
             }
-            */
+
             return null;
         }
 
@@ -277,15 +269,6 @@ public class AssessmentItem {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 

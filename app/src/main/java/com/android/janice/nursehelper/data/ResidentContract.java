@@ -91,7 +91,7 @@ public class ResidentContract {
         // generic medication name
         public static final String COLUMN_NAME_GENERIC = "genericName";
 
-        // generic medication name
+        // medication trade name
         public static final String COLUMN_NAME_TRADE = "tradeName";
 
         // amount of med to give (float value)

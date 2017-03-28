@@ -157,13 +157,25 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
 
         //Intent intent = new Intent(getActivity(), MyReceiver.class);//the same as up
         //intent.setAction(MyReceiver.ACTION_ALARM_RECEIVER);//the same as up
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT);//the same as up
-        alarmMgr.cancel(alarmIntent);//important
-        pendingIntent.cancel();//important
+        PendingIntent pendingIntent;
+        if (intent != null) {
+
+            pendingIntent = PendingIntent.getBroadcast(context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT);//the same as up
+        } else {
+            intent = new Intent(context, NurseHelperAlarmReceiver.class);
+            // NEW:
+            intent.setAction(ACTION_ALARM_RECEIVER);//my custom string action name
+            pendingIntent = PendingIntent.getBroadcast(context, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+        //alarmMgr.cancel(alarmIntent);//important
+        //pendingIntent.cancel();//important
 
         // If the alarm has been set, cancel it.
         if (alarmMgr!= null) {
             alarmMgr.cancel(alarmIntent);
+        }
+        if (pendingIntent != null) {
+            pendingIntent.cancel();
         }
 
         // Disable {@code NurseHelperBootReceiver} so that it doesn't automatically restart the

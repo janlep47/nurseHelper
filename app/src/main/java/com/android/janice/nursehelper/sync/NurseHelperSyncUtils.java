@@ -150,15 +150,7 @@ public class NurseHelperSyncUtils {
                 /* URI for every row of resident data in the 'residents' table*/
                 Uri residentQueryUri = ResidentContract.ResidentEntry.CONTENT_URI;
 
-                /*
-                 * Since this query is going to be used only as a check to see if we have any
-                 * data (rather than to display data), we just need to PROJECT the roomNumber of each
-                 * row. In our queries where we display data, we need to PROJECT more columns
-                 * to determine what resident details need to be displayed.
-                 */
                 String[] projectionColumns = {ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER};
-                //String selectionStatement = WeatherContract.WeatherEntry
-                //        .getSqlSelectForTodayOnwards();
                 String selectionStatement = null;
 
                 /* Here, we perform the query to check to see if we have any weather data */
@@ -168,20 +160,6 @@ public class NurseHelperSyncUtils {
                         selectionStatement,
                         null,
                         null);
-                /*
-                 * A Cursor object can be null for various different reasons. A few are
-                 * listed below.
-                 *
-                 *   1) Invalid URI
-                 *   2) A certain ContentProvider's query method returns null
-                 *   3) A RemoteException was thrown.
-                 *
-                 * Bottom line, it is generally a good idea to check if a Cursor returned
-                 * from a ContentResolver is null.
-                 *
-                 * If the Cursor was null OR if it was empty, we need to sync immediately to
-                 * be able to display data to the user.
-                 */
                 if (null == cursor || cursor.getCount() == 0) {
                     startImmediateSync(context);
                 }

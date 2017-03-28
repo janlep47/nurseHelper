@@ -151,7 +151,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                 UpdateMedicationsFromFirebaseTask updateMedsTask =
                         new UpdateMedicationsFromFirebaseTask(getActivity(), dataSnapshot);
                 updateMedsTask.execute();
-                /*
+
                 // Just delete ALL records in the device 'medications' table, and add the ones from the
                 //  Firebase dataSnapshot:
                 getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
@@ -176,7 +176,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                     }
                 }
                 dataUpdated();
-                */
+
             }
 
             @Override
@@ -256,16 +256,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
 
-
-
-
-        // For when device is rotated
-        //if (savedInstanceState != null) {
-            //mMedicationsAdapter.onRestoreInstanceState(savedInstanceState);
-        //} else {
-            //ResidentSyncAdapter.syncImmediately(getContext());
-        //}
-
         return rootView;
     }
 
@@ -330,34 +320,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                     // Since we know we're going to get items, we keep the listener around until
                     // we see Children.
                     if (mRecyclerView.getChildCount() > 0) {
-                        /*
-                        AppCompatActivity activity = (AppCompatActivity) getActivity();
-
-                        // We need to start the enter transition after the data has loaded
-                        //if ( mTransitionAnimation ) {
-                        activity.supportStartPostponedEnterTransition();
-                        ActionBar actionBar = activity.getSupportActionBar();
-                        actionBar.setSubtitle("room: "+mRoomNumber);
-
-                        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
-                                | ActionBar.DISPLAY_SHOW_CUSTOM);
-                        ImageView imageView = new ImageView(actionBar.getThemedContext());
-                        imageView.setScaleType(ImageView.ScaleType.CENTER);
-                        Picasso.with(getActivity())
-                                .load("file:///android_asset/"+mPortraitFilePath)
-                                .placeholder(R.drawable.blank_portrait)
-                                .noFade().resize(actionBar.getHeight(), actionBar.getHeight())
-                                .error(R.drawable.blank_portrait)
-                                .into(imageView);
-
-                        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                                ActionBar.LayoutParams.WRAP_CONTENT,
-                                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
-                                | Gravity.CENTER_VERTICAL);
-                        layoutParams.rightMargin = 40;
-                        imageView.setLayoutParams(layoutParams);
-                        actionBar.setCustomView(imageView);
-                        */
                         return true;
                     }
                     return false;
@@ -387,21 +349,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         if ( mMedicationsAdapter.getItemCount() == 0 ) {
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_medications_empty);
             if ( null != tv ) {
-
-                /*
-                // if cursor is empty, why? do we have an invalid location
-                int message = R.string.empty_Medications;
-                @ResidentSyncAdapter.Status int status = Utility.getStatus(getActivity());
-                switch (status) {
-                    case ResidentSyncAdapter.STATUS_SERVER_DOWN:
-                        message = R.string.empty_Medications_server_down;
-                        break;
-                    default:
-                        if (!Utility.isNetworkAvailable(getActivity())) {
-                            message = R.string.empty_Medications_no_network;
-                        }
-                }
-                */
                 int message = R.string.empty_medications_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
             }
@@ -415,10 +362,10 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_status_key))) {
+        //if (key.equals(getString(R.string.pref_status_key))) {
             //Utility.resetStatus(getContext());
-            updateEmptyView();
-        }
+            //updateEmptyView();
+        //}
     }
 
 

@@ -94,16 +94,4 @@ public class MedGivenItem {
     public String getReadableTimestamp(Context context) {
         return Utility.getReadableTimestamp(context, timeGiven);
     }
-
-
-    public static void askUndoMedGiven(String roomNumber, String genericName, float dosage) {
-        Log.e(TAG,"  UNDO Med given: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
-    }
-
-
-
-    public static void askUndoMedRefused(String roomNumber, String genericName, float dosage) {
-        Log.e(TAG,"  UNDO Med refused: "+roomNumber+"  name:"+genericName+"   dosage: "+String.valueOf(dosage));
-    }
-
 }

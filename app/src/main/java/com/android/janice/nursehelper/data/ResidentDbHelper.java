@@ -20,7 +20,6 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i("ResidentDbHelper", " YAY ... here in onCreate");
         final String SQL_CREATE_RESIDENTS_TABLE =
                 "CREATE TABLE "+ ResidentContract.ResidentEntry.TABLE_NAME +
                         "( " + ResidentContract.ResidentEntry.COLUMN_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +

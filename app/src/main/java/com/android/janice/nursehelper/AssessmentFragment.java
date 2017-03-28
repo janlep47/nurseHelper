@@ -107,22 +107,6 @@ public class AssessmentFragment extends Fragment {
     private boolean edemaPitting, mEdema_LLE_checked, mEdema_RLE_checked, mEdema_LUE_checked, mEdema_RUE_checked;
     private int mXposn, mYposn;
 
-    /*
-    private static final String[] ASSESSMENT_COLUMNS = {
-            ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
-            ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE,
-            ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE,
-            ResidentContract.AssessmentEntry.COLUMN_PULSE,
-            ResidentContract.AssessmentEntry.COLUMN_RR,
-            ResidentContract.AssessmentEntry.COLUMN_EDEMA,
-            ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN,
-            ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING,
-            ResidentContract.AssessmentEntry.COLUMN_PAIN,
-            ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS,
-            ResidentContract.AssessmentEntry.COLUMN_TIME
-};
-    */
-
     public interface Callback {
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, MedicationsAdapter.MedicationsAdapterViewHolder vh);
@@ -457,14 +441,6 @@ public class AssessmentFragment extends Fragment {
         if (mEdema_RLE_checked) mEdema_RLE.setChecked(true);
         if (mEdema_LUE_checked) mEdema_LUE.setChecked(true);
         if (mEdema_RUE_checked) mEdema_RUE.setChecked(true);
-
-        /*
-        // Do the same for the edemaLocationSpinner:
-        adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.edema_locn_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mEdema_location_spinner.setAdapter(adapter);
-        */
 
         mPain_picker.setMinValue(getActivity().getResources().getInteger(R.integer.pain_min));
         mPain_picker.setMaxValue(getActivity().getResources().getInteger(R.integer.pain_max));
