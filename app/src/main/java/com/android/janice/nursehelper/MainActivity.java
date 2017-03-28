@@ -1,11 +1,14 @@
 package com.android.janice.nursehelper;
 
 import android.app.PendingIntent;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +27,9 @@ import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
 //import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
 //import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
+import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
+import com.android.janice.nursehelper.utility.NetworkUtils;
+import com.android.janice.nursehelper.utility.NurseHelperJsonUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -40,6 +46,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity implements ResidentlistFragment.Callback,
@@ -108,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         }
 
         //NurseHelperSyncUtils.initialize(this, mGoogleApiClient);
-        //MedCheckSyncAdapter.initializeSyncAdapter(this);
+        NurseHelperSyncUtils.initialize(this);
     }
 
 
@@ -121,16 +128,22 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         boolean alarmOn = (PendingIntent.getBroadcast(MainActivity.this,1001,intent,
                 PendingIntent.FLAG_NO_CREATE) != null);
 
+        /*
         // If med-alerts are set ON:
         if (medAlertsSet) {
+            Log.e(LOG_TAG,"1");
             int alertInterval = NurseHelperPreferences.getPreferredAlertTimeInterval(this);
             // If alarm isn't on, set it:
             if (!alarmOn) {
+                Log.e(LOG_TAG,"2");
+
                 alarm.setTimeInterval(alertInterval);
                 alarm.setAlarm(this);
                 // if alarm already on, but the alert-time-inverval has been changed in the meantime,
                 //   stop it, and restart it with the correct time-interval:
             } else if (alertInterval != mAlertTimeInterval) {
+                Log.e(LOG_TAG,"3");
+
                 alarm.cancelAlarm(this);
                 alarm.setTimeInterval(alertInterval);
                 alarm.setAlarm(this);
@@ -138,9 +151,11 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             mAlertTimeInterval = alertInterval;
             // Otherwise, if alerts have been set OFF and the alarm is currently running, cancel it:
         } else if (alarmOn) {
+            Log.e(LOG_TAG,"4");
+
             alarm.cancelAlarm(this);
         }
-
+*/
     }
 
     protected void onStart() {

@@ -620,6 +620,19 @@ public class ResidentProvider extends ContentProvider {
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
+            case MEDICATIONS:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, value);
+                        if (_id != -1) returnCount++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
             case MEDICATIONS_WITH_ROOM_NUMBER:
                 db.beginTransaction();
                 try {

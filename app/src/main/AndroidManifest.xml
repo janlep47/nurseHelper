@@ -120,15 +120,19 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <!-- This is required for immediate syncs -->
+        <service
+            android:name=".sync.NurseHelperSyncIntentService"
+            android:exported="false" />
 
         <!-- This is the Service declaration used in conjunction with FirebaseJobDispatcher -->
-        <!--service
+        <service
             android:name=".sync.NurseHelperFirebaseJobService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
-        </service-->
+        </service>
 
 
         <receiver android:name=".alarm.NurseHelperAlarmReceiver"></receiver>
