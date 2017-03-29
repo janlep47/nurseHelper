@@ -159,7 +159,8 @@ public class Utility {
         AdminTimeInfo adminTimeInfo = null;
 
         Calendar adminCalendar = Calendar.getInstance();
-        adminCalendar.setTimeInMillis(timeLastGiven);
+        if (timeLastGiven != 0)
+            adminCalendar.setTimeInMillis(timeLastGiven);
         //java.util.Date date = new java.util.Date(timestamp);
         //Calendar calendar = Calendar.getInstance();
         //calendar.setTime(date);
@@ -338,7 +339,8 @@ public class Utility {
     private static AdminTimeInfo getNextFreqTime(Context context, String freq, long timeLastGiven,
                                                  Calendar today) {
         Calendar adminTime = Calendar.getInstance();
-        adminTime.setTimeInMillis(timeLastGiven);
+        if (timeLastGiven != 0)
+            adminTime.setTimeInMillis(timeLastGiven);
         int year = adminTime.get(Calendar.YEAR) - 1900;
         int month = adminTime.get(Calendar.MONTH);
         int week = adminTime.get(Calendar.WEEK_OF_YEAR);
