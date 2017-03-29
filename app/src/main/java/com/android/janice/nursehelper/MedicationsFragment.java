@@ -151,37 +151,11 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                 UpdateMedicationsFromFirebaseTask updateMedsTask =
                         new UpdateMedicationsFromFirebaseTask(getActivity(), dataSnapshot);
                 updateMedsTask.execute();
-
-                // Just delete ALL records in the device 'medications' table, and add the ones from the
-                //  Firebase dataSnapshot:
-                getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        if (issue.exists()) {
-                            MedicationItem medication = issue.getValue(MedicationItem.class);
-                            ContentValues medValues = new ContentValues();
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, medication.getRoomNumber());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, medication.getTradeName());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, medication.getGenericName());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, new Double(medication.getDosage()));
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, medication.getDosageUnits());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, medication.getDosageRoute());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, medication.getAdminTimes());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, medication.getFrequency());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, new Long(medication.getLastGivenTime()));
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, medication.getNextDosageTime());
-                            medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, new Long(medication.getNextDosageTimeLong()));
-                            getActivity().getContentResolver().insert(ResidentContract.MedicationEntry.CONTENT_URI,medValues);
-                        }
-                    }
-                }
-                dataUpdated();
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
+                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
             }
         });
 
@@ -385,15 +359,21 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
         @Override
         protected Void doInBackground(Void... params) {
-            // Just delete ALL records in the device 'medications' table, and add the ones from the
-            //  Firebase dataSnapshot:
-
-            // TEMP!! for now do nothing, b/c of PROBLEM of firebase sending TOO MANY FALSE data changes ...
+            // There is a PROBLEM with firebase sending TOO MANY FALSE data changes ...
             //  ... in addition to real ones  .... so don't want to suck down on download amts and get
             //   CHARGED by Firebase!!
-            /*
-            getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
+
+            //getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
             if (dataSnapshot.exists()) {
+                // Just delete ALL records in the device 'medications' table, and add the ones from the
+                //  Firebase dataSnapshot:
+                if (dataSnapshot.hasChild(ResidentContract.MedicationEntry.TABLE_NAME)) {
+                    getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
+                } else {
+                    return null;
+                }
+
+
                 for (DataSnapshot issue : dataSnapshot.getChildren()) {
                     if (issue.exists()) {
                         MedicationItem medication = issue.getValue(MedicationItem.class);
@@ -413,7 +393,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                     }
                 }
             }
-            */
+
             return null;
         }
 

@@ -359,15 +359,21 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
         @Override
         protected Void doInBackground(Void... params) {
-            // Just delete ALL records in the device 'residents' table, and add the ones from the
-            //  Firebase dataSnapshot:
-
             // NOTE there is a PROBLEM with firebase sending TOO MANY FALSE data changes ...
             //  ... in addition to real ones  .... could be expensive and causes annoying screen
             //  flicker with all the extra "changes" causing deletions and re-writes.
 
-            getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
+            //getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
             if (dataSnapshot.exists()) {
+                // Just delete ALL records in the device 'residents' table, and add the ones from the
+                //  Firebase dataSnapshot:
+                if (dataSnapshot.hasChild(ResidentContract.ResidentEntry.TABLE_NAME)) {
+                    getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
+                } else {
+                    return null;
+                }
+
+
                 for (DataSnapshot issue : dataSnapshot.getChildren()) {
                     if (issue.exists()) {
                         ResidentItem resident = issue.getValue(ResidentItem.class);
