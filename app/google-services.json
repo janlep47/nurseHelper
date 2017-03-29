@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "225526148755",
+    "firebase_url": "https://nursehelper-436b9.firebaseio.com",
+    "project_id": "nursehelper-436b9",
+    "storage_bucket": "nursehelper-436b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225526148755:android:e0fa137f4d93ca7e",
+        "android_client_info": {
+          "package_name": "com.android.janice.nursehelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225526148755-rgpk98r1dt3cigjepc623ugu01vug8kg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.janice.nursehelper",
+            "certificate_hash": "4c56e16913a9cdc7ba24dac140fb95488e7705a8"
+          }
+        },
+        {
+          "client_id": "225526148755-na33b39p9pfrke2qp57akq5q810ggmph.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgJY_-y-rdNJRl_f5Wu1UPdr2guKs3Txc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225526148755-na33b39p9pfrke2qp57akq5q810ggmph.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
