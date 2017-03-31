@@ -198,14 +198,14 @@ public class ItemChoiceManager {
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         byte[] states = savedInstanceState.getByteArray(SELECTED_ITEMS_KEY);
-        if ( null != states ) {
+        if (null != states) {
             Parcel inParcel = Parcel.obtain();
             inParcel.unmarshall(states, 0, states.length);
             inParcel.setDataPosition(0);
             mCheckStates = inParcel.readSparseBooleanArray();
             final int numStates = inParcel.readInt();
             mCheckedIdStates.clear();
-            for (int i=0; i<numStates; i++) {
+            for (int i = 0; i < numStates; i++) {
                 final long key = inParcel.readLong();
                 final int value = inParcel.readInt();
                 mCheckedIdStates.put(key, value);
@@ -218,7 +218,7 @@ public class ItemChoiceManager {
         outParcel.writeSparseBooleanArray(mCheckStates);
         final int numStates = mCheckedIdStates.size();
         outParcel.writeInt(numStates);
-        for (int i=0; i<numStates; i++) {
+        for (int i = 0; i < numStates; i++) {
             outParcel.writeLong(mCheckedIdStates.keyAt(i));
             outParcel.writeInt(mCheckedIdStates.valueAt(i));
         }
@@ -228,7 +228,7 @@ public class ItemChoiceManager {
     }
 
     public int getSelectedItemPosition() {
-        if ( mCheckStates.size() == 0 ) {
+        if (mCheckStates.size() == 0) {
             return RecyclerView.NO_POSITION;
         } else {
             return mCheckStates.keyAt(0);

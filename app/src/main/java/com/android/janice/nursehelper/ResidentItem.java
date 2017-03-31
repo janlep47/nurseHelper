@@ -41,13 +41,21 @@ public class ResidentItem {
     }
 
 
-    public String getRoomNumber() { return roomNumber; }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
-    public String getPortraitFilepath() { return portraitFilepath; }
+    public String getPortraitFilepath() {
+        return portraitFilepath;
+    }
 
-    protected void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
+    protected void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
 
-    protected void setPortraitFilepath(String portraitFilepath) { this.portraitFilepath = portraitFilepath; }
+    protected void setPortraitFilepath(String portraitFilepath) {
+        this.portraitFilepath = portraitFilepath;
+    }
 
 
     public static void putInDummyData(Context context, DatabaseReference database, String userId) {
@@ -70,19 +78,19 @@ public class ResidentItem {
         try {
             afiles = assetManager.list("");
         } catch (IOException e) {
-            Log.e("RESIDENTITEM","  IOException "+e.toString());
+            Log.e("RESIDENTITEM", "  IOException " + e.toString());
         }
         if (afiles == null) {
-            Log.e("RESIDENTITEM"," ERROR files are NULL");
+            Log.e("RESIDENTITEM", " ERROR files are NULL");
             return;
         }
         if (afiles.length < 1) {
-            Log.e("RESIDENTITEM"," NO FILES READ FROM ASSETS");
+            Log.e("RESIDENTITEM", " NO FILES READ FROM ASSETS");
             return;
         }
         String[] files = new String[10];
         int n = 0;
-        HashMap<String,String> careplanFiles = new HashMap<String,String>();
+        HashMap<String, String> careplanFiles = new HashMap<String, String>();
         for (int i = 0; i < afiles.length; i++) {
             if (afiles[i].startsWith("CarePlan1")) {
                 careplanFiles.put("1", afiles[i]);
@@ -101,7 +109,7 @@ public class ResidentItem {
         for (int i = files.length - 1; i >= 0; i--) {
             String fileName = files[i];
             if (!fileName.startsWith("av")) continue;
-            String roomNumber = String.valueOf(200+i);
+            String roomNumber = String.valueOf(200 + i);
 
             // First verify the resident not already in the Content provider:
             //  (this is just for adding dummy data anyway, though):
@@ -124,20 +132,19 @@ public class ResidentItem {
 
             // Update the local device database
             residentValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, roomNumber);
-            residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, prefix+fileName);
+            residentValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, prefix + fileName);
             if (roomNumber.equals("200"))
-                residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH,careplanFiles.get("1"));
+                residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH, careplanFiles.get("1"));
             else if (roomNumber.equals("208"))
-                residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH,careplanFiles.get("2"));
+                residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH, careplanFiles.get("2"));
 
             Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
 
             // Now update the central Firebase database
-            UpdateResidentTask updateResidentTask = new UpdateResidentTask(context,database,userId);
+            UpdateResidentTask updateResidentTask = new UpdateResidentTask(context, database, userId);
             updateResidentTask.execute(residentValues);
         }
     }
-
 
 
     private static class UpdateResidentTask extends AsyncTask<ContentValues, Void, Void> {

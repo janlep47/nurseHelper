@@ -39,7 +39,6 @@ import com.android.janice.nursehelper.utility.Utility;
  * of the next-med-admin time for each patient, and indicate whether or not they'd like to see
  * medication next-admin times from the Residentlist screen.  If the 'give-alerts' flag is set to false,
  * the time-window preference is ignored.
- *
  */
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {

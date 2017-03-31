@@ -101,7 +101,7 @@ public class AssessmentFragment extends Fragment {
     boolean mMetricUnits;
     DatabaseReference mDatabase;
 
-    private int mSystolicBP, mDiastolicBP, mTemp, mTempDecimal, mPulse, mRR,  mPain;
+    private int mSystolicBP, mDiastolicBP, mTemp, mTempDecimal, mPulse, mRR, mPain;
     private int edemaSpinnerPosn;
     private String mTempString, mFindings;
     private boolean edemaPitting, mEdema_LLE_checked, mEdema_RLE_checked, mEdema_LUE_checked, mEdema_RUE_checked;
@@ -155,7 +155,7 @@ public class AssessmentFragment extends Fragment {
         //if ( mTransitionAnimation ) {
         activity.supportStartPostponedEnterTransition();
         ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
 
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
@@ -166,9 +166,8 @@ public class AssessmentFragment extends Fragment {
         // Calculate ActionBar height
         int actionBarHeight = getActivity().getResources().getInteger(R.integer.appbar_default_height);
         TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
 
         Picasso.with(getActivity())
@@ -188,7 +187,6 @@ public class AssessmentFragment extends Fragment {
         actionBar.setCustomView(imageView);
 
     }
-
 
 
     @Override
@@ -249,7 +247,7 @@ public class AssessmentFragment extends Fragment {
         //mDiastolicBP_textView = (TextView) rootView.findViewById(R.id.bp_diastolic_textview);
         mTemperature_textView = (TextView) rootView.findViewById(R.id.temperature_textview);
         mPulse_textView = (TextView) rootView.findViewById(R.id.pulse_textview);
-        mRR_textView =  (TextView) rootView.findViewById(R.id.rr_textview);
+        mRR_textView = (TextView) rootView.findViewById(R.id.rr_textview);
         mEdema_textView = (TextView) rootView.findViewById(R.id.edema_textview);
         mPain_textView = (TextView) rootView.findViewById(R.id.pain_textview);
         mFindings_editText = (EditText) rootView.findViewById(R.id.findings_edittext);
@@ -301,7 +299,7 @@ public class AssessmentFragment extends Fragment {
         //mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP));
         mDiastolicBP_picker.setWrapSelectorWheel(false);
 
-        mBP_textView.setText(String.valueOf(mSystolicBP)+"/"+String.valueOf(mDiastolicBP));
+        mBP_textView.setText(String.valueOf(mSystolicBP) + "/" + String.valueOf(mDiastolicBP));
 
         mSystolicBP_picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
@@ -309,7 +307,7 @@ public class AssessmentFragment extends Fragment {
                 if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
                     mSystolicBP = mSystolicBP_picker.getValue();
                     //mSystolicBP_textView.setText(String.valueOf(mSystolicBP));
-                    mBP_textView.setText(String.valueOf(mSystolicBP)+"/"+String.valueOf(mDiastolicBP));
+                    mBP_textView.setText(String.valueOf(mSystolicBP) + "/" + String.valueOf(mDiastolicBP));
                 }
             }
         });
@@ -320,7 +318,7 @@ public class AssessmentFragment extends Fragment {
                 if (i == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
                     mDiastolicBP = mDiastolicBP_picker.getValue();
                     //mDiastolicBP_textView.setText(String.valueOf(mDiastolicBP));
-                    mBP_textView.setText(String.valueOf(mSystolicBP)+"/"+String.valueOf(mDiastolicBP));
+                    mBP_textView.setText(String.valueOf(mSystolicBP) + "/" + String.valueOf(mDiastolicBP));
                 }
             }
         });
@@ -352,7 +350,7 @@ public class AssessmentFragment extends Fragment {
                     mTemp = mTemp_int_picker.getValue();
                     mTempDecimal = mTemp_decimal_picker.getValue();
                     mTempString = String.valueOf(mTemp) + "." +
-                            String.valueOf(mTempDecimal)+
+                            String.valueOf(mTempDecimal) +
                             (mMetricUnits ? "\u00B0 C" : "\u00B0 F");
                     mTemperature_textView.setText(mTempString);
                 }
@@ -470,13 +468,13 @@ public class AssessmentFragment extends Fragment {
                 mFindings = mFindings_editText.getText().toString();
                 String edemaLocations = "";
                 if (mEdema_spinner.getSelectedItemPosition() != 0) {
-                    if (mEdema_LLE.isChecked()) edemaLocations += " "+
+                    if (mEdema_LLE.isChecked()) edemaLocations += " " +
                             getActivity().getResources().getString(R.string.edema_LLE);
-                    if (mEdema_LUE.isChecked()) edemaLocations += " "+
+                    if (mEdema_LUE.isChecked()) edemaLocations += " " +
                             getActivity().getResources().getString(R.string.edema_LUE);
-                    if (mEdema_RLE.isChecked()) edemaLocations += " "+
+                    if (mEdema_RLE.isChecked()) edemaLocations += " " +
                             getActivity().getResources().getString(R.string.edema_RLE);
-                    if (mEdema_RUE.isChecked()) edemaLocations += " "+
+                    if (mEdema_RUE.isChecked()) edemaLocations += " " +
                             getActivity().getResources().getString(R.string.edema_RUE);
                 }
                 AssessmentItem.saveAssessment(getActivity(), mRoomNumber, mSystolicBP, mDiastolicBP, mTempString,
@@ -503,26 +501,25 @@ public class AssessmentFragment extends Fragment {
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
         super.onSaveInstanceState(outState);
         outState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
         outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
-        outState.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
-        outState.putString(MainActivity.ITEM_USER_ID,mDbUserId);
-        outState.putBoolean(MainActivity.ITEM_TEMP_UNITS,mMetricUnits);
+        outState.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+        outState.putString(MainActivity.ITEM_USER_ID, mDbUserId);
+        outState.putBoolean(MainActivity.ITEM_TEMP_UNITS, mMetricUnits);
 
-        outState.putInt(ITEM_SYSTOLIC_BP,mSystolicBP);
-        outState.putInt(ITEM_DIASTOLIC_BP,mDiastolicBP);
-        outState.putInt(ITEM_TEMP,mTemp);
-        outState.putInt(ITEM_TEMP_DECIMAL,mTempDecimal);
-        outState.putInt(ITEM_PULSE,mPulse);
-        outState.putInt(ITEM_RR,mRR);
-        outState.putInt(ITEM_PAIN,mPain);
-        outState.putString(ITEM_TEMP_STRING,mTempString);
-        outState.putString(ITEM_FINDINGS,mFindings);
+        outState.putInt(ITEM_SYSTOLIC_BP, mSystolicBP);
+        outState.putInt(ITEM_DIASTOLIC_BP, mDiastolicBP);
+        outState.putInt(ITEM_TEMP, mTemp);
+        outState.putInt(ITEM_TEMP_DECIMAL, mTempDecimal);
+        outState.putInt(ITEM_PULSE, mPulse);
+        outState.putInt(ITEM_RR, mRR);
+        outState.putInt(ITEM_PAIN, mPain);
+        outState.putString(ITEM_TEMP_STRING, mTempString);
+        outState.putString(ITEM_FINDINGS, mFindings);
         outState.putInt(ITEM_EDEMA_SPINNER_POSN, edemaSpinnerPosn);
         outState.putBoolean(ITEM_EDEMA_PITTING, edemaPitting);
         outState.putBoolean(ITEM_EDEMA_LLE_CHECKED, mEdema_LLE_checked);

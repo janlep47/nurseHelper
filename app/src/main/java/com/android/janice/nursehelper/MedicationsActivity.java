@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by janicerichards on 2/4/17.
  */
 
-public class MedicationsActivity  extends AppCompatActivity  implements MedicationsFragment.Callback {
+public class MedicationsActivity extends AppCompatActivity implements MedicationsFragment.Callback {
 
     MedicationsFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
@@ -75,7 +75,6 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -85,15 +84,14 @@ public class MedicationsActivity  extends AppCompatActivity  implements Medicati
         if (id == R.id.list_past_medications) {
             Intent intent;
             Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.ITEM_ROOM_NUMBER,mRoomNumber);
-            bundle.putString(MainActivity.ITEM_PORTRAIT_FILEPATH,mPortraitFilePath);
+            bundle.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+            bundle.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
             intent = new Intent(this, MedsGivenActivity.class);
             intent.putExtras(bundle);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     @Override

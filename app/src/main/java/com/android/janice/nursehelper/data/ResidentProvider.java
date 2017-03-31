@@ -44,109 +44,109 @@ public class ResidentProvider extends ContentProvider {
 
     // get list of all medications by room# (or patient id)
     public static final String sResidentByRoomNumberSelection =
-            ResidentContract.ResidentEntry.TABLE_NAME+
+            ResidentContract.ResidentEntry.TABLE_NAME +
                     "." + ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     // get list of all medications by room# (or patient id)
     public static final String sMedsByResidentSelection =
-            ResidentContract.MedicationEntry.TABLE_NAME+
+            ResidentContract.MedicationEntry.TABLE_NAME +
                     "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     // get list of all medications by room# (or patient id)
     public static final String sMedsByResidentAndMedSelection =
-            ResidentContract.MedicationEntry.TABLE_NAME+
-                    "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? AND "+
-                    ResidentContract.MedicationEntry.TABLE_NAME+
+            ResidentContract.MedicationEntry.TABLE_NAME +
+                    "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? AND " +
+                    ResidentContract.MedicationEntry.TABLE_NAME +
                     "." + ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC + " = ? ";
 
     // get most recent assessment by room# (or patient id)
     private static final String sRecentAssessmentByResidentSelection =
-            ResidentContract.AssessmentEntry.TABLE_NAME+
+            ResidentContract.AssessmentEntry.TABLE_NAME +
                     "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     private static final String sMedsGivenByResidentSelection =
-            ResidentContract.MedsGivenEntry.TABLE_NAME+
+            ResidentContract.MedsGivenEntry.TABLE_NAME +
                     "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     private static final String sMedsGivenByResidentAndMedSelection =
-            ResidentContract.MedsGivenEntry.TABLE_NAME+
-                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? AND "+
-                    ResidentContract.MedsGivenEntry.TABLE_NAME+
+            ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? AND " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
                     "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ? ";
 
     public static final String sAssessmentsByResidentSelection =
-            ResidentContract.AssessmentEntry.TABLE_NAME+
+            ResidentContract.AssessmentEntry.TABLE_NAME +
                     "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     // Raw query:
     private static final String sResidentsWithNextScheduledMedTime =
-            "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
-                    ", meds."+ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+
-                    ", meds.earliestMed FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res LEFT JOIN "+
-                    "( SELECT "+ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+", "+
-                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME+", MIN(NULLIF("+
-                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG+",0)) earliestMed FROM "+
-                    ResidentContract.MedicationEntry.TABLE_NAME+" GROUP BY "+
-                    ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+" ) meds ON meds."+
-                    ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER+"=res."+
-                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
-                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
+            "SELECT res." + ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER +
+                    ", meds." + ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME +
+                    ", meds.earliestMed FROM " + ResidentContract.ResidentEntry.TABLE_NAME + " res LEFT JOIN " +
+                    "( SELECT " + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + ", " +
+                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME + ", MIN(NULLIF(" +
+                    ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG + ",0)) earliestMed FROM " +
+                    ResidentContract.MedicationEntry.TABLE_NAME + " GROUP BY " +
+                    ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " ) meds ON meds." +
+                    ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + "=res." +
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ORDER BY res." +
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ASC";
 
     // Raw query:
     private static final String sResidentsWithMostRecentAssessmentTime =
-            "SELECT res."+ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+
-                    ", vs.latestCheck FROM "+ResidentContract.ResidentEntry.TABLE_NAME+" res LEFT JOIN "+
-                    "( SELECT "+ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+", "+
-                    "MAX("+ResidentContract.AssessmentEntry.COLUMN_TIME+") latestCheck FROM "+
-                    ResidentContract.AssessmentEntry.TABLE_NAME+" GROUP BY "+
-                    ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+" ) vs ON vs."+
-                    ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+"=res."+
-                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ORDER BY res."+
-                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER+" ASC";
+            "SELECT res." + ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER +
+                    ", vs.latestCheck FROM " + ResidentContract.ResidentEntry.TABLE_NAME + " res LEFT JOIN " +
+                    "( SELECT " + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + ", " +
+                    "MAX(" + ResidentContract.AssessmentEntry.COLUMN_TIME + ") latestCheck FROM " +
+                    ResidentContract.AssessmentEntry.TABLE_NAME + " GROUP BY " +
+                    ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " ) vs ON vs." +
+                    ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + "=res." +
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ORDER BY res." +
+                    ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " ASC";
 
 
     private static final String sAssessmentByResidentWithOldestAssessmentTime =
-        ResidentContract.AssessmentEntry.TABLE_NAME+
-                "."+ResidentContract.AssessmentEntry.COLUMN_TIME+" = (SELECT MIN("+
-                ResidentContract.AssessmentEntry.TABLE_NAME+
-                "."+ResidentContract.AssessmentEntry.COLUMN_TIME+") FROM "+
-                ResidentContract.AssessmentEntry.TABLE_NAME+" WHERE "+
-                ResidentContract.AssessmentEntry.TABLE_NAME+
-                "."+ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER+" = ?);";
+            ResidentContract.AssessmentEntry.TABLE_NAME +
+                    "." + ResidentContract.AssessmentEntry.COLUMN_TIME + " = (SELECT MIN(" +
+                    ResidentContract.AssessmentEntry.TABLE_NAME +
+                    "." + ResidentContract.AssessmentEntry.COLUMN_TIME + ") FROM " +
+                    ResidentContract.AssessmentEntry.TABLE_NAME + " WHERE " +
+                    ResidentContract.AssessmentEntry.TABLE_NAME +
+                    "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ?);";
 
     private static final String sMedsGivenByResidentWithOldestTimestamp =
-        ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MIN("+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+") FROM "+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ?);";
+            ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " = (SELECT MIN(" +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + ") FROM " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME + " WHERE " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ?);";
 
     private static final String sMedsGivenByResidentAndMedWithNewestTimestamp =
-        ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MAX("+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+") FROM "+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ? AND "+
-                ResidentContract.MedsGivenEntry.TABLE_NAME+
-                "."+ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC+" = ?);";
+            ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " = (SELECT MAX(" +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + ") FROM " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME + " WHERE " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? AND " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ?);";
 
 
     // Raw query:
     private static final String sMostRecentResidentAndMedGivenTimestamp =
-            "SELECT "+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" FROM "+
-                    ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
-                    ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+" = (SELECT MAX("+
-                    ResidentContract.MedsGivenEntry.TABLE_NAME+
-                    "."+ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN+") FROM "+
-                    ResidentContract.MedsGivenEntry.TABLE_NAME+" WHERE "+
-                    ResidentContract.MedsGivenEntry.TABLE_NAME+
-                    "."+ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER+" = ? AND "+
-                    ResidentContract.MedsGivenEntry.TABLE_NAME+
-                    "."+ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC+" = ?);";
+            "SELECT " + ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " FROM " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME + " WHERE " +
+                    ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + " = (SELECT MAX(" +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN + ") FROM " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME + " WHERE " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " = ? AND " +
+                    ResidentContract.MedsGivenEntry.TABLE_NAME +
+                    "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ?);";
 
 
     static UriMatcher buildUriMatcher() {
@@ -289,7 +289,7 @@ public class ResidentProvider extends ContentProvider {
                 Log.e(LOG_TAG, " cursor NOT null ...");
                 if (cursor.moveToFirst()) {
                     latestTimestamp = cursor.getLong(0);
-                    Log.e(LOG_TAG, " ...  latestTimestamp is "+String.valueOf(latestTimestamp));
+                    Log.e(LOG_TAG, " ...  latestTimestamp is " + String.valueOf(latestTimestamp));
                 }
             }
             // Now set the last-time-given column for the 'medications' table, for this resident/med to this
@@ -327,8 +327,7 @@ public class ResidentProvider extends ContentProvider {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "residents"
-            case RESIDENTS:
-            {
+            case RESIDENTS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         ResidentContract.ResidentEntry.TABLE_NAME,
                         projection,
@@ -338,8 +337,7 @@ public class ResidentProvider extends ContentProvider {
                 break;
             }
 
-            case RESIDENTS_WITH_ROOM_NUMBER:
-            {
+            case RESIDENTS_WITH_ROOM_NUMBER: {
                 retCursor = getResidentByRoomNumber(uri, projection, sortOrder);
                 break;
             }
@@ -352,14 +350,12 @@ public class ResidentProvider extends ContentProvider {
             }
 
             // "meds/*"
-            case MEDICATIONS_WITH_ROOM_NUMBER:
-            {
+            case MEDICATIONS_WITH_ROOM_NUMBER: {
                 retCursor = getMedicationsByPatient(uri, projection, sortOrder);
                 break;
             }
 
-            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED:
-            {
+            case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED: {
                 retCursor = getMedicationsByPatientAndMed(uri, projection, sortOrder);
                 break;
             }
@@ -370,22 +366,19 @@ public class ResidentProvider extends ContentProvider {
             }
 
             // "assessments/*"
-            case ASSESSMENTS_WITH_ROOM_NUMBER:
-            {
+            case ASSESSMENTS_WITH_ROOM_NUMBER: {
                 retCursor = getAssessmentByPatient(uri, projection, sortOrder);
                 break;
             }
 
             // "medsGiven/*"
-            case MEDS_GIVEN_WITH_ROOM_NUMBER:
-            {
+            case MEDS_GIVEN_WITH_ROOM_NUMBER: {
                 retCursor = getMedsGivenByPt(uri, projection, sortOrder);
                 break;
             }
 
             // "medsGiven/*/*"
-            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED:
-            {
+            case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED: {
                 retCursor = getMedsGivenByPtAndMedname(uri, projection, sortOrder);
                 break;
             }
@@ -401,7 +394,7 @@ public class ResidentProvider extends ContentProvider {
         String roomNumber = ResidentContract.ResidentEntry.getRoomNumberFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.ResidentEntry.TABLE_NAME,
-                projection, sResidentByRoomNumberSelection, new String[] {roomNumber}, null, null, sortOrder);
+                projection, sResidentByRoomNumberSelection, new String[]{roomNumber}, null, null, sortOrder);
     }
 
 
@@ -409,7 +402,7 @@ public class ResidentProvider extends ContentProvider {
         String roomNumber = ResidentContract.MedicationEntry.getRoomNumberFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedicationEntry.TABLE_NAME,
-                projection, sMedsByResidentSelection, new String[] {roomNumber}, null, null, sortOrder);
+                projection, sMedsByResidentSelection, new String[]{roomNumber}, null, null, sortOrder);
     }
 
 
@@ -418,7 +411,7 @@ public class ResidentProvider extends ContentProvider {
         String medName = ResidentContract.MedicationEntry.getMedNameFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedicationEntry.TABLE_NAME,
-                projection, sMedsByResidentAndMedSelection, new String[] {roomNumber,medName}, null, null, sortOrder);
+                projection, sMedsByResidentAndMedSelection, new String[]{roomNumber, medName}, null, null, sortOrder);
     }
 
 
@@ -426,14 +419,14 @@ public class ResidentProvider extends ContentProvider {
         String roomNumber = ResidentContract.AssessmentEntry.getRoomNumberFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.AssessmentEntry.TABLE_NAME,
-                projection, sRecentAssessmentByResidentSelection, new String[] {roomNumber}, null, null, sortOrder);
+                projection, sRecentAssessmentByResidentSelection, new String[]{roomNumber}, null, null, sortOrder);
     }
 
     private Cursor getMedsGivenByPt(Uri uri, String[] projection, String sortOrder) {
         String roomNumber = ResidentContract.MedsGivenEntry.getRoomNumberFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedsGivenEntry.TABLE_NAME,
-                projection, sMedsGivenByResidentSelection, new String[] {roomNumber},
+                projection, sMedsGivenByResidentSelection, new String[]{roomNumber},
                 null, null, sortOrder);
     }
 
@@ -442,7 +435,7 @@ public class ResidentProvider extends ContentProvider {
         String medName = ResidentContract.MedsGivenEntry.getMedNameFromUri(uri);
 
         return mOpenHelper.getReadableDatabase().query(ResidentContract.MedsGivenEntry.TABLE_NAME,
-                projection, sMedsGivenByResidentAndMedSelection, new String[] {roomNumber, medName},
+                projection, sMedsGivenByResidentAndMedSelection, new String[]{roomNumber, medName},
                 null, null, sortOrder);
     }
 
@@ -456,56 +449,69 @@ public class ResidentProvider extends ContentProvider {
         switch (match) {
             case RESIDENTS: {
                 long _id = db.insert(ResidentContract.ResidentEntry.TABLE_NAME, null, values);
-                if ( _id > 0 ) returnUri = ResidentContract.ResidentEntry.buildResidentsUri(_id);
-                else throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
+                if (_id > 0) returnUri = ResidentContract.ResidentEntry.buildResidentsUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (residents)" + uri);
                 break;
             }
             case MEDICATIONS: {
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
-                if ( _id > 0 ) returnUri = ResidentContract.MedicationEntry.buildMedsUri(_id);
-                else throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
+                if (_id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
                 break;
             }
             case MEDICATIONS_WITH_ROOM_NUMBER: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
+                if (_id > 0)
+                    returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
                 break;
             }
             case MEDICATIONS_WITH_ROOM_NUMBER_AND_MED: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedicationEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
+                if (_id > 0)
+                    returnUri = ResidentContract.MedicationEntry.buildMedsWithRoomNumber(roomNumber);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (medications)" + uri);
                 break;
             }
             case ASSESSMENTS: {
                 long _id = db.insert(ResidentContract.AssessmentEntry.TABLE_NAME, null, values);
-                if ( _id > 0 ) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsUri(_id);
-                else throw new android.database.SQLException("Failed to insert row into (assessments)" + uri);
+                if (_id > 0) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (assessments)" + uri);
                 break;
             }
             case ASSESSMENTS_WITH_ROOM_NUMBER: {
                 String roomNumber = values.getAsString("ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.AssessmentEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (assessments)" + uri);
+                if (_id > 0)
+                    returnUri = ResidentContract.AssessmentEntry.buildAssessmentsWithRoomNumber(roomNumber);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (assessments)" + uri);
                 break;
             }
             case MEDS_GIVEN_WITH_ROOM_NUMBER: {
                 String roomNumber = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER");
                 long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumber(roomNumber);
-                else throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
+                if (_id > 0)
+                    returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumber(roomNumber);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
                 break;
             }
             case MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED: {
                 String roomNumber = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER");
                 String medName = values.getAsString("ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC");
                 long _id = db.insert(ResidentContract.MedsGivenEntry.TABLE_NAME, null, values);
-                if ( _id > 0) returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumberAndMed(roomNumber,medName);
-                else throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
+                if (_id > 0)
+                    returnUri = ResidentContract.MedsGivenEntry.buildMedsGivenWithRoomNumberAndMed(roomNumber, medName);
+                else
+                    throw new android.database.SQLException("Failed to insert row into (medsGiven)" + uri);
                 break;
             }
             default:
@@ -522,17 +528,17 @@ public class ResidentProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
         // this makes delete all rows return the number of rows deleted
-        if ( null == selection ) selection = "1";
+        if (null == selection) selection = "1";
         switch (match) {
             case RESIDENTS:    // delete all residents
                 rowsDeleted = db.delete(
                         ResidentContract.ResidentEntry.TABLE_NAME, selection, selectionArgs);
-                Log.e(LOG_TAG," Number of resident rows deleted is "+String.valueOf(rowsDeleted));
+                Log.e(LOG_TAG, " Number of resident rows deleted is " + String.valueOf(rowsDeleted));
                 break;
             case MEDICATIONS:  // delete all medications
                 rowsDeleted = db.delete(
                         ResidentContract.MedicationEntry.TABLE_NAME, selection, selectionArgs);
-                Log.e(LOG_TAG," Number of medication rows deleted is "+String.valueOf(rowsDeleted));
+                Log.e(LOG_TAG, " Number of medication rows deleted is " + String.valueOf(rowsDeleted));
                 break;
             case MEDICATIONS_WITH_ROOM_NUMBER:
                 rowsDeleted = db.delete(
@@ -699,7 +705,7 @@ public class ResidentProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             default:
-                throw new UnsupportedOperationException(" (bulkInsert) unknown uri: "+uri);
+                throw new UnsupportedOperationException(" (bulkInsert) unknown uri: " + uri);
         }
     }
 

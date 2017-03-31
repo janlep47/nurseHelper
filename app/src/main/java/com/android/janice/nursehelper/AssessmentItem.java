@@ -1,6 +1,7 @@
 package com.android.janice.nursehelper;
 
 //import java.sql.Time;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -40,7 +41,6 @@ public class AssessmentItem {
     private long timestamp;
 
 
-
     //boolean mAddProblem = false;
     public final static int COL_ROOM_NUMBER = 0;
     public final static int COL_BLOOD_PRESSURE = 1;
@@ -55,7 +55,9 @@ public class AssessmentItem {
     public final static int COL_TIMESTAMP = 10;
 
 
-    public String getRoomNumber() { return roomNumber; }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
     public String getBloodPressure() {
         return bloodPressure;
@@ -65,45 +67,81 @@ public class AssessmentItem {
         return temperature;
     }
 
-    public int getPulse() { return pulse; }
+    public int getPulse() {
+        return pulse;
+    }
 
-    public int getRespiratoryRate() { return respiratoryRate; }
+    public int getRespiratoryRate() {
+        return respiratoryRate;
+    }
 
-    public String getEdema() { return edema; }
+    public String getEdema() {
+        return edema;
+    }
 
-    public String getEdemaLocn() { return edemaLocn; }
+    public String getEdemaLocn() {
+        return edemaLocn;
+    }
 
-    public boolean getPitting() { return edemaPitting; }
+    public boolean getPitting() {
+        return edemaPitting;
+    }
 
-    public int getPain() { return pain; }
+    public int getPain() {
+        return pain;
+    }
 
-    public String getSignificantFindings() { return significantFindings; }
+    public String getSignificantFindings() {
+        return significantFindings;
+    }
 
-    public long getTimestamp() { return timestamp; }
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-    public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
 
     public void setBloodPressure(String bp) {
         this.bloodPressure = bp;
     }
 
-    public void setTemperature(String temp) { this.temperature = temp; }
+    public void setTemperature(String temp) {
+        this.temperature = temp;
+    }
 
-    public void setPulse(int pulse) { this.pulse = pulse; }
+    public void setPulse(int pulse) {
+        this.pulse = pulse;
+    }
 
-    public void setRespiratoryRate(int rr) { this.respiratoryRate = rr; }
+    public void setRespiratoryRate(int rr) {
+        this.respiratoryRate = rr;
+    }
 
-    public void setEdema(String edema) { this.edema = edema; }
+    public void setEdema(String edema) {
+        this.edema = edema;
+    }
 
-    public void setEdemaLocn(String edemaLocn) { this.edemaLocn = edemaLocn; }
+    public void setEdemaLocn(String edemaLocn) {
+        this.edemaLocn = edemaLocn;
+    }
 
-    public void setPitting(boolean pitting) { this.edemaPitting = pitting; }
+    public void setPitting(boolean pitting) {
+        this.edemaPitting = pitting;
+    }
 
-    public void setPain(int pain) { this.pain = pain; }
+    public void setPain(int pain) {
+        this.pain = pain;
+    }
 
-    public void setSignificantFindings(String findings) { this.significantFindings = findings; }
+    public void setSignificantFindings(String findings) {
+        this.significantFindings = findings;
+    }
 
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public AssessmentItem(Cursor cursor) {
         roomNumber = cursor.getString(COL_ROOM_NUMBER);
@@ -119,7 +157,6 @@ public class AssessmentItem {
         significantFindings = cursor.getString(COL_SIGNIFICANT_FINDINGS);
         timestamp = cursor.getLong(COL_TIMESTAMP);
     }
-
 
 
     public String getReadableTimestamp(Context context) {
@@ -149,7 +186,7 @@ public class AssessmentItem {
         uri = uri.buildUpon().appendPath(roomNumber).build();
 
 
-        long time= System.currentTimeMillis();
+        long time = System.currentTimeMillis();
 
         // Assessment #1
         ContentValues aValues = new ContentValues();
@@ -163,7 +200,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_LOCN, "RLE");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_EDEMA_PITTING, true);  // true
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_PAIN, 2);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "C/O stiffness in R ankle. \n"+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "C/O stiffness in R ankle. \n" +
                 "Very slight headache.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
@@ -207,7 +244,7 @@ public class AssessmentItem {
         long time = System.currentTimeMillis();
 
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER, roomNumber);
-        aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, String.valueOf(systolicBP)+"/"+
+        aValues.put(ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE, String.valueOf(systolicBP) + "/" +
                 String.valueOf(diastolicBP));
 
         //String tempString = String.format(context.getString(R.string.format_temperature), temp) +
@@ -225,10 +262,10 @@ public class AssessmentItem {
 
         Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
         //saveFirebaseAssessment(aValues, database, userId);
-        UpdateAssessmentTask updateAssessmentTask = new UpdateAssessmentTask(context,database,userId);
+        UpdateAssessmentTask updateAssessmentTask = new UpdateAssessmentTask(context, database, userId);
         updateAssessmentTask.execute(aValues);
 
-        TrimAssessmentDataTask trimAssessmentDataTask = new TrimAssessmentDataTask(context,roomNumber);
+        TrimAssessmentDataTask trimAssessmentDataTask = new TrimAssessmentDataTask(context, roomNumber);
         trimAssessmentDataTask.execute();
 
     }
@@ -271,9 +308,6 @@ public class AssessmentItem {
             super.onPostExecute(result);
         }
     }
-
-
-
 
 
     private static class TrimAssessmentDataTask extends AsyncTask<Void, Void, Void> {

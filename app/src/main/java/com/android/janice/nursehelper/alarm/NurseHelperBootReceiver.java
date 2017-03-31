@@ -19,10 +19,10 @@ import android.content.Intent;
 // BEGIN_INCLUDE(autostart)
 public class NurseHelperBootReceiver extends BroadcastReceiver {
     NurseHelperAlarmReceiver alarm = new NurseHelperAlarmReceiver();
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
-        {
+        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             alarm.setAlarm(context);
         }
     }

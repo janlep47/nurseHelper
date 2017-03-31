@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by janicerichards on 2/4/17.
  */
 
-public class AssessmentActivity  extends AppCompatActivity implements AssessmentFragment.Callback{
+public class AssessmentActivity extends AppCompatActivity implements AssessmentFragment.Callback {
 
     AssessmentFragment mFragment;
     private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
@@ -73,7 +73,6 @@ public class AssessmentActivity  extends AppCompatActivity implements Assessment
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -83,15 +82,14 @@ public class AssessmentActivity  extends AppCompatActivity implements Assessment
         if (id == R.id.list_past_assessments) {
             Intent intent;
             Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.ITEM_ROOM_NUMBER,mRoomNumber);
-            bundle.putString(MainActivity.ITEM_PORTRAIT_FILEPATH,mPortraitFilePath);
+            bundle.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
+            bundle.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
             intent = new Intent(this, PastAssessmentsActivity.class);
             intent.putExtras(bundle);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     @Override
@@ -113,7 +111,7 @@ public class AssessmentActivity  extends AppCompatActivity implements Assessment
     }
 
     public DatabaseReference getDatabaseReference() {
-    return mDatabase;
-}
+        return mDatabase;
+    }
 
 }

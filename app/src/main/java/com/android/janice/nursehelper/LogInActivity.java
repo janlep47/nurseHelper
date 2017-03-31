@@ -78,14 +78,14 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 .build();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    //FirebaseUser user = firebaseAuth.getCurrentUser();
-                    mUser = firebaseAuth.getCurrentUser();
-                    if (mUser != null) {
-                        // User is signed in
-                        Log.d(LOG_TAG, "onAuthStateChanged:signed_in:" + mUser.getUid());
-                        // Can now exit, and go back to calling activity (Main)
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                //FirebaseUser user = firebaseAuth.getCurrentUser();
+                mUser = firebaseAuth.getCurrentUser();
+                if (mUser != null) {
+                    // User is signed in
+                    Log.d(LOG_TAG, "onAuthStateChanged:signed_in:" + mUser.getUid());
+                    // Can now exit, and go back to calling activity (Main)
                         /*
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             finishAffinity();
@@ -94,13 +94,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                             System.exit(0);
                         }
                         */
-                    } else {
-                        // User is signed out
-                        Log.d(LOG_TAG, "onAuthStateChanged:signed_out");
-                    }
-                    // ...
+                } else {
+                    // User is signed out
+                    Log.d(LOG_TAG, "onAuthStateChanged:signed_out");
                 }
-            };
+                // ...
+            }
+        };
     }
 
 
@@ -121,7 +121,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
 
 
     @Override
@@ -180,7 +179,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             Bundle bundle = new Bundle();
-                            bundle.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
+                            bundle.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
                             bundle.putString(MainActivity.ITEM_USER_ID, mUser.getUid());
                             intent.putExtras(bundle);
                             startActivity(intent);
@@ -219,11 +218,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-
     @Override // GoogleApiClient.ConnectionCallbacks
     public void onConnected(Bundle connectionHint) {
         if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
-           Log.d(LOG_TAG, "onConnected: " + connectionHint);
+            Log.d(LOG_TAG, "onConnected: " + connectionHint);
         }
     }
 

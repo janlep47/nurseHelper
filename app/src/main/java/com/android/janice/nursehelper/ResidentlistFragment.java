@@ -85,8 +85,11 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
         public void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
                                    int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
+
         public String getNurseName();
+
         public String getDbUserId();
+
         public DatabaseReference getDatabaseReference();
     }
 
@@ -181,7 +184,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         // We hold for transition here just in-case the activity
         // needs to be re-created. In a standard return transition,
         // this doesn't actually make a difference.
-        if ( mHoldForTransition ) {
+        if (mHoldForTransition) {
             getActivity().supportPostponeEnterTransition();
         }
         getLoaderManager().initLoader(RESIDENTLIST_LOADER, null, this);
@@ -202,12 +205,14 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
+                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: " + databaseError.toException());
             }
         });
     }
 
-    void onResidentlistChanged() {getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);}
+    void onResidentlistChanged() {
+        getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);
+    }
 
 
     @Override
@@ -227,7 +232,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         } else {  // MEDTIME_LOADER
             // This call will do a special raw-query, which will find the earliest (if any)
             //   time due for scheduled meds, for each resident.
-            return new CursorLoader(getActivity(),ResidentContract.MedicationEntry.CONTENT_URI, null,
+            return new CursorLoader(getActivity(), ResidentContract.MedicationEntry.CONTENT_URI, null,
                     null, null, null);
         }
     }
@@ -242,7 +247,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         // Otherwise, RESIDENT_LOADER
         mResidentlistAdapter.swapCursor(data);
         updateEmptyView();
-        if ( data.getCount() == 0 ) {
+        if (data.getCount() == 0) {
             getActivity().supportStartPostponedEnterTransition();
         } else {
             mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -295,7 +300,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     }
 
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -315,9 +319,9 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
     // Update the empty-list view if empty Resident DB or server down
     private void updateEmptyView() {
-        if ( mResidentlistAdapter.getItemCount() == 0 ) {
+        if (mResidentlistAdapter.getItemCount() == 0) {
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_residentlist_empty);
-            if ( null != tv ) {
+            if (null != tv) {
 
                 int message = R.string.empty_residentlist_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
@@ -346,7 +350,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     }
 
 
-
     private class UpdateResidentsFromFirebaseTask extends AsyncTask<Void, Void, Void> {
         protected Context context;
         protected DataSnapshot dataSnapshot;
@@ -368,7 +371,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                 // Just delete ALL records in the device 'residents' table, and add the ones from the
                 //  Firebase dataSnapshot:
                 if (dataSnapshot.hasChild(ResidentContract.ResidentEntry.TABLE_NAME)) {
-                    getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI,null, null);
+                    getActivity().getContentResolver().delete(ResidentContract.ResidentEntry.CONTENT_URI, null, null);
                 } else {
                     return null;
                 }
@@ -380,7 +383,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                         ContentValues resValues = new ContentValues();
                         resValues.put(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER, resident.getRoomNumber());
                         resValues.put(ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH, resident.getPortraitFilepath());
-                        getActivity().getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI,resValues);
+                        getActivity().getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, resValues);
                     }
                 }
             }

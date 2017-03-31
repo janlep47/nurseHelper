@@ -11,7 +11,7 @@ import android.view.MenuItem;
  * Created by janicerichards on 2/4/17.
  */
 
-public class MedsGivenActivity  extends AppCompatActivity {
+public class MedsGivenActivity extends AppCompatActivity {
 
     MedsGivenFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();

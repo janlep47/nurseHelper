@@ -53,6 +53,7 @@ public class NurseHelperSyncUtils {
 
     /**
      * Schedules a repeating check of NurseHelper's meds next-due data using FirebaseJobDispatcher.
+     *
      * @param context Context used to create the GooglePlayDriver that powers the
      *                FirebaseJobDispatcher
      */
@@ -108,6 +109,7 @@ public class NurseHelperSyncUtils {
         /* Schedule the Job with the dispatcher */
         dispatcher.schedule(syncNurseHelperJob);
     }
+
     /**
      * Creates periodic sync tasks and checks to see if an immediate sync is required. If an
      * immediate sync is required, this method will take care of making sure that sync occurs.

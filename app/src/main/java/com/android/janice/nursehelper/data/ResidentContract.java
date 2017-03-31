@@ -70,7 +70,6 @@ public class ResidentContract {
     }
 
 
-
     /* Inner class that defines the table contents of the Medications table */
     public static final class MedicationEntry implements BaseColumns {
 
@@ -124,11 +123,11 @@ public class ResidentContract {
         public static String getRoomNumberFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
+
         public static String getMedNameFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }
     }
-
 
 
     /* Inner class that defines the table contents of the Assessments table */
@@ -193,8 +192,6 @@ public class ResidentContract {
     }
 
 
-
-
     /* Inner class that defines the table contents of the Medications table */
     public static final class MedsGivenEntry implements BaseColumns {
 
@@ -241,6 +238,7 @@ public class ResidentContract {
         public static String getRoomNumberFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
+
         public static String getMedNameFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }

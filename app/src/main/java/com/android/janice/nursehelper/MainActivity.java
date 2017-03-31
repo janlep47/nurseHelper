@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        ResidentlistFragment mFragment = ((ResidentlistFragment)getSupportFragmentManager()
+        ResidentlistFragment mFragment = ((ResidentlistFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_residentlist));
 
         ResidentItem.putInDummyData(this, mDatabase, mDbUserId);
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         boolean medAlertsSet = NurseHelperPreferences.areMedAlertsEnabled(this);
         Intent intent = new Intent(MainActivity.this, NurseHelperAlarmReceiver.class);
         intent.setAction(NurseHelperAlarmReceiver.ACTION_ALARM_RECEIVER);
-        boolean alarmOn = (PendingIntent.getBroadcast(MainActivity.this,1001,intent,
+        boolean alarmOn = (PendingIntent.getBroadcast(MainActivity.this, 1001, intent,
                 PendingIntent.FLAG_NO_CREATE) != null);
 
         // If med-alerts are set ON:
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, this);
         } catch (SecurityException e) {
-            Log.d(LOG_TAG," No rights to check device location!! \n"+
+            Log.d(LOG_TAG, " No rights to check device location!! \n" +
                     e.toString());
         }
 
@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_CODE);
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE);
         }
     }
 
@@ -265,9 +265,9 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             return true;
         }
 
-        if (id == R.id.about)     {
+        if (id == R.id.about) {
             AboutDialogFragment dialog = new AboutDialogFragment();
-            dialog.show(getSupportFragmentManager(),getResources().getString(R.string.action_about_title));
+            dialog.show(getSupportFragmentManager(), getResources().getString(R.string.action_about_title));
             return true;
         }
 
@@ -275,16 +275,15 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
     }
 
 
-
     @Override
     public void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
                                int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh) {
         Intent intent;
         Bundle bundle = new Bundle();
-        bundle.putString(ITEM_ROOM_NUMBER,roomNumber);
-        bundle.putString(ITEM_PORTRAIT_FILEPATH,portraitFilePath);
-        bundle.putString(ITEM_NURSE_NAME,mNurseName);
-        bundle.putString(ITEM_USER_ID,mDbUserId);
+        bundle.putString(ITEM_ROOM_NUMBER, roomNumber);
+        bundle.putString(ITEM_PORTRAIT_FILEPATH, portraitFilePath);
+        bundle.putString(ITEM_NURSE_NAME, mNurseName);
+        bundle.putString(ITEM_USER_ID, mDbUserId);
 
         switch (selectionType) {
             case ResidentlistAdapter.ResidentlistAdapterViewHolder.MEDICATIONS_SELECTED:
@@ -327,15 +326,19 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             outputStream.close();
             inputStream.close();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error: "+e.toString());
+            Log.e(LOG_TAG, "Error: " + e.toString());
         }
 
         return destinationFile.getPath();
     }
 
-    public String getNurseName() { return mNurseName; }
+    public String getNurseName() {
+        return mNurseName;
+    }
 
-    public String getDbUserId() { return mDbUserId; }
+    public String getDbUserId() {
+        return mDbUserId;
+    }
 
     public DatabaseReference getDatabaseReference() {
         return mDatabase;

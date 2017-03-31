@@ -30,7 +30,7 @@ import com.squareup.picasso.Picasso;
  * Created by janicerichards on 2/4/17.
  */
 
-public class MedsGivenFragment  extends ListFragment {
+public class MedsGivenFragment extends ListFragment {
     MedsGivenAdapter mAdapter;
     View mLoadingPanel;
     Context mContext;
@@ -78,8 +78,7 @@ public class MedsGivenFragment  extends ListFragment {
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
-
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
 
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
@@ -90,9 +89,8 @@ public class MedsGivenFragment  extends ListFragment {
         // Calculate ActionBar height
         int actionBarHeight = getActivity().getResources().getInteger(R.integer.appbar_default_height);
         TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
 
         Picasso.with(getActivity())
@@ -116,7 +114,7 @@ public class MedsGivenFragment  extends ListFragment {
         TextView emptyView = (TextView) root.findViewById(R.id.list_meds_given_empty);
 
         mContext = getContext();
-        mAdapter = new MedsGivenAdapter(mContext,android.R.layout.simple_list_item_2, mMedList, emptyView);
+        mAdapter = new MedsGivenAdapter(mContext, android.R.layout.simple_list_item_2, mMedList, emptyView);
         mListView.setAdapter(mAdapter);
 
 
@@ -127,9 +125,6 @@ public class MedsGivenFragment  extends ListFragment {
 
         return root;
     }
-
-
-
 
 
     // AsyncTask<Params, Progress, Result>

@@ -30,7 +30,6 @@ import com.android.janice.nursehelper.R;
 public final class NurseHelperPreferences {
 
 
-
     /**
      * Returns true if the user has selected metric temperature display.
      *
@@ -70,7 +69,7 @@ public final class NurseHelperPreferences {
         try {
             iVal = Integer.parseInt(val);
         } catch (NumberFormatException e) {
-            Log.e(" NurseHelperPreferences","  ERROR: couldn't convert alert time to integer!");
+            Log.e(" NurseHelperPreferences", "  ERROR: couldn't convert alert time to integer!");
         }
         return iVal;
     }
@@ -104,7 +103,7 @@ public final class NurseHelperPreferences {
                 .getBoolean(displayMedAlertsKey, shouldDisplayMedAlertsByDefault);
 
 
-        Log.i("PREF","   preferred med alerts on = "+shouldDisplayMedAlerts);
+        Log.i("PREF", "   preferred med alerts on = " + shouldDisplayMedAlerts);
         return shouldDisplayMedAlerts;
     }
 }

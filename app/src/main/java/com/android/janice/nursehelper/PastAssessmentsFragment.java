@@ -28,7 +28,7 @@ import java.util.List;
  * Created by janicerichards on 2/5/17.
  */
 
-public class PastAssessmentsFragment  extends ListFragment {
+public class PastAssessmentsFragment extends ListFragment {
     PastAssessmentsAdapter mAdapter;
     View mLoadingPanel;
     Context mContext;
@@ -73,8 +73,7 @@ public class PastAssessmentsFragment  extends ListFragment {
         ActionBar actionBar = mActivity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
-
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
 
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
@@ -85,9 +84,8 @@ public class PastAssessmentsFragment  extends ListFragment {
         // Calculate ActionBar height
         int actionBarHeight = mActivity.getResources().getInteger(R.integer.appbar_default_height);
         TypedValue tv = new TypedValue();
-        if (mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        if (mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
 
         Picasso.with(mActivity)
@@ -110,13 +108,12 @@ public class PastAssessmentsFragment  extends ListFragment {
         TextView emptyView = (TextView) root.findViewById(R.id.list_past_assessments_empty);
 
         mContext = getContext();
-        mAdapter = new PastAssessmentsAdapter(mContext,android.R.layout.simple_list_item_2, mAssessmentList,
+        mAdapter = new PastAssessmentsAdapter(mContext, android.R.layout.simple_list_item_2, mAssessmentList,
                 emptyView);
         mListView.setAdapter(mAdapter);
 
 
         new PastAssessmentsFragment.GetAssessmentListTask().execute(mRoomNumber);
-
 
 
         return root;
@@ -129,11 +126,6 @@ public class PastAssessmentsFragment  extends ListFragment {
         AssessmentItem item = mAdapter.getItem(position);
         //new AssessmentTask().execute(item.getGenericName());
     }
-
-
-
-
-
 
 
     // AsyncTask<Params, Progress, Result>

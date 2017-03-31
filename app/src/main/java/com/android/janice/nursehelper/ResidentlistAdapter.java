@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.squareup.picasso.Picasso;
+
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,9 +29,10 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
     final private View mEmptyView;
     final private ItemChoiceManager mICM;
 
-    public final static int THUMBNAIL_SIZE =150;
+    public final static int THUMBNAIL_SIZE = 150;
 
     public static final String LOG_TAG = ResidentlistAdapter.class.getSimpleName();
+
     /**
      * Cache of the children views for a residentlist list item.
      */
@@ -108,7 +110,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
      */
     @Override
     public ResidentlistAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if ( viewGroup instanceof RecyclerView ) {
+        if (viewGroup instanceof RecyclerView) {
             int layoutId = R.layout.list_item_residents;
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutId, viewGroup, false);
             view.setFocusable(true);
@@ -177,7 +179,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
 
     @Override
     public int getItemCount() {
-        if ( null == mCursor ) return 0;
+        if (null == mCursor) return 0;
         return mCursor.getCount();
     }
 
@@ -196,11 +198,13 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
         return mCursor;
     }
 
-    public Cursor getTimeCursor() { return mTimeCursor; }
+    public Cursor getTimeCursor() {
+        return mTimeCursor;
+    }
 
     public void selectView(RecyclerView.ViewHolder viewHolder) {
-        if ( viewHolder instanceof ResidentlistAdapterViewHolder ) {
-            ResidentlistAdapterViewHolder vfh = (ResidentlistAdapterViewHolder)viewHolder;
+        if (viewHolder instanceof ResidentlistAdapterViewHolder) {
+            ResidentlistAdapterViewHolder vfh = (ResidentlistAdapterViewHolder) viewHolder;
             vfh.onClick(vfh.itemView);
         }
     }

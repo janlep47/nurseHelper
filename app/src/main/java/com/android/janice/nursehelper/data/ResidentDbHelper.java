@@ -15,22 +15,22 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
     static final String DATABASE_NAME = "charting.db";
 
     public ResidentDbHelper(Context context) {
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_RESIDENTS_TABLE =
-                "CREATE TABLE "+ ResidentContract.ResidentEntry.TABLE_NAME +
-                        "( " + ResidentContract.ResidentEntry.COLUMN_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER +" TEXT KEY, " +
-                        ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH + " TEXT, "+
+                "CREATE TABLE " + ResidentContract.ResidentEntry.TABLE_NAME +
+                        "( " + ResidentContract.ResidentEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " TEXT KEY, " +
+                        ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH + " TEXT, " +
                         ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH + " TEXT);";
 
         db.execSQL(SQL_CREATE_RESIDENTS_TABLE);
 
         final String SQL_CREATE_MEDICATIONS_TABLE =
-                "CREATE TABLE "+ ResidentContract.MedicationEntry.TABLE_NAME +
+                "CREATE TABLE " + ResidentContract.MedicationEntry.TABLE_NAME +
                         "( " + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " TEXT KEY, " +
                         ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC + " TEXT NOT NULL, " +
                         ResidentContract.MedicationEntry.COLUMN_NAME_TRADE + " TEXT NOT NULL, " +
@@ -39,14 +39,14 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
                         ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE + " TEXT NOT NULL, " +
                         ResidentContract.MedicationEntry.COLUMN_FREQUENCY + " TEXT NOT NULL, " +
                         ResidentContract.MedicationEntry.COLUMN_TIMES + " TEXT, " +
-                        ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN + " TIMESTAMP, "+
-                        ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME + " TEXT, "+
+                        ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN + " TIMESTAMP, " +
+                        ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME + " TEXT, " +
                         ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG + " BIGINT);";
 
         db.execSQL(SQL_CREATE_MEDICATIONS_TABLE);
 
         final String SQL_CREATE_ASSESSMENTS_TABLE =
-                "CREATE TABLE "+ ResidentContract.AssessmentEntry.TABLE_NAME +
+                "CREATE TABLE " + ResidentContract.AssessmentEntry.TABLE_NAME +
                         "( " + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " TEXT KEY, " +
                         ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE + " TEXT, " +
                         ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE + " TEXT, " +
@@ -62,7 +62,7 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ASSESSMENTS_TABLE);
 
         final String SQL_CREATE_MEDS_GIVEN_TABLE =
-                "CREATE TABLE "+ ResidentContract.MedsGivenEntry.TABLE_NAME +
+                "CREATE TABLE " + ResidentContract.MedsGivenEntry.TABLE_NAME +
                         "( " + ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER + " TEXT KEY, " +
                         ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " TEXT, " +
                         ResidentContract.MedsGivenEntry.COLUMN_DOSAGE + " REAL, " +

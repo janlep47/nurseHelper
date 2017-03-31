@@ -93,6 +93,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, MedicationsAdapter.MedicationsAdapterViewHolder vh);
         public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh);
+
         public DatabaseReference getDatabaseReference();
     }
 
@@ -155,7 +156,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: "+databaseError.toException());
+                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: " + databaseError.toException());
             }
         });
 
@@ -190,7 +191,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         mRecyclerView.setAdapter(mMedicationsAdapter);
 
 
-
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
         // We need to start the enter transition after the data has loaded
@@ -199,7 +199,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title)+mRoomNumber);
+        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
                 | ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -209,9 +209,8 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         // Calculate ActionBar height
         int actionBarHeight = getActivity().getResources().getInteger(R.integer.appbar_default_height);
         TypedValue tv = new TypedValue();
-        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
 
         Picasso.with(getActivity())
@@ -240,7 +239,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         // needs to be re-created. In a standard return transition,
         // this doesn't actually make a difference.
 
-        if ( mHoldForTransition ) {
+        if (mHoldForTransition) {
             getActivity().supportPostponeEnterTransition();
         }
         getLoaderManager().initLoader(MEDICATIONS_LOADER, null, this);
@@ -248,7 +247,9 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onMedicationsChanged() {getLoaderManager().restartLoader(MEDICATIONS_LOADER, null, this);}
+    void onMedicationsChanged() {
+        getLoaderManager().restartLoader(MEDICATIONS_LOADER, null, this);
+    }
 
 
     @Override
@@ -258,8 +259,8 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         super.onSaveInstanceState(outState);
         outState.putString(MainActivity.ITEM_ROOM_NUMBER, mRoomNumber);
         outState.putString(MainActivity.ITEM_PORTRAIT_FILEPATH, mPortraitFilePath);
-        outState.putString(MainActivity.ITEM_NURSE_NAME,mNurseName);
-        outState.putString(MainActivity.ITEM_USER_ID,mDbUserId);
+        outState.putString(MainActivity.ITEM_NURSE_NAME, mNurseName);
+        outState.putString(MainActivity.ITEM_USER_ID, mDbUserId);
     }
 
 
@@ -285,7 +286,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mMedicationsAdapter.swapCursor(data);
         updateEmptyView();
-        if ( data.getCount() == 0 ) {
+        if (data.getCount() == 0) {
             getActivity().supportStartPostponedEnterTransition();
         } else {
             mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -301,7 +302,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
             });
         }
     }
-
 
 
     @Override
@@ -320,9 +320,9 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
     // Update the empty-list view if empty Resident DB or server down
     private void updateEmptyView() {
-        if ( mMedicationsAdapter.getItemCount() == 0 ) {
+        if (mMedicationsAdapter.getItemCount() == 0) {
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_medications_empty);
-            if ( null != tv ) {
+            if (null != tv) {
                 int message = R.string.empty_medications_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
             }
@@ -337,14 +337,10 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //if (key.equals(getString(R.string.pref_status_key))) {
-            //Utility.resetStatus(getContext());
-            //updateEmptyView();
+        //Utility.resetStatus(getContext());
+        //updateEmptyView();
         //}
     }
-
-
-
-
 
 
     private class UpdateMedicationsFromFirebaseTask extends AsyncTask<Void, Void, Void> {
@@ -368,7 +364,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                 // Just delete ALL records in the device 'medications' table, and add the ones from the
                 //  Firebase dataSnapshot:
                 if (dataSnapshot.hasChild(ResidentContract.MedicationEntry.TABLE_NAME)) {
-                    getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI,null, null);
+                    getActivity().getContentResolver().delete(ResidentContract.MedicationEntry.CONTENT_URI, null, null);
                 } else {
                     return null;
                 }
@@ -389,7 +385,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, new Long(medication.getLastGivenTime()));
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, medication.getNextDosageTime());
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, new Long(medication.getNextDosageTimeLong()));
-                        getActivity().getContentResolver().insert(ResidentContract.MedicationEntry.CONTENT_URI,medValues);
+                        getActivity().getContentResolver().insert(ResidentContract.MedicationEntry.CONTENT_URI, medValues);
                     }
                 }
             }

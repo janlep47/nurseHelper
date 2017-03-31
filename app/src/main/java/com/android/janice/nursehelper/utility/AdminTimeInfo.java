@@ -25,7 +25,7 @@ public class AdminTimeInfo {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR, hrs);
         calendar.set(Calendar.MINUTE, mins);
-        calendar.set(Calendar.AM_PM,pm ? Calendar.PM : Calendar.AM);
+        calendar.set(Calendar.AM_PM, pm ? Calendar.PM : Calendar.AM);
         time = calendar.getTimeInMillis();
         this.hrs = hrs;
         this.mins = mins;
@@ -36,10 +36,10 @@ public class AdminTimeInfo {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_YEAR,day);
+        calendar.set(Calendar.DAY_OF_YEAR, day);
         calendar.set(Calendar.HOUR, hrs);
         calendar.set(Calendar.MINUTE, mins);
-        calendar.set(Calendar.AM_PM,pm ? Calendar.PM : Calendar.AM);
+        calendar.set(Calendar.AM_PM, pm ? Calendar.PM : Calendar.AM);
         time = calendar.getTimeInMillis();
         this.hrs = hrs;
         this.mins = mins;
@@ -97,13 +97,13 @@ public class AdminTimeInfo {
 
         String minsString = String.valueOf(mins);
         // add leading zero for minutes, if any
-        if (mins < 10 && mins > 0) minsString = "0"+minsString;
-        dateTimeString += String.valueOf(hrs)+((mins != 0) ?
-                ":"+minsString : "");
+        if (mins < 10 && mins > 0) minsString = "0" + minsString;
+        dateTimeString += String.valueOf(hrs) + ((mins != 0) ?
+                ":" + minsString : "");
         if (pm) {
-            dateTimeString += " "+context.getString(R.string.pm_string);
+            dateTimeString += " " + context.getString(R.string.pm_string);
         } else {
-            dateTimeString += " "+context.getString(R.string.am_string);
+            dateTimeString += " " + context.getString(R.string.am_string);
         }
         return dateTimeString;
     }

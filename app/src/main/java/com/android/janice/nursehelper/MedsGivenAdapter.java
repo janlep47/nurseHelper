@@ -34,27 +34,27 @@ public class MedsGivenAdapter extends ArrayAdapter<MedGivenItem> {
         MedsGivenHolder holder = null;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new MedsGivenHolder();
-            holder.txt1 = (TextView)row.findViewById(android.R.id.text1);
-            holder.txt2 = (TextView)row.findViewById(android.R.id.text2);
+            holder.txt1 = (TextView) row.findViewById(android.R.id.text1);
+            holder.txt2 = (TextView) row.findViewById(android.R.id.text2);
 
             row.setTag(holder);
         } else {
-            holder = (MedsGivenHolder)row.getTag();
+            holder = (MedsGivenHolder) row.getTag();
         }
 
         String dosageLabel = context.getResources().getString(R.string.med_dosage_label);
         String givenLabel = context.getResources().getString(R.string.med_given);
         String refusedLabel = context.getResources().getString(R.string.med_refused);
         MedGivenItem med = data.get(position);
-        holder.txt1.setText(med.getGenericName() + "   "+dosageLabel+" "+String.valueOf(med.getDosage()) +
-            " "+med.getDosageUnits());
-        String line2 = (med.getGivenOrRefused() ? "   "+givenLabel+"  " : "   "+refusedLabel+"  ") +
+        holder.txt1.setText(med.getGenericName() + "   " + dosageLabel + " " + String.valueOf(med.getDosage()) +
+                " " + med.getDosageUnits());
+        String line2 = (med.getGivenOrRefused() ? "   " + givenLabel + "  " : "   " + refusedLabel + "  ") +
                 med.getReadableTimestamp(context) +
-                "  "+med.getNurseName();
+                "  " + med.getNurseName();
         holder.txt2.setText(line2);
         return row;
     }

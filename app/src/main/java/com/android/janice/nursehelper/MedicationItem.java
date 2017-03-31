@@ -74,7 +74,9 @@ public class MedicationItem {
         tradeName = cursor.getString(COL_TRADE_NAME);
     }
 
-    public String getRoomNumber() { return roomNumber; }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
     public String getGenericName() {
         return genericName;
@@ -84,25 +86,42 @@ public class MedicationItem {
         return tradeName;
     }
 
-    public double getDosage() { return dosage;}
+    public double getDosage() {
+        return dosage;
+    }
 
-    public String getDosageUnits() { return dosageUnits; }
+    public String getDosageUnits() {
+        return dosageUnits;
+    }
 
-    public String getDosageRoute() { return dosageRoute; }
+    public String getDosageRoute() {
+        return dosageRoute;
+    }
 
-    public String getAdminTimes() { return adminTimes; }
+    public String getAdminTimes() {
+        return adminTimes;
+    }
 
-    public String getFrequency() { return frequency; }
+    public String getFrequency() {
+        return frequency;
+    }
 
-    public long getLastGivenTime() { return lastGivenTime; }
+    public long getLastGivenTime() {
+        return lastGivenTime;
+    }
 
-    public String getNextDosageTime() { return nextDosageTime; }
+    public String getNextDosageTime() {
+        return nextDosageTime;
+    }
 
-    public long getNextDosageTimeLong() { return nextDosageTimeLong; }
+    public long getNextDosageTimeLong() {
+        return nextDosageTimeLong;
+    }
 
 
-
-    public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
 
     public void setGenericName(String genericName) {
         this.genericName = genericName;
@@ -112,22 +131,37 @@ public class MedicationItem {
         this.tradeName = tradeName;
     }
 
-    public void setDosage(float dosage) { this.dosage = dosage;}
+    public void setDosage(float dosage) {
+        this.dosage = dosage;
+    }
 
-    public void setDosageUnits(String dosageUnits) { this.dosageUnits = dosageUnits; }
+    public void setDosageUnits(String dosageUnits) {
+        this.dosageUnits = dosageUnits;
+    }
 
-    public void setDosageRoute(String dosageRoute) { this.dosageRoute = dosageRoute; }
+    public void setDosageRoute(String dosageRoute) {
+        this.dosageRoute = dosageRoute;
+    }
 
-    public void setAdminTimes(String adminTimes) { this.adminTimes = adminTimes; }
+    public void setAdminTimes(String adminTimes) {
+        this.adminTimes = adminTimes;
+    }
 
-    public void setFrequency(String frequency) { this.frequency = frequency; }
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
 
-    public void setLastGivenTime(long lastGivenTime) { this.lastGivenTime = lastGivenTime; }
+    public void setLastGivenTime(long lastGivenTime) {
+        this.lastGivenTime = lastGivenTime;
+    }
 
-    public void setNextDosageTime(String nextDosageTime) { this.nextDosageTime = nextDosageTime; }
+    public void setNextDosageTime(String nextDosageTime) {
+        this.nextDosageTime = nextDosageTime;
+    }
 
-    public void setNextDosageTimeLong(long nextDosageTimeLong) { this.nextDosageTimeLong = nextDosageTimeLong; }
-
+    public void setNextDosageTimeLong(long nextDosageTimeLong) {
+        this.nextDosageTimeLong = nextDosageTimeLong;
+    }
 
 
     public static void putInDummyData(Context context, DatabaseReference database, String userId) {
@@ -149,8 +183,8 @@ public class MedicationItem {
         String roomNumber = "200";
         Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
-        long time= System.currentTimeMillis();
-        String timeString = Utility.getReadableTimestamp(context,time);
+        long time = System.currentTimeMillis();
+        String timeString = Utility.getReadableTimestamp(context, time);
 
         // Med #1
         ContentValues medValues = new ContentValues();
@@ -180,7 +214,7 @@ public class MedicationItem {
         // Med #2
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context,time+5);
+        timeString = Utility.getReadableTimestamp(context, time + 5);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metformin HCL");
@@ -203,7 +237,7 @@ public class MedicationItem {
         // Med #3
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context,time+2);
+        timeString = Utility.getReadableTimestamp(context, time + 2);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metaprolol tartrate");
@@ -235,7 +269,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "PRN");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "Q4-6 hours for pain");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
-        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME,"");
+        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         medUri = context.getContentResolver().insert(uriMeds, medValues);
@@ -245,7 +279,7 @@ public class MedicationItem {
         // Med #1 for later patient
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context,time+50);
+        timeString = Utility.getReadableTimestamp(context, time + 50);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "208");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "atavan");
@@ -265,7 +299,7 @@ public class MedicationItem {
         // Med #2 for later patient
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context,time+25);
+        timeString = Utility.getReadableTimestamp(context, time + 25);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "208");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "haldoperitol");
@@ -298,15 +332,15 @@ public class MedicationItem {
         Uri uriMeds = ResidentContract.MedsGivenEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
 
-        long time= System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         // If this medication was REFUSED, don't actually make any changes to the 'medications' table
         //  (that is, no change to 'last-given', 'next-dosage-time', or 'next-dosage-time-long'.
         //  So, no need to calculate these:
         String nextAdminTime = "";
         long nextAdminTimeLong = 0;
         if (given) {
-        //AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
-        AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, timeLastGiven);
+            //AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, time);
+            AdminTimeInfo info = Utility.calculateNextDueTime(context, adminTimes, freq, timeLastGiven);
             if (info != null) {
                 nextAdminTime = info.getDisplayableTime(context);
                 nextAdminTimeLong = info.getTime();
@@ -327,7 +361,7 @@ public class MedicationItem {
 
         Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
         // Add the new "MedicationGiven" record to the Firebase database also:
-        UpdateMedsGivenTask updateMedsGivenTask = new UpdateMedsGivenTask(context,database,userId);
+        UpdateMedsGivenTask updateMedsGivenTask = new UpdateMedsGivenTask(context, database, userId);
         updateMedsGivenTask.execute(medGivenValues);
 
         // If this medication was REFUSED, don't actually make any changes to the 'medications' table
@@ -350,14 +384,14 @@ public class MedicationItem {
             updateMedicationTask.execute();
         }
 
-        TrimMedsGivenDataTask trimMedsGivenDataTask = new TrimMedsGivenDataTask(context,roomNumber);
+        TrimMedsGivenDataTask trimMedsGivenDataTask = new TrimMedsGivenDataTask(context, roomNumber);
         trimMedsGivenDataTask.execute();
 
     }
 
 
     public static void undoMedGiven(Context context, Cursor cursor, String roomNumber, String nurseName,
-                                       final DatabaseReference database, final String userId) {
+                                    final DatabaseReference database, final String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
         String adminTimes = cursor.getString(MedicationsFragment.COL_ADMIN_TIMES);
         String freq = cursor.getString(MedicationsFragment.COL_FREQUENCY);
@@ -371,10 +405,8 @@ public class MedicationItem {
     }
 
 
-
-
     public static void undoMedRefused(Context context, Cursor cursor, String roomNumber, String nurseName,
-                                         DatabaseReference database, String userId) {
+                                      DatabaseReference database, String userId) {
         String genericName = cursor.getString(MedicationsFragment.COL_GENERIC);
         // We have already verified that the nurse had ealier selected 'give' by mistake:
         //   we now need to delete that MedGiven record.  No changes had been made to the Medication
@@ -382,9 +414,6 @@ public class MedicationItem {
         UndoMedRefusedTask undoMedRefusedTask = new UndoMedRefusedTask(context, database, userId, roomNumber, genericName);
         undoMedRefusedTask.execute();
     }
-
-
-
 
 
     // AsyncTask<Params, Progress, Result>
@@ -433,9 +462,6 @@ public class MedicationItem {
     }
 
 
-
-
-
     // AsyncTask<Params, Progress, Result>
     // Params - what you pass to the AsyncTask
     // Progress - if you have any updates; passed to onProgressUpdate()
@@ -478,7 +504,6 @@ public class MedicationItem {
             super.onPostExecute(result);
         }
     }
-
 
 
     private static class UpdateMedicationTakenTask extends AsyncTask<Void, Void, Void> {
@@ -562,8 +587,6 @@ public class MedicationItem {
     }
 
 
-
-
     private static class TrimMedsGivenDataTask extends AsyncTask<Void, Void, Void> {
         protected Context context;
         protected String roomNumber;
@@ -643,7 +666,7 @@ public class MedicationItem {
         protected String roomNumber, genericName;
 
         public UndoMedRefusedTask(Context context, DatabaseReference database, String userId,
-                                String roomNumber, String genericName) {
+                                  String roomNumber, String genericName) {
             this.context = context;
             this.database = database;
             this.userId = userId;

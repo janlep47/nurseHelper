@@ -133,7 +133,7 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 if (vsTimeLong == 0) {
                     vsTime = "No assessments done";
                 } else {
-                    vsTime = Utility.getReadableTimestamp(getApplicationContext(),vsTimeLong);
+                    vsTime = Utility.getReadableTimestamp(getApplicationContext(), vsTimeLong);
                 }
 
                 long medAdminTimeLong = medData.getLong(COL_MED_TIME_LONG);

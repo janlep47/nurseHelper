@@ -39,7 +39,9 @@ public class MedGivenItem {
     public final static String TAG = MedicationItem.class.getSimpleName();
 
 
-    public String getRoomNumber() { return roomNumber; }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
     public String getGenericName() {
         return genericName;
@@ -49,15 +51,25 @@ public class MedGivenItem {
         return dosage;
     }
 
-    public String getDosageUnits() { return dosageUnits; }
+    public String getDosageUnits() {
+        return dosageUnits;
+    }
 
-    public boolean getGivenOrRefused() { return givenOrRefused; }
+    public boolean getGivenOrRefused() {
+        return givenOrRefused;
+    }
 
-    public String getNurseName() { return nurseName; }
+    public String getNurseName() {
+        return nurseName;
+    }
 
-    public long getTimeGiven() { return timeGiven; }
+    public long getTimeGiven() {
+        return timeGiven;
+    }
 
-    public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
 
     public void setGenericName(String genericName) {
         this.genericName = genericName;
@@ -71,21 +83,28 @@ public class MedGivenItem {
         this.dosageUnits = dosageUnits;
     }
 
-    public void setGivenOrRefused(boolean given) { this.givenOrRefused = given; }
+    public void setGivenOrRefused(boolean given) {
+        this.givenOrRefused = given;
+    }
 
-    public void setNurseName(String nurseName) { this.nurseName = nurseName; }
+    public void setNurseName(String nurseName) {
+        this.nurseName = nurseName;
+    }
 
-    public void setTimestamp(long timeGiven) { this.timeGiven = timeGiven; }
+    public void setTimestamp(long timeGiven) {
+        this.timeGiven = timeGiven;
+    }
 
 
-    public MedGivenItem() {}
+    public MedGivenItem() {
+    }
 
     public MedGivenItem(Cursor cursor) {
         roomNumber = cursor.getString(COL_ROOM_NUMBER);
         genericName = cursor.getString(COL_GENERIC_NAME);
         dosage = cursor.getFloat(COL_DOSAGE);
         dosageUnits = cursor.getString(COL_DOSAGE_UNITS);
-        givenOrRefused = (cursor.getShort(COL_GIVEN) == 0 ? false: true);
+        givenOrRefused = (cursor.getShort(COL_GIVEN) == 0 ? false : true);
         nurseName = cursor.getString(COL_NURSE_NAME);
         timeGiven = cursor.getLong(COL_TIME_GIVEN);
     }

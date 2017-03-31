@@ -36,16 +36,16 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
         PastAssessmentsAdapter.AssessmentHolder holder = null;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new PastAssessmentsAdapter.AssessmentHolder();
-            holder.txt1 = (TextView)row.findViewById(android.R.id.text1);
-            holder.txt2 = (TextView)row.findViewById(android.R.id.text2);
+            holder.txt1 = (TextView) row.findViewById(android.R.id.text1);
+            holder.txt2 = (TextView) row.findViewById(android.R.id.text2);
 
             row.setTag(holder);
         } else {
-            holder = (PastAssessmentsAdapter.AssessmentHolder)row.getTag();
+            holder = (PastAssessmentsAdapter.AssessmentHolder) row.getTag();
         }
 
         String bpLabel = mContext.getResources().getString(R.string.bp_label);
@@ -60,16 +60,16 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
         String findingsLabel = mContext.getResources().getString(R.string.findings_label);
         AssessmentItem assessment = data.get(position);
 
-        holder.txt1.setText(assessment.getReadableTimestamp(mContext)+
-                "\n  "+bpLabel+" "+assessment.getBloodPressure()+
-                "  "+tempLabel+" "+assessment.getTemperature()+
-                "\n  "+pulseLabel+" "+assessment.getPulse()+
-                "  "+rrLabel+" "+assessment.getRespiratoryRate()+
-                "\n  "+edemaLabel+" "+assessment.getEdema()+
-                ((!assessment.getEdema().equals("0")) ? "  "+locnLabel+" "+assessment.getEdemaLocn()+
-                        ((assessment.getPitting()) ? "  "+pittingVal : "  "+nonPittingVal) : " ") +
-                "\n  "+painLabel+" "+String.valueOf(assessment.getPain()));
-        holder.txt2.setText(findingsLabel+" \n"+assessment.getSignificantFindings());
+        holder.txt1.setText(assessment.getReadableTimestamp(mContext) +
+                "\n  " + bpLabel + " " + assessment.getBloodPressure() +
+                "  " + tempLabel + " " + assessment.getTemperature() +
+                "\n  " + pulseLabel + " " + assessment.getPulse() +
+                "  " + rrLabel + " " + assessment.getRespiratoryRate() +
+                "\n  " + edemaLabel + " " + assessment.getEdema() +
+                ((!assessment.getEdema().equals("0")) ? "  " + locnLabel + " " + assessment.getEdemaLocn() +
+                        ((assessment.getPitting()) ? "  " + pittingVal : "  " + nonPittingVal) : " ") +
+                "\n  " + painLabel + " " + String.valueOf(assessment.getPain()));
+        holder.txt2.setText(findingsLabel + " \n" + assessment.getSignificantFindings());
 
         return row;
     }

@@ -60,9 +60,11 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
     }
 
     // BEGIN_INCLUDE(set_alarm)
+
     /**
      * Sets a repeating alarm that runs once a day at approximately 8:30 a.m. When the
      * alarm fires, the app broadcasts an Intent to this WakefulBroadcastReceiver.
+     *
      * @param context
      */
     public void setAlarm(Context context) {
@@ -70,7 +72,7 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
             mTimeInterval = context.getResources().getInteger(R.integer.pref_time_interval_default);
         }
 
-        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         intent = new Intent(context, NurseHelperAlarmReceiver.class);
         // NEW:
         intent.setAction(ACTION_ALARM_RECEIVER);//my custom string action name
@@ -149,6 +151,7 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
 
     /**
      * Cancels the alarm.
+     *
      * @param context
      */
     // BEGIN_INCLUDE(cancel_alarm)
@@ -171,7 +174,7 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
         //pendingIntent.cancel();//important
 
         // If the alarm has been set, cancel it.
-        if (alarmMgr!= null) {
+        if (alarmMgr != null) {
             alarmMgr.cancel(alarmIntent);
         }
         if (pendingIntent != null) {

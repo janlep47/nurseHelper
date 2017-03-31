@@ -19,6 +19,7 @@ import android.view.View;
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
+
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -49,6 +50,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
 
     public static final String LOG_TAG = MedicationsAdapter.class.getSimpleName();
+
     /**
      * Cache of the children views for a Medications list item.
      */
@@ -102,7 +104,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
                 if (isChecked && !mRefuseBox.isChecked()) {
                     // Medication given for the current med
                     MedicationItem.medGiven(mContext, mCursor, mRoomNumber, mNurseName, true, mDatabase, mDbUserId);
-                } else if (!isChecked && !mRefuseBox.isChecked()){
+                } else if (!isChecked && !mRefuseBox.isChecked()) {
                     Dialog dialog = new AlertDialog.Builder(mContext)
                             .setTitle(R.string.undo_med_given_dialog_title)
                             .setMessage(R.string.undo_med_given_dialog_message)
@@ -111,7 +113,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     MedicationItem.undoMedGiven(mContext, mCursor, mRoomNumber, mNurseName,
                                             mDatabase, mDbUserId);
-                                    }
+                                }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
@@ -207,7 +209,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      */
     @Override
     public MedicationsAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if ( viewGroup instanceof RecyclerView ) {
+        if (viewGroup instanceof RecyclerView) {
             int layoutId = R.layout.list_item_medications;
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutId, viewGroup, false);
             view.setFocusable(true);
@@ -237,10 +239,10 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             formattedDate = Utility.getReadableTimestamp(mContext, lastGivenTime);
         else
             formattedDate = mContext.getResources().getString(R.string.med_not_given_yet);
-        medicationsAdapterViewHolder.mGenericNameView.setText("   ("+genericName+")");
+        medicationsAdapterViewHolder.mGenericNameView.setText("   (" + genericName + ")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
         medicationsAdapterViewHolder.mDosageView.setText(String.valueOf(dosage));
-        medicationsAdapterViewHolder.mDosageUnitsView.setText(" "+dosageUnits);
+        medicationsAdapterViewHolder.mDosageUnitsView.setText(" " + dosageUnits);
         medicationsAdapterViewHolder.mDosageRouteView.setText(dosageRoute);
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);
@@ -250,7 +252,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
     @Override
     public int getItemCount() {
-        if ( null == mCursor ) return 0;
+        if (null == mCursor) return 0;
         return mCursor.getCount();
     }
 

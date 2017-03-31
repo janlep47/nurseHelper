@@ -57,12 +57,9 @@ public class Utility {
     public static final int MONTHS = 4;
 
     public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
-    public static final long WEEK_IN_MILLIS = DAY_IN_MILLIS*7;
+    public static final long WEEK_IN_MILLIS = DAY_IN_MILLIS * 7;
     public static final long HOUR_IN_MILLIS = TimeUnit.HOURS.toMillis(1);
     public static final long MINUTE_IN_MILLIS = TimeUnit.MINUTES.toMillis(1);
-
-
-
 
 
     public static String getReadableTimestamp(Context context, long timestamp) {
@@ -83,13 +80,13 @@ public class Utility {
 
         String minsString = String.valueOf(mins);
         // add leading zero for minutes, if any
-        if (mins < 10 && mins > 0) minsString = "0"+minsString;
-        dateTimeString += String.valueOf(hrs)+((mins != 0) ?
-            ":"+minsString : "");
+        if (mins < 10 && mins > 0) minsString = "0" + minsString;
+        dateTimeString += String.valueOf(hrs) + ((mins != 0) ?
+                ":" + minsString : "");
         if (pm) {
-            dateTimeString += " "+context.getString(R.string.pm_string);
+            dateTimeString += " " + context.getString(R.string.pm_string);
         } else {
-            dateTimeString += " "+context.getString(R.string.am_string);
+            dateTimeString += " " + context.getString(R.string.am_string);
         }
         return dateTimeString;
     }
@@ -144,7 +141,7 @@ public class Utility {
 
 
     private static AdminTimeInfo getNextAdminTime(Context context, String adminTimes, long timeLastGiven,
-                                            Calendar today) {
+                                                  Calendar today) {
         /*
             <!-- the first match for this, will be hours ONLY -->
             <string name="format_admin_hours">\\d+</string>
@@ -190,7 +187,7 @@ public class Utility {
             String hoursString = "";
             if (matcherHrs.find()) {
                 hoursString = matcherHrs.group();
-                adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_hours),"");
+                adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_hours), "");
             } else break;
 
             Pattern patternMins = Pattern.compile(context.getString(R.string.format_admin_mins));
@@ -200,7 +197,7 @@ public class Utility {
                 minsString = matcherMins.group();
                 // peel off leading ":"
                 minsString = minsString.substring(1);
-                adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_mins),"");
+                adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_mins), "");
             }
 
             Pattern patternAmOrPm = Pattern.compile(context.getString(R.string.format_admin_am_or_pm));
@@ -213,11 +210,11 @@ public class Utility {
                     if (matcherAmOrPm.find()) {
                         amOrPmString = matcherAmOrPm.group();
                         if (isPM(amOrPmString)) pm = true;
-                        adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_am_or_pm),"");
+                        adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_am_or_pm), "");
                     }
                 } else {
                     if (isPM(amOrPmString)) pm = true;
-                    adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_am_or_pm),"");
+                    adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_am_or_pm), "");
                 }
             }
             int scheduledHour = 0, scheduledMin = 0;
@@ -251,7 +248,7 @@ public class Utility {
                 adminTimeInfo = new AdminTimeInfo(scheduledTime);
                 return adminTimeInfo;
             } catch (ParseException e) {
-                Log.e("UTILITY"," !!!! PROBLEM ... PARSE EXCEPTION  adminTimes="+adminTimes);
+                Log.e("UTILITY", " !!!! PROBLEM ... PARSE EXCEPTION  adminTimes=" + adminTimes);
                 return null;
             }
         }
@@ -260,7 +257,7 @@ public class Utility {
     }
 
 
-    private static AdminTimeInfo getNearestTimeFromLastAdmin(Context context, Calendar today, ArrayList<AdminTimeInfo>timesToAdmin) {
+    private static AdminTimeInfo getNearestTimeFromLastAdmin(Context context, Calendar today, ArrayList<AdminTimeInfo> timesToAdmin) {
         int day, hour, min, sec;
         day = today.get(Calendar.DAY_OF_YEAR);
         hour = today.get(Calendar.HOUR);
@@ -292,7 +289,7 @@ public class Utility {
             newTime.set(Calendar.HOUR, scheduledHour);
             newTime.set(Calendar.MINUTE, scheduledMin);
             newTime.set(Calendar.SECOND, 0);
-            newTime.set(Calendar.AM_PM,(pm ? Calendar.PM : Calendar.AM));
+            newTime.set(Calendar.AM_PM, (pm ? Calendar.PM : Calendar.AM));
 
             if (today.before(newTime)) {
                 int scheduledMilitaryHour = newTime.get(Calendar.HOUR_OF_DAY);
@@ -316,7 +313,7 @@ public class Utility {
                 return null;
             }
             Calendar newTimeCalendar = minimumAdminTimeInfo.getCalendar();
-            newTimeCalendar.set(Calendar.DAY_OF_YEAR,day+1);
+            newTimeCalendar.set(Calendar.DAY_OF_YEAR, day + 1);
             return minimumAdminTimeInfo;
         }
         return bestTime;
@@ -324,14 +321,11 @@ public class Utility {
 
     private static boolean isPM(String amOrPmString) {
         if (amOrPmString.trim().toUpperCase().startsWith("PM") ||
-            amOrPmString.trim().toUpperCase().startsWith("P")) {
+                amOrPmString.trim().toUpperCase().startsWith("P")) {
             return true;
         }
         return false;
     }
-
-
-
 
 
     // IMPORTANT: for now this assumes ONLY Q<#><time-period>, where # even specified if it's = 1!!
@@ -353,22 +347,22 @@ public class Utility {
         // First see if freq is one of the common ones
         int freqType = getFreqType(freq);
         if (freqType >= 0) {
-            switch (freqType){
+            switch (freqType) {
                 case QD:
                     // Select lastTimeGiven + 24Hours
-                    adminTime.set(Calendar.DAY_OF_YEAR,day+1);
+                    adminTime.set(Calendar.DAY_OF_YEAR, day + 1);
                     break;
                 case BID:
                     // Select lastTimeGiven + 12Hours
-                    adminTime.set(Calendar.HOUR,hour+12);
+                    adminTime.set(Calendar.HOUR, hour + 12);
                     break;
                 case TID:
                     // Select lastTimeGiven + 8Hours
-                    adminTime.set(Calendar.HOUR,hour+8);
+                    adminTime.set(Calendar.HOUR, hour + 8);
                     break;
                 case QID:
                     // Select lastTimeGiven + 6Hours
-                    adminTime.set(Calendar.HOUR,hour+6);
+                    adminTime.set(Calendar.HOUR, hour + 6);
                     break;
                 default:
                     Log.e("UTILITY", "ERROR added another frequency type, but not handled!");
@@ -405,15 +399,15 @@ public class Utility {
             }
         }
         if (numberString.length() == 0) {
-            Log.e("UTILITY"," !!!! PROBLEM ... numberString is EMPTY");
+            Log.e("UTILITY", " !!!! PROBLEM ... numberString is EMPTY");
             return null;
         }
         int number = 0;
         try {
             number = Integer.parseInt(numberString);
         } catch (NumberFormatException e) {
-            Log.e("UTILITY"," !!!! PROBLEM ... PARSE EXCEPTION  freq="+freq+
-                    "\n  numberString = '"+numberString+"'");
+            Log.e("UTILITY", " !!!! PROBLEM ... PARSE EXCEPTION  freq=" + freq +
+                    "\n  numberString = '" + numberString + "'");
             return null;
         }
 
@@ -422,23 +416,23 @@ public class Utility {
             switch (timePeriod) {
                 case MINS:
                     // Select lastTimeGiven + number (in minutes)
-                    adminTime.set(Calendar.MINUTE,min+number);
+                    adminTime.set(Calendar.MINUTE, min + number);
                     break;
                 case HOURS:
                     // Select lastTimeGiven + number (in hours)
-                    adminTime.set(Calendar.HOUR,hour+number);
+                    adminTime.set(Calendar.HOUR, hour + number);
                     break;
                 case DAYS:
                     // Select lastTimeGiven + number (in days)
-                    adminTime.set(Calendar.DAY_OF_YEAR,day+number);
+                    adminTime.set(Calendar.DAY_OF_YEAR, day + number);
                     break;
                 case WEEKS:
                     // Select lastTimeGiven + number (in weeks)
-                    adminTime.set(Calendar.WEEK_OF_YEAR,week+number);
+                    adminTime.set(Calendar.WEEK_OF_YEAR, week + number);
                     break;
                 case MONTHS:
                     // Select lastTimeGiven + number (in months)
-                    adminTime.set(Calendar.MONTH,month+number);
+                    adminTime.set(Calendar.MONTH, month + number);
                     break;
                 default:
                     Log.e("UTILITY", "ERROR added another frequency/time-period type, but not handled!");
@@ -448,8 +442,6 @@ public class Utility {
         adminTimeInfo = new AdminTimeInfo(adminTime);
         return adminTimeInfo;
     }
-
-
 
 
     private static int getFreqType(String freq) {
@@ -474,6 +466,7 @@ public class Utility {
         if (daysSinceEpoch == 0) return true;
         return false;
     }
+
     private static long elapsedDaysSinceEpoch(long utcDate) {
         return TimeUnit.MILLISECONDS.toDays(utcDate);
     }
@@ -492,11 +485,6 @@ public class Utility {
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
     }
-
-
-
-
-
 
 
     /**

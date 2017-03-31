@@ -64,7 +64,7 @@ public final class NurseHelperJsonUtils {
     }
 
 
-    public static ContentValues[] getMedicationContentValuesFromJson (Context context, String medicationJsonStr)
+    public static ContentValues[] getMedicationContentValuesFromJson(Context context, String medicationJsonStr)
             throws JSONException {
 
         JSONObject medicationJson = new JSONObject(medicationJsonStr);
@@ -101,22 +101,22 @@ public final class NurseHelperJsonUtils {
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS))
                 dosageUnits = (String) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS);
             else
-                dosageUnits="";
+                dosageUnits = "";
             String dosageRoute;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE))
                 dosageRoute = (String) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE);
             else
-                dosageRoute="";
+                dosageRoute = "";
             String freq;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_FREQUENCY))
                 freq = (String) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_FREQUENCY);
             else
-                freq="";
+                freq = "";
             String adminTimes;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_TIMES))
                 adminTimes = (String) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_TIMES);
             else
-                adminTimes="";
+                adminTimes = "";
             long lastGivenTime = 0;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN)) {
                 try {
@@ -124,7 +124,7 @@ public final class NurseHelperJsonUtils {
                     lastGivenTime = lval.longValue();
                 } catch (Exception e) {
                     try {
-                        ival = (Integer)  medicationObject.get(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN);
+                        ival = (Integer) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN);
                         lastGivenTime = ival.longValue();
                     } catch (Exception e1) {
 
@@ -135,7 +135,7 @@ public final class NurseHelperJsonUtils {
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME))
                 nextDosageTime = (String) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME);
             else
-                nextDosageTime="";
+                nextDosageTime = "";
             long nextDosageTimeLong = 0;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG)) {
                 try {
@@ -143,7 +143,7 @@ public final class NurseHelperJsonUtils {
                     nextDosageTimeLong = lval.longValue();
                 } catch (Exception e) {
                     try {
-                        ival = (Integer)  medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG);
+                        ival = (Integer) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG);
                         nextDosageTimeLong = ival.longValue();
                     } catch (Exception e1) {
 

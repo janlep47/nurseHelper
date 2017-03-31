@@ -30,5 +30,7 @@ public class NurseHelperSyncIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {NurseHelperSyncTask.syncResidentData(this);}
+    protected void onHandleIntent(Intent intent) {
+        NurseHelperSyncTask.syncResidentData(this);
+    }
 }
