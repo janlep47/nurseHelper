@@ -20,7 +20,7 @@ import com.android.janice.nursehelper.utility.Utility;
 import static com.android.janice.nursehelper.MainActivity.ITEM_PORTRAIT_FILEPATH;
 import static com.android.janice.nursehelper.MainActivity.ITEM_ROOM_NUMBER;
 
-/**
+/*
  * Created by janicerichards on 2/18/17.
  */
 
@@ -31,8 +31,8 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
             ResidentContract.ResidentEntry.COLUMN_PORTRAIT_FILEPATH
     };
     // These indices are tied to above.
-    static final int COL_ROOM_NUMBER = 0;
-    static final int COL_PORTRAIT_FILEPATH = 1;
+    private static final int COL_ROOM_NUMBER = 0;
+    private static final int COL_PORTRAIT_FILEPATH = 1;
 
     private static final String[] MEDLIST_COLUMNS = {
             ResidentContract.MedicationEntry.TABLE_NAME + "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER,
@@ -40,15 +40,15 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
     };
     // These indices are tied to above.
     //static final int COL_ROOM_NUMBER = 0;
-    static final int COL_MED_TIME = 1;
-    static final int COL_MED_TIME_LONG = 2;
+    private static final int COL_MED_TIME = 1;
+    private static final int COL_MED_TIME_LONG = 2;
 
     private static final String[] VSLIST_COLUMNS = {
             ResidentContract.AssessmentEntry.TABLE_NAME + "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
             ResidentContract.AssessmentEntry.COLUMN_TIME
     };
     // static final int COL_ROOM_NUMBER = 0;
-    static final int COL_TIME_ASSESSED = 1;
+    private static final int COL_TIME_ASSESSED = 1;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -165,11 +165,6 @@ public class ResidentlistWidgetRemoteViewsService extends RemoteViewsService {
                 views.setOnClickFillInIntent(R.id.widget_list_item, medsIntent);
 
                 return views;
-            }
-
-            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-            private void setRemoteContentDescription(RemoteViews views, String description) {
-                //views.setContentDescription(R.id.widget_icon, description);
             }
 
             @Override

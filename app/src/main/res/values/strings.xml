@@ -14,6 +14,7 @@
     <string name="title_activity_medications">Medications</string>
     <string name="title_activity_meds_given">MedsGiven</string>
     <string name="title_activity_assessments">Assess</string>
+    <string name="title_activity_assessment">Assessment</string>
     <string name="title_activity_past_assessments">Assessments</string>
     <string name="title_activity_careplan">Care Plan</string>
 
@@ -27,6 +28,7 @@
     <string name="med_given">given</string>
     <string name="med_refused">refused</string>
     <string name="med_dosage_label">dosage:</string>
+    <string name="space">\u0020</string>
 
     <string name="prn_string">PRN</string>
     <!-- ? once or not at all
@@ -56,7 +58,6 @@
     <string name="pulse_label">pulse: </string>
     <string name="rr_label">respiratory rate: </string>
     <string name="edema_label">edema: </string>
-    <string name="edema_location_label">location: </string>
     <string name="edema_LLE_label">LLE:</string>
     <string name="edema_RLE_label">RLE:</string>
     <string name="edema_LUE_label">LUE:</string>
@@ -65,6 +66,7 @@
     <string name="edema_non_pitting_label">non-pitting:</string>
     <string name="pain_label">pain: </string>
     <string name="significant_findings_label">significant findings: </string>
+    <string name="significant_findings_hint">assessment narrative</string>
     <string name="done_button_label">DONE</string>
 
     <string name="bp_label">BP:</string>
@@ -82,7 +84,6 @@
 
     <string name="temperature_default_imperial">98.7\u00B0 F</string>
     <string name="temperature_default_metric">37.1\u00B0 C</string>
-    <string name="edema_default">0</string>
 
     <string-array name="edema_array">
         <item>0</item>
@@ -92,13 +93,7 @@
         <item>Stage IV</item>
     </string-array>
 
-    <string-array name="edema_locn_array">
-        <item>   </item>
-        <item>LLE</item>
-        <item>RLE</item>
-        <item>LUE</item>
-        <item>RUE</item>
-    </string-array>
+    <string name="resident_picture">Resident picture</string>
 
 
     <!-- Label for the medications-check time interval preference -->
@@ -114,7 +109,7 @@
     <string name="pref_units_metric" translatable="false">metric</string>
     <string name="pref_units_imperial" translatable="false">imperial</string>
 
-    <string name="format_temperature"><xliff:g id="temp">%1.1f</xliff:g>\u00B0</string>
+    <!--string name="format_temperature"><xliff:g id="temp">%1.1f</xliff:g>\u00B0</string-->
 
     <string name="pref_time_intervals_key" translatable="false">med_check_time_interval</string>
     <string name="pref_time_intervals_label">Check when meds due:</string>
@@ -126,19 +121,14 @@
     <string name="pref_enable_med_alerts_true">Enabled</string>
     <string name="pref_enable_med_alerts_false">Not Enabled</string>
 
-    <string name="pref_last_med_alert">last_med_alert</string>
-
 
 
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">nursehelper.com</string>
     <string name="content_authority">com.android.janice.nursehelper</string>
 
     <!-- Empty Residentlist Database -->
     <string name="empty_residentlist">No Pt. Info</string>
     <string name="empty_residentlist_no_network">No resident information available. The network is not available to fetch resident data.</string>
-    <string name="empty_residentlist_server_down">No resident information available. The server is not returning data.</string>
-    <string name="empty_residentlist_server_error">No resident information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
 
     <string name="empty_medications">No Medication Information Available</string>
     <string name="empty_medications_no_network">No medication information available. The network is not available to fetch medication data.</string>
@@ -146,7 +136,6 @@
     <string name="empty_medsgivenlist">No Medication Administered Information Available</string>
 
     <string name="empty_assessmentslist">No Assessment Information Available</string>
-    <string name="empty_assessment_no_network">No assessment information available. The network is not available to fetch assessment data.</string>
 
     <string name="widget_room_number_title">room#</string>
     <string name="widget_med_due_title">meds due / last assessment</string>
@@ -157,7 +146,6 @@
     <string name="pref_status_key" translatable="false">int-status</string>
 
     <string name="about_dialog_title">About:</string>
-    <string name="about">about</string>
     <string name="about_dialog_message">List of your current patients.\
     To see MAR, care-plan, or to enter assessment data, click on the appropriate patient.
     </string>
@@ -182,22 +170,14 @@
     <string name="invalid_location_message">This device is not located in a registered area.\
     NurseHelper may only be run at a supported facility.</string>
     <string name="dialog_invalid_location">Invalid Device Location</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
 
-    <string name="password_hint">Password</string>
-    <string name="email_hint">Email</string>
-    <string name="sign_up_button_label">Sign Up</string>
-    <string name="signup_error_message">Please make sure you enter an email address and password!</string>
-    <string name="signup_error_title">Error!</string>
-    <string name="signup_success">Account successfully created! You can now Login.</string>
-    <string name="login_error_message">Please make sure you enter an email address and password!</string>
-    <string name="login_error_title">Error!</string>
-    <string name="login_button_label">Login</string>
-    <string name="sign_up_text">Sign Up!</string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="add_item">Add New Item</string>
+    <!--string name="title_activity_login">Sign in</string-->
     <string name="action_logout">Logout</string>
+    <string name="exit">Exit</string>
 
     <string name="page_number">Page number:</string>
+    <string name="enter_pw_hint">Please enter password for PDF</string>
+    <string name="enter_pw_label">Password protected PDF-File:</string>
 
 </resources>

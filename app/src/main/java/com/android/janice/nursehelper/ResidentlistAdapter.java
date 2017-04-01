@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
+/*
  * Created by janicerichards on 2/2/17.
  */
 
@@ -29,7 +29,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
     final private View mEmptyView;
     final private ItemChoiceManager mICM;
 
-    public final static int THUMBNAIL_SIZE = 150;
+    private final static int THUMBNAIL_SIZE = 150;
 
     public static final String LOG_TAG = ResidentlistAdapter.class.getSimpleName();
 
@@ -130,7 +130,7 @@ public class ResidentlistAdapter extends RecyclerView.Adapter<ResidentlistAdapte
 
         // Read next-time-to-admin from timeCursor:
         String nextAdminTime = "";
-        long nextAdminTimeLong = 0;
+        long nextAdminTimeLong;
         if (mTimeCursor != null) {
             mTimeCursor.moveToPosition(position);
             nextAdminTime = mTimeCursor.getString(ResidentlistFragment.COL_NEXT_ADMIN_TIME);

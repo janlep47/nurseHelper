@@ -7,19 +7,16 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.android.janice.nursehelper.MainActivity;
 import com.android.janice.nursehelper.utility.AdminTimeInfo;
 import com.android.janice.nursehelper.utility.Utility;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-/**
+/*
  * Created by janicerichards on 2/1/17.
  */
 
@@ -29,26 +26,26 @@ public class ResidentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private ResidentDbHelper mOpenHelper;
 
-    static final int RESIDENTS = 100;              // PATH  residents path (DIR)
-    static final int RESIDENTS_WITH_ROOM_NUMBER = 101; // PATH/* residents path followed by a String (ITEM)
-    static final int MEDICATIONS = 200;            // PATH  medications path (DIR)
-    static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
-    static final int MEDICATIONS_WITH_ROOM_NUMBER_AND_MED = 202;  // PATH/*  medications path followed by a String (ITEM)
-    static final int ASSESSMENTS = 300;            // PATH  assessments path (DIR)
-    static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
-    static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/* medsGiven path followed by 1 strings (ITEM)
-    static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 402;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
+    private static final int RESIDENTS = 100;              // PATH  residents path (DIR)
+    private static final int RESIDENTS_WITH_ROOM_NUMBER = 101; // PATH/* residents path followed by a String (ITEM)
+    private static final int MEDICATIONS = 200;            // PATH  medications path (DIR)
+    private static final int MEDICATIONS_WITH_ROOM_NUMBER = 201;  // PATH/*  medications path followed by a String (ITEM)
+    private static final int MEDICATIONS_WITH_ROOM_NUMBER_AND_MED = 202;  // PATH/*  medications path followed by a String (ITEM)
+    private static final int ASSESSMENTS = 300;            // PATH  assessments path (DIR)
+    private static final int ASSESSMENTS_WITH_ROOM_NUMBER = 301;  // PATH/*  assessments path followed by a String (ITEM)
+    private static final int MEDS_GIVEN_WITH_ROOM_NUMBER = 401;  // PATH/* medsGiven path followed by 1 strings (ITEM)
+    private static final int MEDS_GIVEN_WITH_ROOM_NUMBER_AND_MED = 402;  // PATH/*/* medsGiven path followed by 2 strings (ITEMs)
 
-    public static final String LOG_TAG = ResidentProvider.class.getSimpleName();
+    private static final String LOG_TAG = ResidentProvider.class.getSimpleName();
 
 
     // get list of all medications by room# (or patient id)
-    public static final String sResidentByRoomNumberSelection =
+    private static final String sResidentByRoomNumberSelection =
             ResidentContract.ResidentEntry.TABLE_NAME +
                     "." + ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
     // get list of all medications by room# (or patient id)
-    public static final String sMedsByResidentSelection =
+    private static final String sMedsByResidentSelection =
             ResidentContract.MedicationEntry.TABLE_NAME +
                     "." + ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
@@ -74,7 +71,7 @@ public class ResidentProvider extends ContentProvider {
                     ResidentContract.MedsGivenEntry.TABLE_NAME +
                     "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ? ";
 
-    public static final String sAssessmentsByResidentSelection =
+    private static final String sAssessmentsByResidentSelection =
             ResidentContract.AssessmentEntry.TABLE_NAME +
                     "." + ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER + " = ? ";
 
@@ -149,7 +146,7 @@ public class ResidentProvider extends ContentProvider {
                     "." + ResidentContract.MedsGivenEntry.COLUMN_NAME_GENERIC + " = ?);";
 
 
-    static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
         // expressions instead?  Because you're not crazy, that's why.
 
@@ -172,9 +169,6 @@ public class ResidentProvider extends ContentProvider {
         return matcher;
     }
 
-    public ResidentDbHelper getDbHelper() {
-        return mOpenHelper;
-    }
 
     @Override
     public boolean onCreate() {
@@ -183,7 +177,7 @@ public class ResidentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
 
         // Use the Uri Matcher to determine what kind of URI this is.
         final int match = sUriMatcher.match(uri);
@@ -213,114 +207,121 @@ public class ResidentProvider extends ContentProvider {
     }
 
     @Override
-    public Bundle call(String method, String arg, Bundle extras) {
+    public Bundle call(@NonNull String method, String arg, Bundle extras) {
         // This is called to see how many records in the 'assessments' table on the user's device:
-        if (method.equals("countAssessments")) {
-            String roomNumber = arg;
-            long numberAssessments = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
-                    ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentsByResidentSelection,
-                    new String[]{roomNumber});
-            Bundle results = new Bundle();
-            results.putLong(MainActivity.ITEM_COUNT, numberAssessments);
-            return results;
+        String roomNumber;
+        Bundle results;
+        Uri uri;
+        int numberRecordsToDelete, rowsDeleted;
+        String genericName;
+        switch(method) {
+            case "countAssessments":
+                roomNumber = arg;
+                long numberAssessments = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
+                        ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentsByResidentSelection,
+                        new String[]{roomNumber});
+                results = new Bundle();
+                results.putLong(MainActivity.ITEM_COUNT, numberAssessments);
+                return results;
             // This is called to trim an overly large 'assessments' table, on the user's device:
-        } else if (method.equals("deleteOldestAssessments")) {
-            Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
-            String roomNumber = arg;
-            int numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
-            int rowsDeleted = 0;
-            while (rowsDeleted < numberRecordsToDelete) {
-                rowsDeleted += mOpenHelper.getWritableDatabase().delete(
-                        ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentByResidentWithOldestAssessmentTime,
-                        new String[]{roomNumber});
-            }
-            getContext().getContentResolver().notifyChange(uri, null);
-            return null;
+            case "deleteOldestAssessments":
+                uri = ResidentContract.AssessmentEntry.CONTENT_URI;
+                roomNumber = arg;
+                numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
+                rowsDeleted = 0;
+                while (rowsDeleted < numberRecordsToDelete) {
+                    rowsDeleted += mOpenHelper.getWritableDatabase().delete(
+                            ResidentContract.AssessmentEntry.TABLE_NAME, sAssessmentByResidentWithOldestAssessmentTime,
+                            new String[]{roomNumber});
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return null;
             // This is called to see how many records in the 'medsGiven' table on the user's device:
-        } else if (method.equals("countMedsGiven")) {
-            String roomNumber = arg;
-            long numberMedsGiven = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
-                    ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentSelection,
-                    new String[]{roomNumber});
-            Bundle results = new Bundle();
-            results.putLong(MainActivity.ITEM_COUNT, numberMedsGiven);
-            return results;
-            // This is called to trim an overly large 'medsGiven' table, on the user's device:
-        } else if (method.equals("deleteOldestMedsGiven")) {
-            Uri uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
-            String roomNumber = arg;
-            int numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
-            int rowsDeleted = 0;
-            while (rowsDeleted < numberRecordsToDelete) {
-                rowsDeleted += mOpenHelper.getWritableDatabase().delete(
-                        ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentWithOldestTimestamp,
+            case "countMedsGiven":
+                roomNumber = arg;
+                long numberMedsGiven = DatabaseUtils.queryNumEntries(mOpenHelper.getReadableDatabase(),
+                        ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentSelection,
                         new String[]{roomNumber});
-            }
-            getContext().getContentResolver().notifyChange(uri, null);
-            return null;
+                results = new Bundle();
+                results.putLong(MainActivity.ITEM_COUNT, numberMedsGiven);
+                return results;
+            // This is called to trim an overly large 'medsGiven' table, on the user's device:
+            case "deleteOldestMedsGiven":
+                uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
+                roomNumber = arg;
+                numberRecordsToDelete = extras.getInt(MainActivity.ITEM_DELETE_AMT);
+                rowsDeleted = 0;
+                while (rowsDeleted < numberRecordsToDelete) {
+                    rowsDeleted += mOpenHelper.getWritableDatabase().delete(
+                            ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentWithOldestTimestamp,
+                            new String[]{roomNumber});
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return null;
             // This next one is called when nurse hit 'given' by mistake, and wants to undo it:
             //  the corresponding 'medsGiven' record will be deleted
-        } else if (method.equals("deleteNewestMedsGiven")) {
-            Uri uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
-            String roomNumber = arg;
-            String genericName = extras.getString(MainActivity.ITEM_GENERIC_NAME);
-            int rowsDeleted = mOpenHelper.getWritableDatabase().delete(
-                    ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentAndMedWithNewestTimestamp,
-                    new String[]{roomNumber, genericName});
-            getContext().getContentResolver().notifyChange(uri, null);
-            return null;
+            case "deleteNewestMedsGiven":
+                uri = ResidentContract.MedsGivenEntry.CONTENT_URI;
+                roomNumber = arg;
+                genericName = extras.getString(MainActivity.ITEM_GENERIC_NAME);
+                mOpenHelper.getWritableDatabase().delete(
+                        ResidentContract.MedsGivenEntry.TABLE_NAME, sMedsGivenByResidentAndMedWithNewestTimestamp,
+                        new String[]{roomNumber, genericName});
+                getContext().getContentResolver().notifyChange(uri, null);
+                return null;
             // This is also called, after doing the previous method, to undo the 'medications' table
             //   'last-given' timestamp, for that resident/med;  also need to reupdate the
             //   'next-admin-time' field to match reset 'last-given' field
-        } else if (method.equals("undoMostRecentTimestamp")) {
-            // Now that the most recent 'med-given' record has been deleted (for the given room# and
-            //   generic med), find the most recent time stamp for that resident/med int the medsGiven
-            //   table, and reset the Medications table 'last-time-given' value to that time!
-            //
-            // First, get the previous 'med-given' timestamp for that resident/med:
-            String roomNumber = arg;
-            String genericName = extras.getString(MainActivity.ITEM_GENERIC_NAME);
-            String adminTimes = extras.getString(MainActivity.ITEM_ADMIN_TIMES);
-            String freq = extras.getString(MainActivity.ITEM_FREQ);
-            Cursor cursor = mOpenHelper.getReadableDatabase().rawQuery(sMostRecentResidentAndMedGivenTimestamp,
-                    new String[]{roomNumber, genericName});
-            long latestTimestamp = 0;
-            if (cursor != null) {
-                Log.e(LOG_TAG, " cursor NOT null ...");
-                if (cursor.moveToFirst()) {
-                    latestTimestamp = cursor.getLong(0);
-                    Log.e(LOG_TAG, " ...  latestTimestamp is " + String.valueOf(latestTimestamp));
+            case "undoMostRecentTimestamp":
+                // Now that the most recent 'med-given' record has been deleted (for the given room# and
+                //   generic med), find the most recent time stamp for that resident/med int the medsGiven
+                //   table, and reset the Medications table 'last-time-given' value to that time!
+                //
+                // First, get the previous 'med-given' timestamp for that resident/med:
+                roomNumber = arg;
+                genericName = extras.getString(MainActivity.ITEM_GENERIC_NAME);
+                String adminTimes = extras.getString(MainActivity.ITEM_ADMIN_TIMES);
+                String freq = extras.getString(MainActivity.ITEM_FREQ);
+                Cursor cursor = mOpenHelper.getReadableDatabase().rawQuery(sMostRecentResidentAndMedGivenTimestamp,
+                        new String[]{roomNumber, genericName});
+                long latestTimestamp = 0;
+                if (cursor != null) {
+                    Log.e(LOG_TAG, " cursor NOT null ...");
+                    if (cursor.moveToFirst()) {
+                        latestTimestamp = cursor.getLong(0);
+                        Log.e(LOG_TAG, " ...  latestTimestamp is " + String.valueOf(latestTimestamp));
+                    }
+                    cursor.close();
                 }
-            }
-            // Now set the last-time-given column for the 'medications' table, for this resident/med to this
-            //  latest timestamp:
-            Uri uri = ResidentContract.MedicationEntry.CONTENT_URI;
-            AdminTimeInfo info = Utility.calculateNextDueTime(getContext(), adminTimes, freq, latestTimestamp);
-            final String nextAdminTime;
-            final long nextAdminTimeLong;
-            if (info != null) {
-                nextAdminTime = info.getDisplayableTime(getContext());
-                nextAdminTimeLong = info.getTime();
-            } else {
-                nextAdminTime = "";
-                nextAdminTimeLong = 0;
-            }
+                // Now set the last-time-given column for the 'medications' table, for this resident/med to this
+                //  latest timestamp:
+                uri = ResidentContract.MedicationEntry.CONTENT_URI;
+                AdminTimeInfo info = Utility.calculateNextDueTime(getContext(), adminTimes, freq, latestTimestamp);
+                final String nextAdminTime;
+                final long nextAdminTimeLong;
+                if (info != null) {
+                    nextAdminTime = info.getDisplayableTime(getContext());
+                    nextAdminTimeLong = info.getTime();
+                } else {
+                    nextAdminTime = "";
+                    nextAdminTimeLong = 0;
+                }
 
-            ContentValues meds = new ContentValues();
-            meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, latestTimestamp);
-            meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
-            meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, nextAdminTimeLong);
+                ContentValues meds = new ContentValues();
+                meds.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, latestTimestamp);
+                meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, nextAdminTime);
+                meds.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, nextAdminTimeLong);
 
-            int rowsUpdated = mOpenHelper.getWritableDatabase().update(ResidentContract.MedicationEntry.TABLE_NAME,
-                    meds, sMedsByResidentAndMedSelection, new String[]{roomNumber, genericName});
-            getContext().getContentResolver().notifyChange(uri, null);
+                mOpenHelper.getWritableDatabase().update(ResidentContract.MedicationEntry.TABLE_NAME,
+                        meds, sMedsByResidentAndMedSelection, new String[]{roomNumber, genericName});
+                getContext().getContentResolver().notifyChange(uri, null);
         }
         return null;
     }
 
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
@@ -441,7 +442,7 @@ public class ResidentProvider extends ContentProvider {
 
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -523,7 +524,7 @@ public class ResidentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
@@ -575,7 +576,7 @@ public class ResidentProvider extends ContentProvider {
 
     @Override
     public int update(
-            Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+            @NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
@@ -608,7 +609,7 @@ public class ResidentProvider extends ContentProvider {
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int returnCount = 0;

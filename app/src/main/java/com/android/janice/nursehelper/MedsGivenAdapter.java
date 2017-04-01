@@ -2,6 +2,7 @@ package com.android.janice.nursehelper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +11,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
+/*
  * Created by janicerichards on 2/4/17.
  */
 
 public class MedsGivenAdapter extends ArrayAdapter<MedGivenItem> {
-    Context context;
-    int layoutResourceId;
+    private final Context context;
+    private final int layoutResourceId;
     List<MedGivenItem> data;
-    TextView mEmptyView;
+    private final TextView mEmptyView;
 
     public MedsGivenAdapter(Context context, int layoutResourceId, List<MedGivenItem> data, TextView emptyView) {
         super(context, layoutResourceId, data);
@@ -28,10 +29,11 @@ public class MedsGivenAdapter extends ArrayAdapter<MedGivenItem> {
         this.mEmptyView = emptyView;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        MedsGivenHolder holder = null;
+        MedsGivenHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();

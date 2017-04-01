@@ -1,12 +1,10 @@
 package com.android.janice.nursehelper;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,19 +17,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,24 +34,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-//import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
-/**
+/*
  * Created by janicerichards on 2/2/17.
  */
 
 public class MedicationsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String LOG_TAG = MedicationsFragment.class.getSimpleName();
+    private static final String LOG_TAG = MedicationsFragment.class.getSimpleName();
     private MedicationsAdapter mMedicationsAdapter;
     private RecyclerView mRecyclerView;
     private boolean mHoldForTransition;
 
-    String mRoomNumber;
-    String mPortraitFilePath;
-    String mNurseName;
-    String mDbUserId;
-    DatabaseReference mDatabase;
+    private String mRoomNumber;
+    private String mPortraitFilePath;
+    private String mNurseName;
+    private String mDbUserId;
+    private DatabaseReference mDatabase;
 
     private static final int MEDICATIONS_LOADER = 0;
 
@@ -77,7 +68,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
 
     // These indices are tied to above.
-    static final int COL_ROOM_NUMBER = 0;
     static final int COL_GENERIC = 1;
     static final int COL_TRADE = 2;
     static final int COL_DOSAGE = 3;
@@ -92,9 +82,9 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     public interface Callback {
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, MedicationsAdapter.MedicationsAdapterViewHolder vh);
-        public void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh);
+        void onItemSelected(String roomNumber, MedicationsAdapter.MedicationsAdapterViewHolder vh);
 
-        public DatabaseReference getDatabaseReference();
+        DatabaseReference getDatabaseReference();
     }
 
     public MedicationsFragment() {
@@ -156,7 +146,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: " + databaseError.toException());
+                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: " + databaseError.toString());
             }
         });
 
@@ -197,9 +187,11 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         //if ( mTransitionAnimation ) {
         activity.supportStartPostponedEnterTransition();
         ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
+        } else return rootView;
 
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
                 | ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -212,18 +204,18 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
-
+        int targetWidth = actionBarHeight;
         Picasso.with(getActivity())
                 .load(mPortraitFilePath)
                 .placeholder(R.drawable.blank_portrait)
                 //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
-                .noFade().resize(actionBarHeight, actionBarHeight)
+                .noFade().resize(targetWidth, actionBarHeight)
                 .error(R.drawable.blank_portrait)
                 .into(imageView);
 
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.END
                 | Gravity.CENTER_VERTICAL);
         layoutParams.rightMargin = getActivity().getResources().getInteger(R.integer.appbar_portrait_margin);
         imageView.setLayoutParams(layoutParams);
@@ -247,9 +239,9 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onMedicationsChanged() {
-        getLoaderManager().restartLoader(MEDICATIONS_LOADER, null, this);
-    }
+    //void onMedicationsChanged() {
+    //    getLoaderManager().restartLoader(MEDICATIONS_LOADER, null, this);
+    //}
 
 
     @Override
@@ -294,9 +286,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                 public boolean onPreDraw() {
                     // Since we know we're going to get items, we keep the listener around until
                     // we see Children.
-                    if (mRecyclerView.getChildCount() > 0) {
-                        return true;
-                    }
+                    if (mRecyclerView.getChildCount() > 0) return true;
                     return false;
                 }
             });
@@ -322,7 +312,7 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     private void updateEmptyView() {
         if (mMedicationsAdapter.getItemCount() == 0) {
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_medications_empty);
-            if (null != tv) {
+            if (tv != null) {
                 int message = R.string.empty_medications_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
             }
@@ -330,22 +320,18 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
     }
 
 
-    public void dataUpdated() {
+    private void dataUpdated() {
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //if (key.equals(getString(R.string.pref_status_key))) {
-        //Utility.resetStatus(getContext());
-        //updateEmptyView();
-        //}
     }
 
 
     private class UpdateMedicationsFromFirebaseTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected DataSnapshot dataSnapshot;
+        protected final Context context;
+        protected final DataSnapshot dataSnapshot;
 
         public UpdateMedicationsFromFirebaseTask(Context context, DataSnapshot dataSnapshot) {
             this.context = context;
@@ -377,14 +363,14 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, medication.getRoomNumber());
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE, medication.getTradeName());
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, medication.getGenericName());
-                        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, new Double(medication.getDosage()));
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE, Double.valueOf(medication.getDosage()));
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_UNITS, medication.getDosageUnits());
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, medication.getDosageRoute());
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, medication.getAdminTimes());
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, medication.getFrequency());
-                        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, new Long(medication.getLastGivenTime()));
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, Long.valueOf(medication.getLastGivenTime()));
                         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, medication.getNextDosageTime());
-                        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, new Long(medication.getNextDosageTimeLong()));
+                        medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, Long.valueOf(medication.getNextDosageTimeLong()));
                         getActivity().getContentResolver().insert(ResidentContract.MedicationEntry.CONTENT_URI, medValues);
                     }
                 }
@@ -398,15 +384,6 @@ public class MedicationsFragment extends Fragment implements LoaderManager.Loade
         protected void onPostExecute(Void result) {
             dataUpdated();
             super.onPostExecute(result);
-
-            // If added successfully, end this activity, and go back to the calling activity:
-            //if (result.intValue() == 0) mActivity.finish();
-            //else {
-            //    Log.e(LOG_TAG," DIDN'T add OK!!   --- should we put up a dialog box here?...");
-            //    mAddProblem = true;
-            //}
-            //mLoadingPanel.setVisibility(View.GONE);
-            //super.onPostExecute(result);
         }
     }
 

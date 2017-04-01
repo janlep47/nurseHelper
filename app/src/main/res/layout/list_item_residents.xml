@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+        android:baselineAligned="false"
         android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
         android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
         android:orientation="horizontal">
@@ -39,8 +38,9 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:contentDescription="@string/resident_picture"
                 android:adjustViewBounds="true"/>
         </LinearLayout>
 
@@ -59,7 +59,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:textSize="@dimen/residentlist_subtext_size"
                 android:textColor="@color/colorMeds"
-                android:text="Medications"/>
+                android:text="@string/title_activity_medications"/>
 
             <TextView
                 android:id="@+id/list_item_assessment_textview"
@@ -69,7 +69,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
                 android:textSize="@dimen/residentlist_subtext_size"
                 android:textColor="@color/colorAssessment"
-                android:text="Assessment"/>
+                android:text="@string/title_activity_assessment"/>
 
             <TextView
                 android:id="@+id/list_item_careplan_textview"
@@ -79,7 +79,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:textSize="@dimen/residentlist_subtext_size"
                 android:textColor="@color/colorCarePlan"
-                android:text="Care Plan"/>
+                android:text="@string/title_activity_careplan"/>
 
             <TextView
                 android:id="@+id/list_item_medtime_textview"

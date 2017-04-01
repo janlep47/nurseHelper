@@ -451,6 +451,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
         <!-- android:layout_weight="2" -->
 
             <TextView
+                android:labelFor="@+id/findings_edittext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/significant_findings_label"
@@ -465,6 +466,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                 android:id="@+id/findings_edittext"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:hint="@string/significant_findings_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"

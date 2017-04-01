@@ -12,17 +12,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.android.janice.nursehelper.MedicationsActivity;
-import com.android.janice.nursehelper.AssessmentActivity;
 import com.android.janice.nursehelper.MainActivity;
 import com.android.janice.nursehelper.R;
 import com.android.janice.nursehelper.alarm.NurseHelperSchedulingService;
-//import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
-//import com.android.janice.nursehelper.sync.ResidentSyncAdapter;
 
-/**
+/*
  * Created by janicerichards on 2/18/17.
  */
 
@@ -39,11 +35,7 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
             // Set up the collection
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                setRemoteAdapter(context, views);
-            } else {
-                setRemoteAdapterV11(context, views);
-            }
+            setRemoteAdapter(context, views);
 
             Intent clickIntentTemplate = new Intent(context, MainActivity.class);
 
@@ -87,17 +79,6 @@ public class ResidentlistWidgetProvider extends AppWidgetProvider {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
         views.setRemoteAdapter(R.id.widget_list,
-                new Intent(context, ResidentlistWidgetRemoteViewsService.class));
-    }
-
-    /**
-     * Sets the remote adapter used to fill in the list items
-     *
-     * @param views RemoteViews to set the RemoteAdapter
-     */
-    @SuppressWarnings("deprecation")
-    private void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
-        views.setRemoteAdapter(0, R.id.widget_list,
                 new Intent(context, ResidentlistWidgetRemoteViewsService.class));
     }
 }

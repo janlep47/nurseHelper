@@ -1,6 +1,6 @@
 package com.android.janice.nursehelper.alarm;
 
-/**
+/*
  * Created by janicerichards on 3/26/17.
  */
 
@@ -28,7 +28,7 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
     private PendingIntent alarmIntent;
     private Intent intent;
     private int mTimeInterval;
-    public static String ACTION_ALARM_RECEIVER = "update";
+    public static final String ACTION_ALARM_RECEIVER = "update";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -65,7 +65,7 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
      * Sets a repeating alarm that runs once a day at approximately 8:30 a.m. When the
      * alarm fires, the app broadcasts an Intent to this WakefulBroadcastReceiver.
      *
-     * @param context
+     * @param context used to get alarm service
      */
     public void setAlarm(Context context) {
         if (mTimeInterval == 0) {
@@ -152,7 +152,7 @@ public class NurseHelperAlarmReceiver extends WakefulBroadcastReceiver {
     /**
      * Cancels the alarm.
      *
-     * @param context
+     * @param context  used for alarm service
      */
     // BEGIN_INCLUDE(cancel_alarm)
     public void cancelAlarm(Context context) {

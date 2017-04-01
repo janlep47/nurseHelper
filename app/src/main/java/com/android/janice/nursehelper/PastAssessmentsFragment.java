@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,31 +23,26 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by janicerichards on 2/5/17.
  */
 
 public class PastAssessmentsFragment extends ListFragment {
-    PastAssessmentsAdapter mAdapter;
-    View mLoadingPanel;
-    Context mContext;
-    List<AssessmentItem> mAssessmentList = new ArrayList<>();
+    private PastAssessmentsAdapter mAdapter;
+    private View mLoadingPanel;
+    private Context mContext;
+    private final List<AssessmentItem> mAssessmentList = new ArrayList<>();
 
-    String mRoomNumber, mPortraitFilePath;
+    private String mRoomNumber, mPortraitFilePath;
 
 
     private static final String LOG_TAG = PastAssessmentsFragment.class.getSimpleName();
-    AppCompatActivity mActivity;
+    private AppCompatActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
 
@@ -65,44 +59,46 @@ public class PastAssessmentsFragment extends ListFragment {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_past_assessments, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         mActivity = activity;
-        mLoadingPanel = (View) root.findViewById(R.id.loadingPanel);
+        mLoadingPanel = root.findViewById(R.id.loadingPanel);
 
         // We need to start the enter transition after the data has loaded
         //if ( mTransitionAnimation ) {
         mActivity.supportStartPostponedEnterTransition();
         ActionBar actionBar = mActivity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
 
 
-        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
-                | ActionBar.DISPLAY_SHOW_CUSTOM);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
+            actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                    | ActionBar.DISPLAY_SHOW_CUSTOM);
+            ImageView imageView = new ImageView(actionBar.getThemedContext());
+            imageView.setScaleType(ImageView.ScaleType.CENTER);
 
-        // Calculate ActionBar height
-        int actionBarHeight = mActivity.getResources().getInteger(R.integer.appbar_default_height);
-        TypedValue tv = new TypedValue();
-        if (mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+            // Calculate ActionBar height
+            int actionBarHeight = mActivity.getResources().getInteger(R.integer.appbar_default_height);
+            TypedValue tv = new TypedValue();
+            if (mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+            }
+            int targetWidth = actionBarHeight;
+            Picasso.with(mActivity)
+                    .load(mPortraitFilePath)
+                    .placeholder(R.drawable.blank_portrait)
+                    //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
+                    .noFade().resize(targetWidth, actionBarHeight)
+                    .error(R.drawable.blank_portrait)
+                    .into(imageView);
+
+            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                    ActionBar.LayoutParams.WRAP_CONTENT,
+                    ActionBar.LayoutParams.WRAP_CONTENT, Gravity.END
+                    | Gravity.CENTER_VERTICAL);
+            layoutParams.rightMargin = mActivity.getResources().getInteger(R.integer.appbar_portrait_margin);
+            imageView.setLayoutParams(layoutParams);
+            actionBar.setCustomView(imageView);
         }
-
-        Picasso.with(mActivity)
-                .load(mPortraitFilePath)
-                .placeholder(R.drawable.blank_portrait)
-                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
-                .noFade().resize(actionBarHeight, actionBarHeight)
-                .error(R.drawable.blank_portrait)
-                .into(imageView);
-
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
-                | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = mActivity.getResources().getInteger(R.integer.appbar_portrait_margin);
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
 
         ListView mListView = (ListView) root.findViewById(android.R.id.list);
         TextView emptyView = (TextView) root.findViewById(R.id.list_past_assessments_empty);
@@ -123,8 +119,7 @@ public class PastAssessmentsFragment extends ListFragment {
     // List item click means this Assessment given/refused.
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        AssessmentItem item = mAdapter.getItem(position);
-        //new AssessmentTask().execute(item.getGenericName());
+        //AssessmentItem item = mAdapter.getItem(position);
     }
 
 
@@ -139,7 +134,7 @@ public class PastAssessmentsFragment extends ListFragment {
             String roomNumber = params[0];
             Uri uri = ResidentContract.AssessmentEntry.CONTENT_URI;
             uri = uri.buildUpon().appendPath(roomNumber).build();
-            Cursor cursor = getContext().getContentResolver().query(uri,
+            return getContext().getContentResolver().query(uri,
                     new String[]{ResidentContract.AssessmentEntry.COLUMN_ROOM_NUMBER,
                             ResidentContract.AssessmentEntry.COLUMN_BLOOD_PRESSURE,
                             ResidentContract.AssessmentEntry.COLUMN_TEMPERATURE,
@@ -152,7 +147,6 @@ public class PastAssessmentsFragment extends ListFragment {
                             ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS,
                             ResidentContract.AssessmentEntry.COLUMN_TIME},
                     null, null, ResidentContract.AssessmentEntry.COLUMN_TIME + " ASC");
-            return cursor;
         }
 
 

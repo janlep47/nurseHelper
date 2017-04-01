@@ -2,15 +2,17 @@ package com.android.janice.nursehelper;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-/**
+/*
  * Created by janicerichards on 6/18/16.
  */
 
 public class AboutDialogFragment extends DialogFragment {
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.about_dialog_title)
@@ -19,3 +21,4 @@ public class AboutDialogFragment extends DialogFragment {
                 .create();
     }
 }
+

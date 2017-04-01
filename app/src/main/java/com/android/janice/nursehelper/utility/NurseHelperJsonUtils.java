@@ -19,14 +19,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -41,7 +38,7 @@ public final class NurseHelperJsonUtils {
         JSONObject residentJson = new JSONObject(residentJsonStr);
 
         Iterator<String> iterator = residentJson.keys();
-        ArrayList<ContentValues> residentList = new ArrayList<ContentValues>();
+        ArrayList<ContentValues> residentList = new ArrayList<>();
         while (iterator.hasNext()) {
             String key = iterator.next();
             JSONObject residentObject = residentJson.getJSONObject(key);
@@ -70,7 +67,7 @@ public final class NurseHelperJsonUtils {
         JSONObject medicationJson = new JSONObject(medicationJsonStr);
 
         Iterator<String> iterator = medicationJson.keys();
-        ArrayList<ContentValues> medicationList = new ArrayList<ContentValues>();
+        ArrayList<ContentValues> medicationList = new ArrayList<>();
         while (iterator.hasNext()) {
             String key = iterator.next();
             JSONObject medicationObject = medicationJson.getJSONObject(key);
@@ -81,17 +78,14 @@ public final class NurseHelperJsonUtils {
                 tradeName = (String) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NAME_TRADE);
             else tradeName = "";
             double dosage = 0;
-            Double val;
             Long lval;
             Integer ival;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_DOSAGE)) {
                 try {
-                    val = (Double) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_DOSAGE);
-                    dosage = val.doubleValue();
+                    dosage = ((Double) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_DOSAGE)).doubleValue();
                 } catch (Exception e) {
                     try {
-                        lval = (Long) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_DOSAGE);
-                        dosage = lval.doubleValue();
+                        dosage = ((Long) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_DOSAGE)).doubleValue();
                     } catch (Exception e1) {
 
                     }
@@ -120,12 +114,10 @@ public final class NurseHelperJsonUtils {
             long lastGivenTime = 0;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN)) {
                 try {
-                    lval = (Long) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN);
-                    lastGivenTime = lval.longValue();
+                    lastGivenTime = ((Long) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN)).longValue();
                 } catch (Exception e) {
                     try {
-                        ival = (Integer) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN);
-                        lastGivenTime = ival.longValue();
+                        lastGivenTime = ((Integer) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN)).longValue();
                     } catch (Exception e1) {
 
                     }
@@ -139,12 +131,10 @@ public final class NurseHelperJsonUtils {
             long nextDosageTimeLong = 0;
             if (medicationObject.has(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG)) {
                 try {
-                    lval = (Long) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG);
-                    nextDosageTimeLong = lval.longValue();
+                    nextDosageTimeLong = ((Long) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG)).longValue();
                 } catch (Exception e) {
                     try {
-                        ival = (Integer) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG);
-                        nextDosageTimeLong = ival.longValue();
+                        nextDosageTimeLong = ((Integer) medicationObject.get(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG)).longValue();
                     } catch (Exception e1) {
 
                     }

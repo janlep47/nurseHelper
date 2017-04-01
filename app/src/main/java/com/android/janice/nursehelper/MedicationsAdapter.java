@@ -1,37 +1,25 @@
 package com.android.janice.nursehelper;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.android.janice.nursehelper.data.ResidentContract;
 import com.google.firebase.database.DatabaseReference;
-import com.squareup.picasso.Picasso;
 
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.android.janice.nursehelper.utility.Utility;
 
-/**
+/*
  * Created by janicerichards on 2/2/17.
  */
 
@@ -39,7 +27,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
     private Cursor mCursor;
     final private Context mContext;
-    final private MedicationsAdapterOnClickHandler mClickHandler;
+    //final private MedicationsAdapterOnClickHandler mClickHandler;
     final private View mEmptyView;
     //final private ItemChoiceManager mICM;
     final private String mRoomNumber;
@@ -64,12 +52,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         public final TextView mFrequencyView;
         public final TextView mAdminTimesView;
         public final TextView mLastTimeGivenView;
-        public final TextView mLastGivenByView;
         public final TextView mNextDueTimeView;
 
-        public final TextView mGiveLabelView;
         public final CheckBox mGiveBox;
-        public final TextView mRefuseLabelView;
         public final CheckBox mRefuseBox;
 
 
@@ -84,12 +69,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             mFrequencyView = (TextView) view.findViewById(R.id.medication_frequency_textview);
             mAdminTimesView = (TextView) view.findViewById(R.id.medication_admin_times_textview);
             mLastTimeGivenView = (TextView) view.findViewById(R.id.medication_last_given_time_textview);
-            mLastGivenByView = (TextView) view.findViewById(R.id.medication_last_given_nurse_textview);
             mNextDueTimeView = (TextView) view.findViewById(R.id.medication_due_time_textview);
 
-            mGiveLabelView = (TextView) view.findViewById(R.id.give_med_textview);
             mGiveBox = (CheckBox) view.findViewById(R.id.give_med_checkbox);
-            mRefuseLabelView = (TextView) view.findViewById(R.id.refuse_med_textview);
             mRefuseBox = (CheckBox) view.findViewById(R.id.refuse_med_checkbox);
 
             mGiveBox.setOnCheckedChangeListener(this);
@@ -182,14 +164,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         }
     }
 
-    public static interface MedicationsAdapterOnClickHandler {
+    public interface MedicationsAdapterOnClickHandler {
         void onClick(String roomNumber, MedicationsAdapterViewHolder vh);
     }
 
     public MedicationsAdapter(Context context, MedicationsAdapterOnClickHandler dh, View emptyView,
                               String roomNumber, String nurseName, DatabaseReference database, String userId) {
         mContext = context;
-        mClickHandler = dh;
+        //mClickHandler = dh;
         mEmptyView = emptyView;
         //mICM = new ItemChoiceManager(this);
         //mICM.setChoiceMode(choiceMode);
@@ -242,7 +224,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         medicationsAdapterViewHolder.mGenericNameView.setText("   (" + genericName + ")");
         medicationsAdapterViewHolder.mTradeNameView.setText(tradeName);
         medicationsAdapterViewHolder.mDosageView.setText(String.valueOf(dosage));
-        medicationsAdapterViewHolder.mDosageUnitsView.setText(" " + dosageUnits);
+        String space = mContext.getResources().getString(R.string.space);
+        medicationsAdapterViewHolder.mDosageUnitsView.setText(space + dosageUnits);
         medicationsAdapterViewHolder.mDosageRouteView.setText(dosageRoute);
         medicationsAdapterViewHolder.mFrequencyView.setText(freq);
         medicationsAdapterViewHolder.mAdminTimesView.setText(adminTimes);

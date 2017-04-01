@@ -16,8 +16,6 @@ package com.android.janice.nursehelper;
  * limitations under the License.
  */
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -26,12 +24,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.util.Log;
-
-import com.android.janice.nursehelper.data.NurseHelperPreferences;
-import com.android.janice.nursehelper.data.ResidentContract;
-//import com.android.janice.nursehelper.sync.MedCheckSyncAdapter;
-import com.android.janice.nursehelper.utility.Utility;
-//import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
 
 /**
  * The SettingsFragment serves as the display for all of the user's settings. In NurseHelper, the
@@ -95,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Activity activity = getActivity();
+        //Activity activity = getActivity();
 
         /*    Don't really need to alert anyone of changes, b/c AssessmentActivity checks units
                 before creating the view; MainActivity checks for changes to time-interval and

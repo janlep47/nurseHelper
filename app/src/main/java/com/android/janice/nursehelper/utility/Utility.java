@@ -1,11 +1,6 @@
 package com.android.janice.nursehelper.utility;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
-import android.text.format.Time;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -14,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-
-//import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 import com.android.janice.nursehelper.R;
 
 import java.text.DateFormat;
@@ -24,42 +17,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-/**
+/*
  * Created by janicerichards on 2/26/17.
  */
 
 public class Utility {
-    public static final String AM_STRING = "AM";
-    public static final String PM_STRING = "PM";
-    public static final String EVERY_CHARS = "Q";
-    public static final String HOUR_MIN_SEPARATOR = ":";
-    public static final String[] ALLOWED_FREQUENCIES = {
+    private static final String EVERY_CHARS = "Q";
+    private static final String[] ALLOWED_FREQUENCIES = {
             "QD", "BID", "TID", "QID"
     };
 
-    public static final int QD = 0;
-    public static final int BID = 1;
-    public static final int TID = 2;
-    public static final int QID = 3;
+    private static final int QD = 0;
+    private static final int BID = 1;
+    private static final int TID = 2;
+    private static final int QID = 3;
 
-    public static final String[] ALLOWED_TIME_PERIODS = {
+    private static final String[] ALLOWED_TIME_PERIODS = {
             "MINUTES", "HOURS", "DAYS", "WEEKS", "MONTHS"
     };
 
-    public static final String[] ALLOWED_TIME_PERIODS_ABBREV = {
+    private static final String[] ALLOWED_TIME_PERIODS_ABBREV = {
             "MINS", "HRS", "DAYS", "WKS", "MNTHS"
     };
 
-    public static final int MINS = 0;
-    public static final int HOURS = 1;
-    public static final int DAYS = 2;
-    public static final int WEEKS = 3;
-    public static final int MONTHS = 4;
-
-    public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
-    public static final long WEEK_IN_MILLIS = DAY_IN_MILLIS * 7;
-    public static final long HOUR_IN_MILLIS = TimeUnit.HOURS.toMillis(1);
-    public static final long MINUTE_IN_MILLIS = TimeUnit.MINUTES.toMillis(1);
+    private static final int MINS = 0;
+    private static final int HOURS = 1;
+    private static final int DAYS = 2;
+    private static final int WEEKS = 3;
+    private static final int MONTHS = 4;
 
 
     public static String getReadableTimestamp(Context context, long timestamp) {
@@ -97,7 +82,7 @@ public class Utility {
 
         // Get current time:
         Calendar calendar = Calendar.getInstance();
-        AdminTimeInfo adminTimeInfo = null;
+        AdminTimeInfo adminTimeInfo;
 
         if (anyAdminTimes(adminTimes)) {
             if (!anyFreq(freq)) {
@@ -124,8 +109,7 @@ public class Utility {
 
     private static boolean aPrnMed(Context context, String adminTimes, String freq) {
         String prnString = context.getString(R.string.prn_string);
-        if (adminTimes.indexOf(prnString) >= 0) return true;
-        if (freq.indexOf(prnString) >= 0) return true;
+        if (adminTimes.toUpperCase().contains(prnString)  || freq.toUpperCase().contains(prnString)) return true;
         return false;
     }
 
@@ -152,8 +136,8 @@ public class Utility {
             <string name="format_admin_am_or_pm">\\D*</string>
         */
         //
-        ArrayList<AdminTimeInfo> timesToAdmin = new ArrayList<AdminTimeInfo>();
-        AdminTimeInfo adminTimeInfo = null;
+        ArrayList<AdminTimeInfo> timesToAdmin = new ArrayList<>();
+        AdminTimeInfo adminTimeInfo;
 
         Calendar adminCalendar = Calendar.getInstance();
         if (timeLastGiven != 0)
@@ -162,7 +146,7 @@ public class Utility {
         //Calendar calendar = Calendar.getInstance();
         //calendar.setTime(date);
 
-        int year, month, day, hour, min, sec;
+        int year, month, day; //, hour, min, sec;
         /*
         year = today.get(Calendar.YEAR) - 1900;
         month = today.get(Calendar.MONTH);
@@ -174,17 +158,16 @@ public class Utility {
         year = adminCalendar.get(Calendar.YEAR) - 1900;
         month = adminCalendar.get(Calendar.MONTH);
         day = adminCalendar.get(Calendar.DAY_OF_YEAR);
-        hour = adminCalendar.get(Calendar.HOUR);
-        min = adminCalendar.get(Calendar.MINUTE);
-        sec = adminCalendar.get(Calendar.SECOND);
-
-        if (sec > 30) min += 1;
+        //hour = adminCalendar.get(Calendar.HOUR);
+        //min = adminCalendar.get(Calendar.MINUTE);
+        //sec = adminCalendar.get(Calendar.SECOND);
+        //if (sec > 30) min += 1;
 
         while (true) {
 
             Pattern patternHrs = Pattern.compile(context.getString(R.string.format_admin_hours));
             Matcher matcherHrs = patternHrs.matcher(adminTimes);
-            String hoursString = "";
+            String hoursString;
             if (matcherHrs.find()) {
                 hoursString = matcherHrs.group();
                 adminTimes = adminTimes.replaceFirst(context.getString(R.string.format_admin_hours), "");
@@ -202,7 +185,7 @@ public class Utility {
 
             Pattern patternAmOrPm = Pattern.compile(context.getString(R.string.format_admin_am_or_pm));
             Matcher matcherAmOrPm = patternAmOrPm.matcher(adminTimes);
-            String amOrPmString = "";
+            String amOrPmString;
             boolean pm = false;
             if (matcherAmOrPm.find()) {
                 amOrPmString = matcherAmOrPm.group();
@@ -239,10 +222,10 @@ public class Utility {
             //        "MM-dd-yyyy HH:mm"
             String adminTimeFormat = context.getString(R.string.format_admin_date_time);
             //DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
-            DateFormat formatter = new SimpleDateFormat(adminTimeFormat);
+            DateFormat formatter = new SimpleDateFormat(adminTimeFormat,Locale.US);
 
             try {
-                Date date = (Date) formatter.parse(adminTimes);
+                Date date = formatter.parse(adminTimes);
                 Calendar scheduledTime = Calendar.getInstance();
                 scheduledTime.setTime(date);
                 adminTimeInfo = new AdminTimeInfo(scheduledTime);
@@ -260,7 +243,7 @@ public class Utility {
     private static AdminTimeInfo getNearestTimeFromLastAdmin(Context context, Calendar today, ArrayList<AdminTimeInfo> timesToAdmin) {
         int day, hour, min, sec;
         day = today.get(Calendar.DAY_OF_YEAR);
-        hour = today.get(Calendar.HOUR);
+        //hour = today.get(Calendar.HOUR);
         min = today.get(Calendar.MINUTE);
         sec = today.get(Calendar.SECOND);
 
@@ -276,8 +259,8 @@ public class Utility {
         newTime.setTimeInMillis(today.getTimeInMillis());
 
         if (timesToAdmin.size() == 0) return null;
-        int scheduledHour = 0;
-        int scheduledMin = 0;
+        int scheduledHour;
+        int scheduledMin;
         AdminTimeInfo bestTime = null;
         for (int i = 0; i < timesToAdmin.size(); i++) {
             AdminTimeInfo timeInfo = timesToAdmin.get(i);
@@ -321,9 +304,7 @@ public class Utility {
 
     private static boolean isPM(String amOrPmString) {
         if (amOrPmString.trim().toUpperCase().startsWith("PM") ||
-                amOrPmString.trim().toUpperCase().startsWith("P")) {
-            return true;
-        }
+                amOrPmString.trim().toUpperCase().startsWith("P"))  return true;
         return false;
     }
 
@@ -335,14 +316,14 @@ public class Utility {
         Calendar adminTime = Calendar.getInstance();
         if (timeLastGiven != 0)
             adminTime.setTimeInMillis(timeLastGiven);
-        int year = adminTime.get(Calendar.YEAR) - 1900;
+        //int year = adminTime.get(Calendar.YEAR) - 1900;
         int month = adminTime.get(Calendar.MONTH);
         int week = adminTime.get(Calendar.WEEK_OF_YEAR);
         int day = adminTime.get(Calendar.DAY_OF_YEAR);
         int hour = adminTime.get(Calendar.HOUR);
         int min = adminTime.get(Calendar.MINUTE);
 
-        AdminTimeInfo adminTimeInfo = null;
+        AdminTimeInfo adminTimeInfo;
 
         // First see if freq is one of the common ones
         int freqType = getFreqType(freq);
@@ -391,7 +372,7 @@ public class Utility {
         if (matcherTimePeriod.find()) {
             timePeriodString = matcherTimePeriod.group();
             // skip over "Q", if any:
-            if (timePeriodString.toUpperCase().indexOf(EVERY_CHARS) >= 0) {
+            if (timePeriodString.toUpperCase().contains(EVERY_CHARS)) {
                 timePeriodString = "";
                 if (matcherTimePeriod.find()) {
                     timePeriodString = matcherTimePeriod.group();
@@ -402,7 +383,7 @@ public class Utility {
             Log.e("UTILITY", " !!!! PROBLEM ... numberString is EMPTY");
             return null;
         }
-        int number = 0;
+        int number;
         try {
             number = Integer.parseInt(numberString);
         } catch (NumberFormatException e) {
@@ -454,16 +435,15 @@ public class Utility {
     private static int getTimePeriod(String timePeriod) {
         timePeriod = timePeriod.trim();
         for (int i = 0; i < ALLOWED_TIME_PERIODS.length && i < ALLOWED_TIME_PERIODS_ABBREV.length; i++) {
-            if (ALLOWED_TIME_PERIODS[i].indexOf(timePeriod) >= 0) return i;
-            else if (ALLOWED_TIME_PERIODS_ABBREV[i].indexOf(timePeriod) >= 0) return i;
+            if (ALLOWED_TIME_PERIODS[i].contains(timePeriod)) return i;
+            else if (ALLOWED_TIME_PERIODS_ABBREV[i].contains(timePeriod)) return i;
         }
         return -1;
     }
 
 
     public static boolean timeIsNull(long dateTime) {
-        long daysSinceEpoch = elapsedDaysSinceEpoch(dateTime);
-        if (daysSinceEpoch == 0) return true;
+        if (elapsedDaysSinceEpoch(dateTime) == 0) return true;
         return false;
     }
 
@@ -471,12 +451,14 @@ public class Utility {
         return TimeUnit.MILLISECONDS.toDays(utcDate);
     }
 
-    /**
+    /*
      * Returns true if the network is available or about to become available.
      *
      * @param c Context used to get the ConnectivityManager
      * @return true if the network is available
      */
+
+    /*
     static public boolean isNetworkAvailable(Context c) {
         ConnectivityManager cm =
                 (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -485,9 +467,10 @@ public class Utility {
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
     }
+    */
 
 
-    /**
+    /*
      * @param c Context used to get the SharedPreferences
      * @return the status integer type
      */
@@ -500,7 +483,7 @@ public class Utility {
         return sp.getInt(c.getString(R.string.pref_status_key), NurseHelperSyncAdapter.STATUS_UNKNOWN);
     }
 */
-    /**
+    /*
      * Resets the network status.  (Sets it to NurseHelperSyncAdapter.STATUS_UNKNOWN)
      *
      * @param c Context used to get the SharedPreferences

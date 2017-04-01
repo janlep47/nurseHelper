@@ -15,10 +15,8 @@
  */
 package com.android.janice.nursehelper;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +35,7 @@ public class ItemChoiceManager {
     private int mChoiceMode;
 
     private RecyclerView.Adapter mAdapter;
+    /*
     private RecyclerView.AdapterDataObserver mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -45,11 +44,9 @@ public class ItemChoiceManager {
                 confirmCheckedPositionsById(mAdapter.getItemCount());
         }
     };
+    */
 
-    private ItemChoiceManager() {
-    }
 
-    ;
 
     public ItemChoiceManager(RecyclerView.Adapter adapter) {
         mAdapter = adapter;
@@ -65,14 +62,14 @@ public class ItemChoiceManager {
     /**
      * Running state of which positions are currently checked
      */
-    SparseBooleanArray mCheckStates = new SparseBooleanArray();
+    private SparseBooleanArray mCheckStates = new SparseBooleanArray();
 
     /**
      * Running state of which IDs are currently checked.
      * If there is a value for a given key, the checked state for that ID is true
      * and the value holds the last known position in the adapter for that id.
      */
-    LongSparseArray<Integer> mCheckedIdStates = new LongSparseArray<Integer>();
+    private final LongSparseArray<Integer> mCheckedIdStates = new LongSparseArray<>();
 
     public void onClick(RecyclerView.ViewHolder vh) {
         if (mChoiceMode == AbsListView.CHOICE_MODE_NONE)
@@ -149,12 +146,12 @@ public class ItemChoiceManager {
         return mCheckStates.get(position);
     }
 
-    void clearSelections() {
+    private void clearSelections() {
         mCheckStates.clear();
         mCheckedIdStates.clear();
     }
 
-    void confirmCheckedPositionsById(int oldItemCount) {
+    private void confirmCheckedPositionsById(int oldItemCount) {
         // Clear out the positional check states, we'll rebuild it below from IDs.
         mCheckStates.clear();
 
@@ -210,6 +207,7 @@ public class ItemChoiceManager {
                 final int value = inParcel.readInt();
                 mCheckedIdStates.put(key, value);
             }
+            inParcel.recycle();
         }
     }
 

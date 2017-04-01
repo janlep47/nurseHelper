@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-/**
+/*
  * Created by janicerichards on 2/27/17.
  */
 
@@ -20,17 +20,6 @@ public class AdminTimeInfo {
     private Calendar adminCalendarTime = null;
     private boolean pm = false;
     private long time = 0;
-
-    public AdminTimeInfo(int hrs, int mins, boolean pm) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, hrs);
-        calendar.set(Calendar.MINUTE, mins);
-        calendar.set(Calendar.AM_PM, pm ? Calendar.PM : Calendar.AM);
-        time = calendar.getTimeInMillis();
-        this.hrs = hrs;
-        this.mins = mins;
-        this.pm = pm;
-    }
 
     public AdminTimeInfo(int year, int month, int day, int hrs, int mins, boolean pm) {
         Calendar calendar = Calendar.getInstance();

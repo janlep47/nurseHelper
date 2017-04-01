@@ -1,23 +1,15 @@
 package com.android.janice.nursehelper;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
-/**
+/*
  * Created by janicerichards on 2/5/17.
  */
 
 public class PastAssessmentsActivity extends AppCompatActivity {
 
-    PastAssessmentsFragment mFragment;
+    private PastAssessmentsFragment mFragment;
     private static final String LOG_TAG = PastAssessmentsActivity.class.getSimpleName();
 
 

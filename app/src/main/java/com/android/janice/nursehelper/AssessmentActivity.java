@@ -11,16 +11,16 @@ import android.view.MenuItem;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
+/*
  * Created by janicerichards on 2/4/17.
  */
 
 public class AssessmentActivity extends AppCompatActivity implements AssessmentFragment.Callback {
 
-    AssessmentFragment mFragment;
+    private AssessmentFragment mFragment;
     private static final String LOG_TAG = AssessmentActivity.class.getSimpleName();
 
-    String mRoomNumber, mPortraitFilePath, mNurseName, mDbUserId;
+    private String mRoomNumber, mPortraitFilePath, mNurseName, mDbUserId;
     private DatabaseReference mDatabase;
 
 

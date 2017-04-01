@@ -44,8 +44,7 @@ public final class NetworkUtils {
                 //.appendQueryParameter(ITEM_USER, mDbUserId)   ... etc., if necessary later ...
                 .build();
         try {
-            URL residentsUrl = new URL(residentsUri.toString());
-            return residentsUrl;
+            return new URL(residentsUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -55,8 +54,7 @@ public final class NetworkUtils {
     public static URL getMedicationsUrl(Context context) {
         Uri medicationsUri = Uri.parse(NURSEHELPER_FIREBASE_DB_MEDICATIONS_URL).buildUpon().build();
         try {
-            URL medicationsUrl = new URL(medicationsUri.toString());
-            return medicationsUrl;
+            return new URL(medicationsUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;

@@ -11,16 +11,16 @@ import android.view.MenuItem;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
+/*
  * Created by janicerichards on 2/4/17.
  */
 
 public class MedicationsActivity extends AppCompatActivity implements MedicationsFragment.Callback {
 
-    MedicationsFragment mFragment;
+    private MedicationsFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
 
-    String mRoomNumber, mPortraitFilePath, mNurseName, mDbUserId;
+    private String mRoomNumber, mPortraitFilePath, mNurseName, mDbUserId;
     private DatabaseReference mDatabase;
 
 

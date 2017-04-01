@@ -1,28 +1,19 @@
 package com.android.janice.nursehelper;
 
-//import java.sql.Time;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
-import com.android.janice.nursehelper.data.ResidentProvider;
 import com.android.janice.nursehelper.utility.Utility;
 import com.google.firebase.database.DatabaseReference;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
-/**
+/*
  * Created by janicerichards on 2/5/17.
  */
 
@@ -41,18 +32,17 @@ public class AssessmentItem {
     private long timestamp;
 
 
-    //boolean mAddProblem = false;
-    public final static int COL_ROOM_NUMBER = 0;
-    public final static int COL_BLOOD_PRESSURE = 1;
-    public final static int COL_TEMPERATURE = 2;
-    public final static int COL_PULSE = 3;
-    public final static int COL_RR = 4;
-    public final static int COL_EDEMA = 5;
-    public final static int COL_EDEMA_LOCN = 6;
-    public final static int COL_EDEMA_PITTING = 7;
-    public final static int COL_PAIN = 8;
-    public final static int COL_SIGNIFICANT_FINDINGS = 9;
-    public final static int COL_TIMESTAMP = 10;
+    private final static int COL_ROOM_NUMBER = 0;
+    private final static int COL_BLOOD_PRESSURE = 1;
+    private final static int COL_TEMPERATURE = 2;
+    private final static int COL_PULSE = 3;
+    private final static int COL_RR = 4;
+    private final static int COL_EDEMA = 5;
+    private final static int COL_EDEMA_LOCN = 6;
+    private final static int COL_EDEMA_PITTING = 7;
+    private final static int COL_PAIN = 8;
+    private final static int COL_SIGNIFICANT_FINDINGS = 9;
+    private final static int COL_TIMESTAMP = 10;
 
 
     public String getRoomNumber() {
@@ -152,7 +142,7 @@ public class AssessmentItem {
         edema = cursor.getString(COL_EDEMA);
         edemaLocn = cursor.getString(COL_EDEMA_LOCN);
         short pitting = cursor.getShort(COL_EDEMA_PITTING);
-        edemaPitting = ((pitting == 0) ? false : true);
+        edemaPitting = (pitting != 0);
         pain = cursor.getInt(COL_PAIN);
         significantFindings = cursor.getString(COL_SIGNIFICANT_FINDINGS);
         timestamp = cursor.getLong(COL_TIMESTAMP);
@@ -204,7 +194,7 @@ public class AssessmentItem {
                 "Very slight headache.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
-        Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
+        context.getContentResolver().insert(uri, aValues);
         //saveFirebaseAssessment(aValues, database, userId);
         new UpdateAssessmentTask(context, database, userId).execute(aValues);
 
@@ -224,7 +214,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, "Pt. says moderate pain in lower back.");
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
-        assessmentUri = context.getContentResolver().insert(uri, aValues);
+        context.getContentResolver().insert(uri, aValues);
         //saveFirebaseAssessment(aValues, database, userId);
         new UpdateAssessmentTask(context, database, userId).execute(aValues);
 
@@ -260,7 +250,7 @@ public class AssessmentItem {
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_SIGNIFICANT_FINDINGS, findings);
         aValues.put(ResidentContract.AssessmentEntry.COLUMN_TIME, time);
 
-        Uri assessmentUri = context.getContentResolver().insert(uri, aValues);
+        context.getContentResolver().insert(uri, aValues);
         //saveFirebaseAssessment(aValues, database, userId);
         UpdateAssessmentTask updateAssessmentTask = new UpdateAssessmentTask(context, database, userId);
         updateAssessmentTask.execute(aValues);
@@ -272,9 +262,9 @@ public class AssessmentItem {
 
 
     private static class UpdateAssessmentTask extends AsyncTask<ContentValues, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
+        private final Context context;
+        private final DatabaseReference database;
+        private final String userId;
 
         public UpdateAssessmentTask(Context context, DatabaseReference database, String userId) {
             this.context = context;
@@ -290,7 +280,7 @@ public class AssessmentItem {
             //String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();
             String assessmentId = database.child(ResidentContract.PATH_USERS).child(userId)
                     .child(ResidentContract.AssessmentEntry.TABLE_NAME).push().getKey();
-            ArrayList<String> keys = new ArrayList<String>(assessmentValues.keySet());
+            ArrayList<String> keys = new ArrayList<>(assessmentValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = assessmentValues.get(keys.get(i));
                 //database.child("users").child(userId).child("assessments").child(assessmentId).child(keys.get(i)).setValue(value);
@@ -311,8 +301,8 @@ public class AssessmentItem {
 
 
     private static class TrimAssessmentDataTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected String roomNumber;
+        private final Context context;
+        private final String roomNumber;
 
         public TrimAssessmentDataTask(Context context, String roomNumber) {
             this.context = context;
@@ -323,7 +313,9 @@ public class AssessmentItem {
         protected Void doInBackground(Void... params) {
             Bundle bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
                     "countAssessments", roomNumber, null);
-            long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
+            long numberRecs = 0;
+            if (bundle != null)
+                numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
 
             int maxNumberRecords = context.getResources().getInteger(R.integer.max_number_assessment_records);
 
@@ -331,7 +323,7 @@ public class AssessmentItem {
                 int numberToDelete = context.getResources().getInteger(R.integer.number_assessment_records_to_delete);
                 Bundle input = new Bundle();
                 input.putInt(MainActivity.ITEM_DELETE_AMT, numberToDelete);
-                bundle = context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
+                context.getContentResolver().call(ResidentContract.AssessmentEntry.CONTENT_URI,
                         "deleteOldestAssessments", roomNumber, input);
             }
             return null;

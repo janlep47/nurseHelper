@@ -1,6 +1,6 @@
 package com.android.janice.nursehelper;
 
-/**
+/*
  * Created by janicerichards on 3/12/17.
  */
 

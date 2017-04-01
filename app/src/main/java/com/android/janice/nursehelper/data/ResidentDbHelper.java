@@ -1,18 +1,17 @@
 package com.android.janice.nursehelper.data;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
+/*
  * Created by janicerichards on 2/1/17.
  */
 
 public class ResidentDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    static final String DATABASE_NAME = "charting.db";
+    private static final String DATABASE_NAME = "charting.db";
 
     public ResidentDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -81,6 +80,5 @@ public class ResidentDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ResidentContract.AssessmentEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ResidentContract.MedsGivenEntry.TABLE_NAME);
         onCreate(db);
-        return;
     }
 }

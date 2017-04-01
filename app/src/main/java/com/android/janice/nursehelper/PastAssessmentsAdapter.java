@@ -2,7 +2,7 @@ package com.android.janice.nursehelper;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +11,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
+/*
  * Created by janicerichards on 2/5/17.
  */
 
 public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
-    Context mContext;
-    int layoutResourceId;
+    private final Context mContext;
+    private final int layoutResourceId;
     List<AssessmentItem> data;
-    TextView mEmptyView;
+    private final TextView mEmptyView;
 
     public PastAssessmentsAdapter(Context context, int layoutResourceId, List<AssessmentItem> data,
                                   TextView emptyView) {
@@ -30,10 +30,11 @@ public class PastAssessmentsAdapter extends ArrayAdapter<AssessmentItem> {
         this.mEmptyView = emptyView;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        PastAssessmentsAdapter.AssessmentHolder holder = null;
+        PastAssessmentsAdapter.AssessmentHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();

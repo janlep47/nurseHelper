@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -44,12 +45,12 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    public static final int REQUEST_CODE = 123;
+    private static final int REQUEST_CODE = 123;
     public static final String ITEM_ROOM_NUMBER = "roomNumber";
     public static final String ITEM_PORTRAIT_FILEPATH = "portraitFilepath";
     public static final String ITEM_NURSE_NAME = "nurseName";
     public static final String ITEM_USER_ID = "dataBaseUserID";
-    public static final String NO_CARE_PLAN_PDF = "CarePlanNONE.pdf";
+    private static final String NO_CARE_PLAN_PDF = "CarePlanNONE.pdf";
 
     public static final String ITEM_TEMP_UNITS = "tempUnits";
 
@@ -90,8 +91,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        ResidentlistFragment mFragment = ((ResidentlistFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_residentlist));
+        getSupportFragmentManager().findFragmentById(R.id.fragment_residentlist);
 
         ResidentItem.putInDummyData(this, mDatabase, mDbUserId);
         MedicationItem.putInDummyData(this, mDatabase, mDbUserId);
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
 
     }
 
-    public void checkPermission() {
+    private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -222,9 +222,8 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         }
     }
 
-
     @Override // GoogleApiClient.OnConnectionFailedListener
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             Log.d(LOG_TAG, "onConnectionFailed: " + result);
         }
@@ -311,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
         }
     }
 
-    public String getAssetsPdfPath(String assetsFile) {
+    private String getAssetsPdfPath(String assetsFile) {
         String filePath = getFilesDir() + File.separator + assetsFile;
         File destinationFile = new File(filePath);
 
@@ -319,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
             FileOutputStream outputStream = new FileOutputStream(destinationFile);
             InputStream inputStream = getAssets().open(assetsFile);
             byte[] buffer = new byte[1024];
-            int length = 0;
+            int length;
             while ((length = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
             }

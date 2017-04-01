@@ -1,18 +1,14 @@
 package com.android.janice.nursehelper;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.util.Log;
-import android.os.Build;
 import android.content.Intent;
 import android.widget.Toast;
 
 
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,7 +24,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-/**
+/*
  * Created by janicerichards on 3/12/17.
  */
 
@@ -37,7 +33,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     private final String LOG_TAG = LogInActivity.class.getSimpleName();
 
-    private SignInButton mSignInButton;
     private GoogleApiClient mGoogleApiClient;
 
     private FirebaseAuth mAuth;
@@ -60,8 +55,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         mAuth = FirebaseAuth.getInstance();
 
         // Set the dimensions of the sign-in button.
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        mSignInButton.setSize(SignInButton.SIZE_STANDARD);
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -138,11 +133,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-
-            mNurseName = acct.getDisplayName();
+            if (acct != null)
+                mNurseName = acct.getDisplayName();
+            else
+                mNurseName = "";
             firebaseAuthWithGoogle(acct);
-        } else {
-            // Signed out, show unauthenticated UI.
         }
     }
 
@@ -233,9 +228,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-
     @Override // GoogleApiClient.OnConnectionFailedListener
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             Log.d(LOG_TAG, "onConnectionFailed: " + result);
         }

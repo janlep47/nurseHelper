@@ -1,6 +1,6 @@
 package com.android.janice.nursehelper.alarm;
 
-/**
+/*
  * Created by janicerichards on 3/26/17.
  */
 
@@ -18,7 +18,7 @@ import android.content.Intent;
  */
 // BEGIN_INCLUDE(autostart)
 public class NurseHelperBootReceiver extends BroadcastReceiver {
-    NurseHelperAlarmReceiver alarm = new NurseHelperAlarmReceiver();
+    private final NurseHelperAlarmReceiver alarm = new NurseHelperAlarmReceiver();
 
     @Override
     public void onReceive(Context context, Intent intent) {

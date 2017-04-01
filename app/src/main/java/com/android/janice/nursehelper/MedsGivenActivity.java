@@ -1,19 +1,16 @@
 package com.android.janice.nursehelper;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
-/**
+/*
  * Created by janicerichards on 2/4/17.
  */
 
 public class MedsGivenActivity extends AppCompatActivity {
 
-    MedsGivenFragment mFragment;
+    private MedsGivenFragment mFragment;
     private static final String LOG_TAG = MedicationsActivity.class.getSimpleName();
 
 

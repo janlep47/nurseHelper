@@ -1,19 +1,13 @@
 package com.android.janice.nursehelper;
 
 
-import android.os.Bundle;
-
-/**
+/*
  * Created by janicerichards on 3/19/17.
  */
 
 public class CareplanActivity extends net.sf.andpdf.pdfviewer.PdfViewerActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     public int getPreviousPageImageResource() {
         return R.drawable.left_arrow;
     }

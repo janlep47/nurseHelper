@@ -12,10 +12,10 @@
 
     <dimen name="assessment_subtext_size">18sp</dimen>
 
-    <dimen name="widget_text_size">16dp</dimen>
+    <dimen name="widget_text_size">16sp</dimen>
     <!--dimen name="widget_subtext_size">12sp</dimen-->
     <dimen name="widget_subtext_size">16sp</dimen>
-    <dimen name="widget_headertext_size">12dp</dimen>
+    <dimen name="widget_headertext_size">12sp</dimen>
 
     <!--dimen name="widget_room_number_width">80dp</dimen>
     <dimen name="widget_time_width">160dp</dimen-->

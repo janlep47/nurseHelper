@@ -8,8 +8,8 @@
     <!-- for google location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 
     <application
@@ -19,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
+        On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
+        Consider adding the attribute 'android:fullBackupContent' to specify an '@xml'
+        resource which configures which files to backup. More info: https://developer.android.com/training/backup/autosyncapi.html
         <activity
             android:name=".LogInActivity"
             android:label="@string/title_activity_nurse_login"
@@ -135,12 +137,12 @@
         </service>
 
 
-        <receiver android:name=".alarm.NurseHelperAlarmReceiver"></receiver>
+        <receiver android:name=".alarm.NurseHelperAlarmReceiver" />
 
         <receiver android:name=".alarm.NurseHelperBootReceiver"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <service android:name=".alarm.NurseHelperSchedulingService" />

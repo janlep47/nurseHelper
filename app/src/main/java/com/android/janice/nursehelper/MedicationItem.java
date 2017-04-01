@@ -2,35 +2,24 @@ package com.android.janice.nursehelper;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.text.format.Time;
 
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.data.ResidentProvider;
 import com.android.janice.nursehelper.utility.AdminTimeInfo;
 import com.android.janice.nursehelper.utility.Utility;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
-/**
+/*
  * Created by janicerichards on 2/4/17.
  */
 
@@ -50,17 +39,9 @@ public class MedicationItem {
     private String nextDosageTime;
     private long nextDosageTimeLong;
 
-    public final static int COL_ROOM_NUMBER = 0;
-    public final static int COL_GENERIC_NAME = 1;
-    public final static int COL_TRADE_NAME = 2;
-    public final static int COL_DOSAGE = 3;
-    public final static int COL_DOSAGE_UNITS = 4;
-    public final static int COL_DOSAGE_ROUTE = 5;
-    public final static int COL_ADMIN_TIMES = 6;
-    public final static int COL_FREQ = 7;
-    public final static int COL_LAST_GIVEN = 8;
-    public final static int COL_NEXT_DOSAGE_TIME = 9;
-    public final static int COL_NEXT_DOSAGE_TIME_LONG = 10;
+    private final static int COL_ROOM_NUMBER = 0;
+    private final static int COL_GENERIC_NAME = 1;
+    private final static int COL_TRADE_NAME = 2;
 
     public final static String TAG = MedicationItem.class.getSimpleName();
 
@@ -184,7 +165,6 @@ public class MedicationItem {
         Uri uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
         uriMeds = uriMeds.buildUpon().appendPath(roomNumber).build();
         long time = System.currentTimeMillis();
-        String timeString = Utility.getReadableTimestamp(context, time);
 
         // Med #1
         ContentValues medValues = new ContentValues();
@@ -197,15 +177,12 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "QD");
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
         // Write to local device DB
-        Uri medUri = context.getContentResolver().insert(uriMeds, medValues);
+        context.getContentResolver().insert(uriMeds, medValues);
 
         // Now, right to Firebase DB
         new UpdateMedicationTask(context, database, userId).execute(medValues);
@@ -214,7 +191,7 @@ public class MedicationItem {
         // Med #2
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context, time + 5);
+        Utility.getReadableTimestamp(context, time + 5);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metformin HCL");
@@ -224,20 +201,17 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "7 AM / 3 PM / 11 PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "");  // also tried "TID"
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+5);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
-        medUri = context.getContentResolver().insert(uriMeds, medValues);
+        context.getContentResolver().insert(uriMeds, medValues);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
         // Med #3
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context, time + 2);
+        Utility.getReadableTimestamp(context, time + 2);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, roomNumber);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "metaprolol tartrate");
@@ -247,14 +221,11 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_DOSAGE_ROUTE, "oral");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_TIMES, "9 AM / 9PM");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_FREQUENCY, "BID");
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, time);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, timeString);
-        //medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, time+2);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN, 0);
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
-        medUri = context.getContentResolver().insert(uriMeds, medValues);
+        context.getContentResolver().insert(uriMeds, medValues);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
         // Med for ANOTHER PATIENT
@@ -272,14 +243,14 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
-        medUri = context.getContentResolver().insert(uriMeds, medValues);
+        context.getContentResolver().insert(uriMeds, medValues);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
 
         // Med #1 for later patient
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context, time + 50);
+        Utility.getReadableTimestamp(context, time + 50);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "208");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "atavan");
@@ -293,13 +264,13 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
-        medUri = context.getContentResolver().insert(uriMeds, medValues);
+        context.getContentResolver().insert(uriMeds, medValues);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
 
         // Med #2 for later patient
         medValues = new ContentValues();
 
-        timeString = Utility.getReadableTimestamp(context, time + 25);
+        Utility.getReadableTimestamp(context, time + 25);
 
         medValues.put(ResidentContract.MedicationEntry.COLUMN_ROOM_NUMBER, "208");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC, "haldoperitol");
@@ -313,7 +284,7 @@ public class MedicationItem {
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME, "");
         medValues.put(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG, 0);
 
-        medUri = context.getContentResolver().insert(uriMeds, medValues);
+        context.getContentResolver().insert(uriMeds, medValues);
         new UpdateMedicationTask(context, database, userId).execute(medValues);
     }
 
@@ -359,7 +330,7 @@ public class MedicationItem {
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_NURSE, nurseName);
         medGivenValues.put(ResidentContract.MedsGivenEntry.COLUMN_TIME_GIVEN, time);
 
-        Uri medGivenUri = context.getContentResolver().insert(uriMeds, medGivenValues);
+        context.getContentResolver().insert(uriMeds, medGivenValues);
         // Add the new "MedicationGiven" record to the Firebase database also:
         UpdateMedsGivenTask updateMedsGivenTask = new UpdateMedsGivenTask(context, database, userId);
         updateMedsGivenTask.execute(medGivenValues);
@@ -374,7 +345,7 @@ public class MedicationItem {
 
             uriMeds = ResidentContract.MedicationEntry.CONTENT_URI;
             uriMeds = uriMeds.buildUpon().appendPath(roomNumber).appendPath(genericName).build();
-            int rowsUpdated = context.getContentResolver().update(uriMeds, meds,
+            context.getContentResolver().update(uriMeds, meds,
                     ResidentProvider.sMedsByResidentAndMedSelection,
                     new String[]{roomNumber, genericName});
 
@@ -422,9 +393,9 @@ public class MedicationItem {
     // Result - the output; returned by doInBackground()
     //
     private static class UpdateMedicationTask extends AsyncTask<ContentValues, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
+        protected final Context context;
+        protected final DatabaseReference database;
+        protected final String userId;
 
         public UpdateMedicationTask(Context context, DatabaseReference database, String userId) {
             this.context = context;
@@ -442,7 +413,7 @@ public class MedicationItem {
             //String medicationId = database.child("users").child(userId).child("medications").push().getKey();
             String medicationId = database.child(ResidentContract.PATH_USERS).child(userId)
                     .child(ResidentContract.MedicationEntry.TABLE_NAME).push().getKey();
-            ArrayList<String> keys = new ArrayList<String>(medicationValues.keySet());
+            ArrayList<String> keys = new ArrayList<>(medicationValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = medicationValues.get(keys.get(i));
                 //database.child("users").child(userId).child("medications").child(medicationId).child(keys.get(i)).setValue(value);
@@ -468,9 +439,9 @@ public class MedicationItem {
     // Result - the output; returned by doInBackground()
     //
     private static class UpdateMedsGivenTask extends AsyncTask<ContentValues, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
+        protected final Context context;
+        protected final DatabaseReference database;
+        protected final String userId;
 
         public UpdateMedsGivenTask(Context context, DatabaseReference database, String userId) {
             this.context = context;
@@ -486,7 +457,7 @@ public class MedicationItem {
             //String medicationId = database.child("users").child(userId).child("medsGiven").push().getKey();
             String medicationId = database.child(ResidentContract.PATH_USERS).child(userId)
                     .child(ResidentContract.MedsGivenEntry.TABLE_NAME).push().getKey();
-            ArrayList<String> keys = new ArrayList<String>(medGivenValues.keySet());
+            ArrayList<String> keys = new ArrayList<>(medGivenValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = medGivenValues.get(keys.get(i));
                 //database.child("users").child(userId).child("medsGiven").child(medicationId).child(keys.get(i)).setValue(value);
@@ -507,9 +478,9 @@ public class MedicationItem {
 
 
     private static class UpdateMedicationTakenTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
+        protected final Context context;
+        protected final DatabaseReference database;
+        protected final String userId;
         protected String roomNumber, genericName, nextAdminTime;
         protected long time, nextAdminTimeLong;
 
@@ -555,7 +526,7 @@ public class MedicationItem {
                                 database.child(ResidentContract.PATH_USERS).child(userId)
                                         .child(ResidentContract.MedicationEntry.TABLE_NAME)
                                         .child(issue.getKey()).child(ResidentContract.MedicationEntry.COLUMN_LAST_GIVEN)
-                                        .setValue(new Long(time));
+                                        .setValue(Long.valueOf(time));
                                 database.child(ResidentContract.PATH_USERS).child(userId)
                                         .child(ResidentContract.MedicationEntry.TABLE_NAME)
                                         .child(issue.getKey()).child(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME)
@@ -563,7 +534,7 @@ public class MedicationItem {
                                 database.child(ResidentContract.PATH_USERS).child(userId)
                                         .child(ResidentContract.MedicationEntry.TABLE_NAME)
                                         .child(issue.getKey()).child(ResidentContract.MedicationEntry.COLUMN_NEXT_DOSAGE_TIME_LONG)
-                                        .setValue(new Long(nextAdminTimeLong));
+                                        .setValue(Long.valueOf(nextAdminTimeLong));
                             }
                         }
                     }
@@ -574,8 +545,6 @@ public class MedicationItem {
 
                 }
             });
-            queryMed = null;
-
             return null;
         }
 
@@ -588,8 +557,8 @@ public class MedicationItem {
 
 
     private static class TrimMedsGivenDataTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected String roomNumber;
+        protected final Context context;
+        protected final String roomNumber;
 
         public TrimMedsGivenDataTask(Context context, String roomNumber) {
             this.context = context;
@@ -600,7 +569,9 @@ public class MedicationItem {
         protected Void doInBackground(Void... params) {
             Bundle bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "countMedsGiven", roomNumber, null);
-            long numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
+            long numberRecs = 0;
+            if (bundle != null)
+                numberRecs = bundle.getLong(MainActivity.ITEM_COUNT);
 
             int maxNumberRecords = context.getResources().getInteger(R.integer.max_number_medsgiven_records);
 
@@ -608,7 +579,7 @@ public class MedicationItem {
                 int numberToDelete = context.getResources().getInteger(R.integer.number_medsgiven_records_to_delete);
                 Bundle input = new Bundle();
                 input.putInt(MainActivity.ITEM_DELETE_AMT, numberToDelete);
-                bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+                context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                         "deleteOldestMedsGiven", roomNumber, input);
             }
             return null;
@@ -617,11 +588,11 @@ public class MedicationItem {
 
 
     private static class UndoMedGivenTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
-        protected String roomNumber, genericName;
-        protected String adminTimes, freq;
+        protected final Context context;
+        protected final DatabaseReference database;
+        protected final String userId;
+        protected final String roomNumber, genericName;
+        protected final String adminTimes, freq;
 
         public UndoMedGivenTask(Context context, DatabaseReference database, String userId,
                                 String roomNumber, String genericName,
@@ -640,12 +611,12 @@ public class MedicationItem {
             Bundle input = new Bundle();
             input.putString(MainActivity.ITEM_GENERIC_NAME, genericName);
             // Delete the single most recent med-given record, with the given room# and generic med:
-            Bundle bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+            context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "deleteNewestMedsGiven", roomNumber, input);
 
             input.putString(MainActivity.ITEM_ADMIN_TIMES, adminTimes);
             input.putString(MainActivity.ITEM_FREQ, freq);
-            bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+            context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "undoMostRecentTimestamp", roomNumber, input);
             return null;
         }
@@ -660,10 +631,10 @@ public class MedicationItem {
 
 
     private static class UndoMedRefusedTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
-        protected String roomNumber, genericName;
+        protected final Context context;
+        protected final DatabaseReference database;
+        protected final String userId;
+        protected final String roomNumber, genericName;
 
         public UndoMedRefusedTask(Context context, DatabaseReference database, String userId,
                                   String roomNumber, String genericName) {
@@ -680,7 +651,7 @@ public class MedicationItem {
             input.putString(MainActivity.ITEM_GENERIC_NAME, genericName);
             // Delete the single most recent med-given record, with the given room# and generic med:
             //  ('refused' will be true, but this isn't necessary to check for)
-            Bundle bundle = context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
+            context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "deleteNewestMedsGiven", roomNumber, input);
             return null;
         }

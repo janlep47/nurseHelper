@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.android.janice.nursehelper.alarm.NurseHelperSchedulingService;
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
@@ -31,7 +30,6 @@ import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +55,7 @@ public class NurseHelperSyncUtils {
      * @param context Context used to create the GooglePlayDriver that powers the
      *                FirebaseJobDispatcher
      */
-    static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
+    private static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
 
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
@@ -153,13 +151,12 @@ public class NurseHelperSyncUtils {
                 Uri residentQueryUri = ResidentContract.ResidentEntry.CONTENT_URI;
 
                 String[] projectionColumns = {ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER};
-                String selectionStatement = null;
 
                 /* Here, we perform the query to check to see if we have any weather data */
                 Cursor cursor = context.getContentResolver().query(
                         residentQueryUri,
                         projectionColumns,
-                        selectionStatement,
+                        null, // selectionStatement
                         null,
                         null);
                 if (null == cursor || cursor.getCount() == 0) {
@@ -167,7 +164,7 @@ public class NurseHelperSyncUtils {
                 }
 
                 /* Make sure to close the Cursor to avoid memory leaks! */
-                cursor.close();
+                if (cursor != null) cursor.close();
             }
         });
 
@@ -181,7 +178,7 @@ public class NurseHelperSyncUtils {
      *
      * @param context The Context used to start the IntentService for the sync.
      */
-    public static void startImmediateSync(@NonNull final Context context) {
+    private static void startImmediateSync(@NonNull final Context context) {
         Intent intentToSyncImmediately = new Intent(context, NurseHelperSyncIntentService.class);
         context.startService(intentToSyncImmediately);
     }

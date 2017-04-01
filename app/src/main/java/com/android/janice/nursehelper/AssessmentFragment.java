@@ -1,29 +1,18 @@
 package com.android.janice.nursehelper;
 
 import android.annotation.TargetApi;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,15 +26,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.NurseHelperPreferences;
-import com.android.janice.nursehelper.data.ResidentContract;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-//import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
 
-/**
+/*
  * Created by janicerichards on 2/2/17.
  */
 
@@ -76,30 +60,25 @@ public class AssessmentFragment extends Fragment {
     private NumberPicker mPulse_picker;
     private NumberPicker mRR_picker;
     private Spinner mEdema_spinner;
-    //private Spinner mEdema_location_spinner;
     private NumberPicker mPain_picker;
     private CheckBox mEdema_LLE, mEdema_RLE, mEdema_LUE, mEdema_RUE;
     private RadioButton mEdema_pitting, mEdema_non_pitting;
     private LinearLayout mEdema_info;
 
-    //private TextView mSystolicBP_textView;
-    //private TextView mDiastolicBP_textView;
     private TextView mBP_textView;
     private TextView mTemperature_textView;
     private TextView mPulse_textView;
     private TextView mRR_textView;
-    private TextView mEdema_textView;
-    private TextView mEdemaLocation_textView;
     private TextView mPain_textView;
     private EditText mFindings_editText;
     private Button mDone_button;
 
-    String mRoomNumber;
-    String mPortraitFilePath;
-    String mNurseName;
-    String mDbUserId;
-    boolean mMetricUnits;
-    DatabaseReference mDatabase;
+    private String mRoomNumber;
+    private String mPortraitFilePath;
+    private String mNurseName;
+    private String mDbUserId;
+    private boolean mMetricUnits;
+    private DatabaseReference mDatabase;
 
     private int mSystolicBP, mDiastolicBP, mTemp, mTempDecimal, mPulse, mRR, mPain;
     private int edemaSpinnerPosn;
@@ -110,7 +89,7 @@ public class AssessmentFragment extends Fragment {
     public interface Callback {
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, MedicationsAdapter.MedicationsAdapterViewHolder vh);
-        public DatabaseReference getDatabaseReference();
+        DatabaseReference getDatabaseReference();
     }
 
 
@@ -155,9 +134,9 @@ public class AssessmentFragment extends Fragment {
         //if ( mTransitionAnimation ) {
         activity.supportStartPostponedEnterTransition();
         ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar == null) return;
+
         actionBar.setSubtitle(activity.getResources().getString(R.string.action_bar_room_number_title) + mRoomNumber);
-
-
         actionBar.setDisplayOptions(actionBar.getDisplayOptions()
                 | ActionBar.DISPLAY_SHOW_CUSTOM);
         ImageView imageView = new ImageView(actionBar.getThemedContext());
@@ -169,18 +148,17 @@ public class AssessmentFragment extends Fragment {
         if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
-
+        int targetWidth = actionBarHeight;
         Picasso.with(getActivity())
                 .load(mPortraitFilePath)
                 .placeholder(R.drawable.blank_portrait)
-                //.noFade().resize(actionBar.getHeight(), actionBar.getHeight())
-                .noFade().resize(actionBarHeight, actionBarHeight)
+                .noFade().resize(targetWidth, actionBarHeight)
                 .error(R.drawable.blank_portrait)
                 .into(imageView);
 
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.END
                 | Gravity.CENTER_VERTICAL);
         layoutParams.rightMargin = getActivity().getResources().getInteger(R.integer.appbar_portrait_margin);
         imageView.setLayoutParams(layoutParams);
@@ -235,7 +213,7 @@ public class AssessmentFragment extends Fragment {
             mEdema_RLE_checked = false;
             mEdema_LUE_checked = false;
             mEdema_RUE_checked = false;
-            mPain = 0;
+            mPain = getActivity().getResources().getInteger(R.integer.pain_default);
             mFindings = "";
             edemaPitting = false;
             mXposn = 0;
@@ -248,7 +226,6 @@ public class AssessmentFragment extends Fragment {
         mTemperature_textView = (TextView) rootView.findViewById(R.id.temperature_textview);
         mPulse_textView = (TextView) rootView.findViewById(R.id.pulse_textview);
         mRR_textView = (TextView) rootView.findViewById(R.id.rr_textview);
-        mEdema_textView = (TextView) rootView.findViewById(R.id.edema_textview);
         mPain_textView = (TextView) rootView.findViewById(R.id.pain_textview);
         mFindings_editText = (EditText) rootView.findViewById(R.id.findings_edittext);
 

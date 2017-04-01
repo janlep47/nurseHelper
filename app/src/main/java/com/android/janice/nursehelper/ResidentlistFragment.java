@@ -1,12 +1,10 @@
 package com.android.janice.nursehelper;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,13 +15,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -31,22 +25,17 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.android.janice.nursehelper.data.ResidentContract;
-import com.android.janice.nursehelper.data.ResidentProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-//import com.android.janice.nursehelper.sync.NurseHelperSyncAdapter;
-
-/**
+/*
  * Created by janicerichards on 2/2/17.
  */
 
 public class ResidentlistFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String LOG_TAG = ResidentlistFragment.class.getSimpleName();
+    private static final String LOG_TAG = ResidentlistFragment.class.getSimpleName();
     private ResidentlistAdapter mResidentlistAdapter;
     private RecyclerView mRecyclerView;
     private boolean mAutoSelectView;
@@ -76,21 +65,18 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
     static final int COL_NEXT_ADMIN_TIME = 1;
     static final int COL_NEXT_ADMIN_TIME_LONG = 2;
 
-    String mNurseName;
-    String mDbUserId;
-    DatabaseReference mDatabase;
+    private String mNurseName;
+    private String mDbUserId;
+    private DatabaseReference mDatabase;
 
     public interface Callback {
         // for when a list item has been selected.
         //public void onItemSelected(Uri dateUri, int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
-        public void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
+        void onItemSelected(String roomNumber, String portraitFilePath, String careplanFilePath,
                                    int selectionType, ResidentlistAdapter.ResidentlistAdapterViewHolder vh);
-
-        public String getNurseName();
-
-        public String getDbUserId();
-
-        public DatabaseReference getDatabaseReference();
+        String getNurseName();
+        String getDbUserId();
+        DatabaseReference getDatabaseReference();
     }
 
     public ResidentlistFragment() {
@@ -172,8 +158,6 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         // For when device is rotated
         if (savedInstanceState != null) {
             mResidentlistAdapter.onRestoreInstanceState(savedInstanceState);
-        } else {
-            //ResidentSyncAdapter.syncImmediately(getContext());
         }
 
         return rootView;
@@ -205,14 +189,14 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: " + databaseError.toException());
+                Log.e(LOG_TAG, " Firebase database 'residents' onCancelled: " + databaseError.toString());
             }
         });
     }
 
-    void onResidentlistChanged() {
-        getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);
-    }
+    //void onResidentlistChanged() {
+    //    getLoaderManager().restartLoader(RESIDENTLIST_LOADER, null, this);
+    //}
 
 
     @Override
@@ -261,7 +245,7 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
                         if (position == RecyclerView.NO_POSITION && !mInitialSelectedRoomNumber.equals("")) {
                             Cursor data = mResidentlistAdapter.getCursor();
 
-                            Cursor medData = mResidentlistAdapter.getTimeCursor();
+                            mResidentlistAdapter.getTimeCursor();
 
                             int count = data.getCount();
                             int roomNumberColumn = data.getColumnIndex(ResidentContract.ResidentEntry.COLUMN_ROOM_NUMBER);
@@ -313,23 +297,22 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
         mResidentlistAdapter.swapCursor(null);
     }
 
-    public void setInitialSelectedRoomNumber(String initialSelectedRoomNumber) {
-        mInitialSelectedRoomNumber = initialSelectedRoomNumber;
-    }
+    //public void setInitialSelectedRoomNumber(String initialSelectedRoomNumber) {
+    //    mInitialSelectedRoomNumber = initialSelectedRoomNumber;
+    //}
 
     // Update the empty-list view if empty Resident DB or server down
     private void updateEmptyView() {
         if (mResidentlistAdapter.getItemCount() == 0) {
             TextView tv = (TextView) getView().findViewById(R.id.recyclerview_residentlist_empty);
-            if (null != tv) {
-
+            if (tv != null) {
                 int message = R.string.empty_residentlist_no_network;   // FOR NOW ONLY!!!
                 tv.setText(message);
             }
         }
     }
 
-    public void dataUpdated() {
+    private void dataUpdated() {
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
@@ -351,8 +334,8 @@ public class ResidentlistFragment extends Fragment implements LoaderManager.Load
 
 
     private class UpdateResidentsFromFirebaseTask extends AsyncTask<Void, Void, Void> {
-        protected Context context;
-        protected DataSnapshot dataSnapshot;
+        protected final Context context;
+        protected final DataSnapshot dataSnapshot;
 
         public UpdateResidentsFromFirebaseTask(Context context, DataSnapshot dataSnapshot) {
             this.context = context;

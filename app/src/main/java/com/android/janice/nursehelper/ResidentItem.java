@@ -4,27 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
+/*
  * Created by janicerichards on 2/3/17.
  */
 
@@ -90,16 +81,14 @@ public class ResidentItem {
         }
         String[] files = new String[10];
         int n = 0;
-        HashMap<String, String> careplanFiles = new HashMap<String, String>();
-        for (int i = 0; i < afiles.length; i++) {
-            if (afiles[i].startsWith("CarePlan1")) {
-                careplanFiles.put("1", afiles[i]);
-            } else if (afiles[i].startsWith("CarePlan8")) {
-                careplanFiles.put("2", afiles[i]);
-            } else if (afiles[i].startsWith("CarePlanNONE")) {
-
-            } else {
-                files[n] = afiles[i];
+        HashMap<String, String> careplanFiles = new HashMap<>();
+        for (String afile : afiles) {
+            if (afile.startsWith("CarePlan1")) {
+                careplanFiles.put("1", afile);
+            } else if (afile.startsWith("CarePlan8")) {
+                careplanFiles.put("2", afile);
+            } else if (!afile.startsWith("CarePlanNONE")) {
+                files[n] = afile;
                 n++;
                 if (n >= 10) break;
             }
@@ -138,7 +127,7 @@ public class ResidentItem {
             else if (roomNumber.equals("208"))
                 residentValues.put(ResidentContract.ResidentEntry.COLUMN_CAREPLAN_FILEPATH, careplanFiles.get("2"));
 
-            Uri uri = context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
+            context.getContentResolver().insert(ResidentContract.ResidentEntry.CONTENT_URI, residentValues);
 
             // Now update the central Firebase database
             UpdateResidentTask updateResidentTask = new UpdateResidentTask(context, database, userId);
@@ -148,9 +137,9 @@ public class ResidentItem {
 
 
     private static class UpdateResidentTask extends AsyncTask<ContentValues, Void, Void> {
-        protected Context context;
-        protected DatabaseReference database;
-        protected String userId;
+        protected final Context context;
+        protected final DatabaseReference database;
+        protected final String userId;
 
         public UpdateResidentTask(Context context, DatabaseReference database, String userId) {
             this.context = context;
@@ -168,7 +157,7 @@ public class ResidentItem {
             //String residentId = database.child("users").child(userId).child("residents").push().getKey();
             String residentId = database.child(ResidentContract.PATH_USERS).child(userId)
                     .child(ResidentContract.ResidentEntry.TABLE_NAME).push().getKey();
-            ArrayList<String> keys = new ArrayList<String>(residentValues.keySet());
+            ArrayList<String> keys = new ArrayList<>(residentValues.keySet());
             for (int i = 0; i < keys.size(); i++) {
                 Object value = residentValues.get(keys.get(i));
                 //database.child("users").child(userId).child("residents").child(residentId).child(keys.get(i)).setValue(value);

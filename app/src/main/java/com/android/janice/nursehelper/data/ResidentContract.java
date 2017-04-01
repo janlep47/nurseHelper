@@ -5,7 +5,7 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
+/*
  * Created by janicerichards on 2/1/17.
  */
 
@@ -15,7 +15,7 @@ public class ResidentContract {
 
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     // Possible paths (appended to base content URI for possible URI's)
     // e.g. content://com.android.stocks/stocks/ is a valid path for at the stock data.
@@ -144,9 +144,6 @@ public class ResidentContract {
         public static final String TABLE_NAME = "assessments";
 
 
-        //_id INTEGER PRIMARY KEY AUTOINCREMENT
-        public static final String COLUMN_ID = "_id";
-
         // primary key:  room Number
         public static final String COLUMN_ROOM_NUMBER = "roomNumber";
 
@@ -198,8 +195,6 @@ public class ResidentContract {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEDS_GIVEN).build();
 
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS_GIVEN;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEDS_GIVEN;
 

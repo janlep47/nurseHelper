@@ -21,13 +21,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.android.janice.nursehelper.data.NurseHelperPreferences;
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.utility.NurseHelperJsonUtils;
 import com.android.janice.nursehelper.utility.NetworkUtils;
 import com.android.janice.nursehelper.alarm.NurseHelperSchedulingService;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 
 import java.net.URL;
 
