@@ -21,6 +21,8 @@ import android.Manifest;
 
 import com.android.janice.nursehelper.alarm.NurseHelperAlarmReceiver;
 import com.android.janice.nursehelper.data.NurseHelperPreferences;
+import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.sync.NurseHelperSyncTask;
 import com.android.janice.nursehelper.sync.NurseHelperSyncUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -106,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements ResidentlistFragm
                     .build();
         }
 
-        //NurseHelperSyncUtils.initialize(this, mGoogleApiClient);
         NurseHelperSyncUtils.initialize(this);
+        NurseHelperSyncTask.setDbUserId(mDbUserId);
         startMedAlertsAlarm();
         mPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override

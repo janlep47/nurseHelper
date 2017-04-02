@@ -32,6 +32,7 @@ public class NurseHelperSyncTask {
 
     //private static GoogleApiClient sGoogleApiClient;
     private static final String TAG = "SYNC-ADAPTER";
+    private static String mDbUserId;
 
     /**
      * Performs the network request for current firebase 'resident' and 'medication' data, parses the JSON from that
@@ -44,7 +45,7 @@ public class NurseHelperSyncTask {
      */
     synchronized public static void syncResidentData(Context context) {
         try {
-            URL residentDataUrl = NetworkUtils.getResidentsUrl(context);
+            URL residentDataUrl = NetworkUtils.getResidentsUrl(context,mDbUserId);
 
             // Use the URL to retrieve the JSON from Firebase database 'residents' table
             String jsonResidentResponse = NetworkUtils.getResponseFromHttpUrl(residentDataUrl);
@@ -53,7 +54,7 @@ public class NurseHelperSyncTask {
             ContentValues[] residentValues = NurseHelperJsonUtils
                     .getResidentContentValuesFromJson(context, jsonResidentResponse);
 
-            URL medicationDataUrl = NetworkUtils.getMedicationsUrl(context);
+            URL medicationDataUrl = NetworkUtils.getMedicationsUrl(context,mDbUserId);
 
             String jsonMedicationResponse = NetworkUtils.getResponseFromHttpUrl(medicationDataUrl);
 
@@ -117,6 +118,10 @@ public class NurseHelperSyncTask {
         context.sendBroadcast(dataUpdatedIntent);
     }
 
+
+    public static void setDbUserId (String dbUserId) {
+        mDbUserId = dbUserId;
+    }
 
     //public static void setGoogleApiClient (GoogleApiClient client) {
     //    sGoogleApiClient = client;

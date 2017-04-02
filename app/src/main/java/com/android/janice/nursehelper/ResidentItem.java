@@ -9,9 +9,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.utility.NetworkUtils;
+import com.android.janice.nursehelper.utility.NurseHelperJsonUtils;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -153,7 +156,21 @@ public class ResidentItem {
             //   for adding fake testing data.  Actual resident data will ONLY be entered at the
             //   Firebase console, and downloaded to this app.
 
-            ContentValues residentValues = params[0];
+            // ONLY add this stuff, if NO RESIDENTS currently defined for this userId:
+            try {
+                URL residentDataUrl = NetworkUtils.getResidentsUrl(context,userId);
+                String jsonResidentResponse = NetworkUtils.getResponseFromHttpUrl(residentDataUrl);
+                ContentValues[] residentValues = NurseHelperJsonUtils
+                        .getResidentContentValuesFromJson(context, jsonResidentResponse);
+                // if already data here for residents, don't bother adding any of this DUMMY DATA!!
+                if (residentValues != null && residentValues.length != 0) return null;
+            } catch (Exception e) {
+                // Server probably invalid
+                e.printStackTrace();
+                return null;
+            }
+
+                ContentValues residentValues = params[0];
             //String residentId = database.child("users").child(userId).child("residents").push().getKey();
             String residentId = database.child(ResidentContract.PATH_USERS).child(userId)
                     .child(ResidentContract.ResidentEntry.TABLE_NAME).push().getKey();

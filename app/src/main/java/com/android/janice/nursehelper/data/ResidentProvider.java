@@ -534,12 +534,12 @@ public class ResidentProvider extends ContentProvider {
             case RESIDENTS:    // delete all residents
                 rowsDeleted = db.delete(
                         ResidentContract.ResidentEntry.TABLE_NAME, selection, selectionArgs);
-                Log.e(LOG_TAG, " Number of resident rows deleted is " + String.valueOf(rowsDeleted));
+                //Log.e(LOG_TAG, " Number of resident rows deleted is " + String.valueOf(rowsDeleted));
                 break;
             case MEDICATIONS:  // delete all medications
                 rowsDeleted = db.delete(
                         ResidentContract.MedicationEntry.TABLE_NAME, selection, selectionArgs);
-                Log.e(LOG_TAG, " Number of medication rows deleted is " + String.valueOf(rowsDeleted));
+                //Log.e(LOG_TAG, " Number of medication rows deleted is " + String.valueOf(rowsDeleted));
                 break;
             case MEDICATIONS_WITH_ROOM_NUMBER:
                 rowsDeleted = db.delete(

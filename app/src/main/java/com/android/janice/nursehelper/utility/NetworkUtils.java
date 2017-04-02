@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+
 /**
  * These utilities will be used to communicate with the NurseHelper Firebase database.
  */
@@ -33,15 +34,24 @@ public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    private static final String NURSEHELPER_FIREBASE_DB_URL =
+            "https://nursehelper-436b9.firebaseio.com/users/";
+    private static final String RESIDENTS_URL =
+            "residents.json";
+    private static final String MEDICATIONS_URL =
+            "medications.json";
+    /*
     private static final String NURSEHELPER_FIREBASE_DB_RESIDENTS_URL =
             "https://nursehelper-436b9.firebaseio.com/users/yaC7E09pBceh5xX87vmyl5Ulx4B3/residents.json";
 
     private static final String NURSEHELPER_FIREBASE_DB_MEDICATIONS_URL =
             "https://nursehelper-436b9.firebaseio.com/users/yaC7E09pBceh5xX87vmyl5Ulx4B3/medications.json";
-
-    public static URL getResidentsUrl(Context context) {
-        Uri residentsUri = Uri.parse(NURSEHELPER_FIREBASE_DB_RESIDENTS_URL).buildUpon()
-                //.appendQueryParameter(ITEM_USER, mDbUserId)   ... etc., if necessary later ...
+*/
+    public static URL getResidentsUrl(Context context, String dbUserId) {
+        //Uri residentsUri = Uri.parse(NURSEHELPER_FIREBASE_DB_RESIDENTS_URL).buildUpon()
+        Uri residentsUri = Uri.parse(NURSEHELPER_FIREBASE_DB_URL).buildUpon()
+                .appendPath(dbUserId)
+                .appendPath(RESIDENTS_URL)
                 .build();
         try {
             return new URL(residentsUri.toString());
@@ -51,8 +61,11 @@ public final class NetworkUtils {
         }
     }
 
-    public static URL getMedicationsUrl(Context context) {
-        Uri medicationsUri = Uri.parse(NURSEHELPER_FIREBASE_DB_MEDICATIONS_URL).buildUpon().build();
+    public static URL getMedicationsUrl(Context context, String dbUserId) {
+        Uri medicationsUri = Uri.parse(NURSEHELPER_FIREBASE_DB_URL).buildUpon()
+                .appendPath(dbUserId)
+                .appendPath(MEDICATIONS_URL)
+                .build();
         try {
             return new URL(medicationsUri.toString());
         } catch (MalformedURLException e) {

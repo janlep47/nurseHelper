@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.android.janice.nursehelper.data.ResidentContract;
+import com.android.janice.nursehelper.utility.NetworkUtils;
+import com.android.janice.nursehelper.utility.NurseHelperJsonUtils;
 import com.android.janice.nursehelper.utility.Utility;
 import com.google.firebase.database.DatabaseReference;
+
+import java.net.URL;
 import java.util.ArrayList;
 
 /*
@@ -275,6 +279,23 @@ public class AssessmentItem {
         @Override
         protected Void doInBackground(ContentValues... params) {
             // Add the new "Assessment" record to the Firebase database.
+
+            // ONLY add this stuff, if NO MEDICATIONS currently defined for this userId.
+            //  (good enough to check for this, rather that assessments done, which we have
+            //    no Utils/JsonUtils code for!)
+            try {
+                URL medicationDataUrl = NetworkUtils.getMedicationsUrl(context,userId);
+                String jsonMedicationResponse = NetworkUtils.getResponseFromHttpUrl(medicationDataUrl);
+                ContentValues[] medValues = NurseHelperJsonUtils
+                        .getMedicationContentValuesFromJson(context, jsonMedicationResponse);
+                // if already data here for medications, don't bother adding any of this DUMMY DATA!!
+                if (medValues != null && medValues.length != 0) return null;
+            } catch (Exception e) {
+                // Server probably invalid
+                e.printStackTrace();
+                return null;
+            }
+
 
             ContentValues assessmentValues = params[0];
             //String assessmentId = database.child("users").child(userId).child("assessments").push().getKey();

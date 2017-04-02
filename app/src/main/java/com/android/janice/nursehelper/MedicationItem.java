@@ -10,6 +10,8 @@ import android.os.Bundle;
 import com.android.janice.nursehelper.data.ResidentContract;
 import com.android.janice.nursehelper.data.ResidentProvider;
 import com.android.janice.nursehelper.utility.AdminTimeInfo;
+import com.android.janice.nursehelper.utility.NetworkUtils;
+import com.android.janice.nursehelper.utility.NurseHelperJsonUtils;
 import com.android.janice.nursehelper.utility.Utility;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /*
@@ -408,6 +411,20 @@ public class MedicationItem {
             // Add the new "Medication" record to the Firebase database.  This is used here ONLY
             //   for adding fake testing data.  Actual medication data will ONLY be entered at the
             //   Firebase console, and downloaded to this app.
+
+            // ONLY add this stuff, if NO MEDICATIONS currently defined for this userId:
+            try {
+                URL medicationDataUrl = NetworkUtils.getMedicationsUrl(context,userId);
+                String jsonMedicationResponse = NetworkUtils.getResponseFromHttpUrl(medicationDataUrl);
+                ContentValues[] medValues = NurseHelperJsonUtils
+                        .getMedicationContentValuesFromJson(context, jsonMedicationResponse);
+                // if already data here for medications, don't bother adding any of this DUMMY DATA!!
+                if (medValues != null && medValues.length != 0) return null;
+            } catch (Exception e) {
+                // Server probably invalid
+                e.printStackTrace();
+                return null;
+            }
 
             ContentValues medicationValues = params[0];
             //String medicationId = database.child("users").child(userId).child("medications").push().getKey();
