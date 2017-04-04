@@ -122,7 +122,6 @@
     <string name="pref_enable_med_alerts_false">Not Enabled</string>
 
 
-
     <!-- SyncAdapter related -->
     <string name="content_authority">com.android.janice.nursehelper</string>
 

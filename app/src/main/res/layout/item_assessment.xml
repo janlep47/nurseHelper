@@ -14,7 +14,6 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
     tools:context="com.android.janice.nursehelper.AssessmentFragment">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +25,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
         android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
         android:orientation="vertical">
 
-    <!-- ROW 1  Blood Pressure: -->
+        <!-- ROW 1  Blood Pressure: -->
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -44,7 +43,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_gravity="center"
                     android:text="@string/blood_pressure_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <TextView
                     android:id="@+id/bp_textview"
@@ -52,8 +51,8 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
-                </LinearLayout>
+                    android:textSize="@dimen/assessment_subtext_size" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_height="wrap_content"
@@ -68,14 +67,14 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"  />
+                    android:theme="@style/AppTheme.Picker" />
 
                 <NumberPicker
                     android:id="@+id/bp_diastolic_numberpicker"
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"/>
+                    android:theme="@style/AppTheme.Picker" />
             </LinearLayout>
 
 
@@ -100,7 +99,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_gravity="center"
                     android:text="@string/temperature_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <TextView
                     android:id="@+id/temperature_textview"
@@ -108,7 +107,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -122,20 +121,19 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"  />
+                    android:theme="@style/AppTheme.Picker" />
 
                 <NumberPicker
                     android:id="@+id/temp_decimal_numberpicker"
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"  />
+                    android:theme="@style/AppTheme.Picker" />
 
             </LinearLayout>
 
 
         </LinearLayout>
-
 
 
         <!-- ROW 3  Pulse: -->
@@ -158,7 +156,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_gravity="center_horizontal"
                     android:text="@string/pulse_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <TextView
                     android:id="@+id/pulse_textview"
@@ -166,7 +164,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -180,12 +178,11 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"  />
+                    android:theme="@style/AppTheme.Picker" />
 
             </LinearLayout>
 
         </LinearLayout>
-
 
 
         <!-- ROW 4  Respiratory Rate: -->
@@ -208,7 +205,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_gravity="center_horizontal"
                     android:text="@string/rr_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <TextView
                     android:id="@+id/rr_textview"
@@ -216,7 +213,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -230,12 +227,10 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"  />
+                    android:theme="@style/AppTheme.Picker" />
             </LinearLayout>
 
         </LinearLayout>
-
-
 
 
         <!-- ROW 5  Pain: -->
@@ -258,7 +253,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_gravity="center_horizontal"
                     android:text="@string/pain_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <TextView
                     android:id="@+id/pain_textview"
@@ -266,7 +261,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -280,13 +275,10 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.Picker"  />
+                    android:theme="@style/AppTheme.Picker" />
             </LinearLayout>
 
         </LinearLayout>
-
-
-
 
 
         <!-- ROW 6  Edema: -->
@@ -308,14 +300,14 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:text="@string/edema_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <TextView
                     android:id="@+id/edema_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
             </LinearLayout>
 
@@ -326,7 +318,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+                android:textSize="@dimen/assessment_subtext_size" />
 
             <!--TextView
                 android:layout_width="wrap_content"
@@ -361,7 +353,7 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_height="wrap_content"
                     android:text="@string/edema_LLE_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <CheckBox
                     android:id="@+id/edema_LLE"
@@ -369,14 +361,14 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="@dimen/residentlist_subtext_size"/>
+                    android:textSize="@dimen/residentlist_subtext_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/edema_RLE_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <CheckBox
                     android:id="@+id/edema_RLE"
@@ -384,14 +376,14 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="@dimen/residentlist_subtext_size"/>
+                    android:textSize="@dimen/residentlist_subtext_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/edema_LUE_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <CheckBox
                     android:id="@+id/edema_LUE"
@@ -399,14 +391,14 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="@dimen/residentlist_subtext_size"/>
+                    android:textSize="@dimen/residentlist_subtext_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/edema_RUE_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/assessment_subtext_size"/>
+                    android:textSize="@dimen/assessment_subtext_size" />
 
                 <CheckBox
                     android:id="@+id/edema_RUE"
@@ -414,63 +406,63 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="@dimen/residentlist_subtext_size"/>
+                    android:textSize="@dimen/residentlist_subtext_size" />
 
             </LinearLayout>
 
 
-                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/edema_pitting"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <RadioButton android:id="@+id/edema_pitting"
-                        android:focusable="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edema_pitting_label"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="@dimen/assessment_subtext_size"/>
-                    <RadioButton android:id="@+id/edema_non_pitting"
-                        android:focusable="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edema_non_pitting_label"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="@dimen/assessment_subtext_size"/>
-                </RadioGroup>
+                    android:text="@string/edema_pitting_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size" />
+
+                <RadioButton
+                    android:id="@+id/edema_non_pitting"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edema_non_pitting_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/assessment_subtext_size" />
+            </RadioGroup>
 
         </LinearLayout>
-
-
-
-
 
 
         <!-- ROW 7  Significant Findings: -->
         <!-- android:layout_width="0dp" -->
         <!-- android:layout_weight="2" -->
 
-            <TextView
-                android:labelFor="@+id/findings_edittext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/significant_findings_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+        <TextView
+            android:labelFor="@+id/findings_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/significant_findings_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="@dimen/assessment_subtext_size" />
 
         <!-- ROW 8  Significant Findings EDIT field: -->
         <!-- android:layout_width="0dp" -->
         <!-- android:layout_weight="2" -->
 
         <EditText
-                android:id="@+id/findings_edittext"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:hint="@string/significant_findings_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/assessment_subtext_size"/>
+            android:id="@+id/findings_edittext"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="@string/significant_findings_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="@dimen/assessment_subtext_size" />
 
 
         <!-- ROW 9  DONE button -->
@@ -484,9 +476,8 @@ android:paddingEnd="@dimen/list_item_extra_padding"-->
             android:layout_height="wrap_content"
             android:text="@string/done_button_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textSize="@dimen/assessment_subtext_size"/>
+            android:textSize="@dimen/assessment_subtext_size" />
 
 
-
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

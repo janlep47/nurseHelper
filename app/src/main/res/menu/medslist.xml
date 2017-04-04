@@ -2,8 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.android.stocks.MedicationsActivity" >
-    <item android:id="@+id/list_past_medications"
+    tools:context="com.android.stocks.MedicationsActivity">
+    <item
+        android:id="@+id/list_past_medications"
         android:title="@string/action_show_past_meds"
         app:showAsAction="collapseActionView" />
 </menu>

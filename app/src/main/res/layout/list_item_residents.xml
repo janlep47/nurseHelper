@@ -5,8 +5,7 @@
     android:paddingLeft="@dimen/list_item_extra_padding"
     android:paddingStart="@dimen/list_item_extra_padding"
     android:paddingRight="@dimen/list_item_extra_padding"
-    android:paddingEnd="@dimen/list_item_extra_padding"
-    >
+    android:paddingEnd="@dimen/list_item_extra_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/roomNumber_desc"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textSize="@dimen/residentlist_text_size"/>
+                android:textSize="@dimen/residentlist_text_size" />
 
             <ImageView
                 android:id="@+id/list_item_portrait_imageview"
@@ -41,7 +40,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:contentDescription="@string/resident_picture"
-                android:adjustViewBounds="true"/>
+                android:adjustViewBounds="true" />
         </LinearLayout>
 
 
@@ -59,7 +58,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:textSize="@dimen/residentlist_subtext_size"
                 android:textColor="@color/colorMeds"
-                android:text="@string/title_activity_medications"/>
+                android:text="@string/title_activity_medications" />
 
             <TextView
                 android:id="@+id/list_item_assessment_textview"
@@ -69,7 +68,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
                 android:textSize="@dimen/residentlist_subtext_size"
                 android:textColor="@color/colorAssessment"
-                android:text="@string/title_activity_assessment"/>
+                android:text="@string/title_activity_assessment" />
 
             <TextView
                 android:id="@+id/list_item_careplan_textview"
@@ -79,7 +78,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:textSize="@dimen/residentlist_subtext_size"
                 android:textColor="@color/colorCarePlan"
-                android:text="@string/title_activity_careplan"/>
+                android:text="@string/title_activity_careplan" />
 
             <TextView
                 android:id="@+id/list_item_medtime_textview"
@@ -87,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display4"
                 android:textSize="@dimen/residentlist_medtime_size"
-                android:textColor="@color/colorMedTime"/>
+                android:textColor="@color/colorMedTime" />
 
         </LinearLayout>
 

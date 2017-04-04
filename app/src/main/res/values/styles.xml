@@ -14,13 +14,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.Main" parent="@style/AppTheme"/>
+    <style name="AppTheme.Main" parent="@style/AppTheme" />
 
-    <style name="AppTheme.Details" parent="@style/AppTheme"/>
-    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+    <style name="AppTheme.Details" parent="@style/AppTheme" />
+
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textSize">18sp</item>
     </style>
-
 
 
 </resources>

@@ -28,7 +28,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:textSize="@dimen/widget_text_size"/>
+            android:textSize="@dimen/widget_text_size" />
 
 
         <LinearLayout
@@ -46,7 +46,7 @@
                 android:textColor="@color/white"
                 android:background="@drawable/widget_med_time_background"
                 android:textStyle="bold"
-                android:textSize="@dimen/widget_subtext_size"/>
+                android:textSize="@dimen/widget_subtext_size" />
 
             <TextView
                 android:id="@+id/widget_last_assessment"
@@ -58,7 +58,7 @@
                 android:textColor="@color/white"
                 android:background="@drawable/widget_assess_time_background"
                 android:textStyle="bold"
-                android:textSize="@dimen/widget_subtext_size"/>
+                android:textSize="@dimen/widget_subtext_size" />
         </LinearLayout>
 
     </LinearLayout>
