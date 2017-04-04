@@ -635,6 +635,33 @@ public class MedicationItem {
             input.putString(MainActivity.ITEM_FREQ, freq);
             context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "undoMostRecentTimestamp", roomNumber, input);
+
+            // Also need to delete it from the Firebase database:
+            Query queryMed = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.MedsGivenEntry.TABLE_NAME)
+                    .orderByChild(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER).limitToLast(1);
+            queryMed.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                            // Since this is the last one (most recent timestamp), this is the 'medGiven' record
+                            //  that we want to undo.
+                            if (issue.child(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC).getValue()
+                                    .equals(genericName)) {
+                                issue.getRef().removeValue();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             return null;
         }
 
@@ -670,6 +697,34 @@ public class MedicationItem {
             //  ('refused' will be true, but this isn't necessary to check for)
             context.getContentResolver().call(ResidentContract.MedsGivenEntry.CONTENT_URI,
                     "deleteNewestMedsGiven", roomNumber, input);
+
+            // Also need to delete it from the Firebase database:
+            Query queryMed = database.child(ResidentContract.PATH_USERS).child(userId)
+                    .child(ResidentContract.MedsGivenEntry.TABLE_NAME)
+                    .orderByChild(ResidentContract.MedsGivenEntry.COLUMN_ROOM_NUMBER).limitToLast(1);
+            queryMed.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                            // Since this is the last one (most recent timestamp), this is the 'medGiven' record
+                            //  that we want to undo.
+                            if (issue.child(ResidentContract.MedicationEntry.COLUMN_NAME_GENERIC).getValue()
+                                    .equals(genericName)) {
+                                issue.getRef().removeValue();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
             return null;
         }
 
